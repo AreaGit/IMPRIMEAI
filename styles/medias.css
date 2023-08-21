@@ -160,3 +160,137 @@
         left: 15%;
       }
 }
+@media screen and (min-width: 1024px) and (max-width: 1440px) {
+    /*:root {
+        --branco:#ffff;
+        --coral:#F37160;
+        --flamingo:#F69896;
+        --concreto:#A7A9AC;
+        --preto:#000000;
+        --vermelho:#EF4126;
+        --font-padrao:'Open Sans';
+    }
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: var(--font-padrao);
+    }
+    header {
+        height: 300px;
+    }
+    header > p {
+        position: relative;
+        top: 30px;
+        left: 5%;
+        font-size: 14px;
+        letter-spacing: 0.4px;
+        width: fit-content;
+    }
+    .elem1 > p {
+        width: fit-content;
+    }
+    .menu2 {
+        position: relative;
+        left: 35%;
+    }
+    .logo-imprimeai {
+        position: relative;
+        left: 10%;
+    }
+    .search__input {
+        width: 350px;
+    }
+    .slider-container {
+        position: relative;
+        left: 8%;
+        width: 90%;
+    }
+    .produto > p {
+        width: fit-content;
+    }*/
+    :root {
+        --branco:#ffff;
+        --coral:#F37160;
+        --flamingo:#F69896;
+        --concreto:#A7A9AC;
+        --preto:#000000;
+        --vermelho:#EF4126;
+        --font-padrao:'Open Sans';
+    }
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: var(--font-padrao);
+    }
+    header {
+        height: 300px;
+    }
+    header > p {
+        position: relative;
+        top: 30px;
+        left: 5%;
+        font-size: 14px;
+        letter-spacing: 0.4px;
+        width: fit-content;
+    }
+    .menu2 {
+        list-style: none;
+        width: max-content;
+        position: relative;
+        left: 35%;
+    }
+    .icons-header {
+        position: relative;
+        top: 0px;
+        left: 70%;
+        cursor: pointer;
+        width: fit-content;
+        padding-left: 5px;
+    }
+    .logo-imprimeai {
+        position: relative;
+        top: 63px;
+        left: 10%;
+    }
+    .input-pesq {
+        position: relative;
+        top: 10px;
+        left: 35%;
+    }
+    .search__input {
+        font-family: inherit;
+        font-size: inherit;
+        background-color: #f4f2f2;
+        border: none;
+        color: #646464;
+        padding: 1rem 2rem;
+        border-radius: 30px;
+        width: 390px;
+        transition: all ease-in-out .5s;
+        margin-right: -2rem;
+      }
+      .elem1 > p {
+        display: none;
+      }
+      .menu  {
+        font-size: 13px;
+      }
+      .slider-container {
+        width: 100%;
+        position: relative;
+        left: 0%;
+    }
+      .produtos {
+        height: 850px;
+      }
+      .produto {
+        position: relative;
+        left: 15%;
+      }
+}
