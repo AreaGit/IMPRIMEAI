@@ -74,9 +74,60 @@
       .menu  {
         font-size: 13px;
       }
+      .images-sec {
+        margin-top: 100px;
+        height: 700px;
+      }
+      .images-sec > h2 {
+        width: fit-content;
+        position: relative;
+        top: 50px;
+        left: 19%;
+        
+      }
+      .content {
+        position: relative;
+        top: 80px;
+        left: 0%;
+        height: 650px;
+        
+      }
+      .content > .image1 {
+        border: 1px solid black;
+        width: 300px;
+        height: 200px;
+        margin: auto;
+      }
+      .content > .image2 {
+        border: 1px solid black;
+        width: 300px;
+        height: 200px;
+        margin: auto;
+        position: relative;
+        top: 10px;
+        left: 0%;
+      }
+      .content > .image3 {
+        border: 1px solid black;
+        width: 300px;
+        height: 200px;
+        margin: auto;
+        position: relative;
+        top: 25px;
+        left: 0%;
+      }
+      #voltar_ao_topo {
+        position: fixed;
+        bottom: 50px;
+        right: 10px;
+        cursor: pointer;
+        background-color: #F37160;
+        border-radius: 5px;
+        color: white;
+      }
     .slider-container {display: none;}
 }
-@media screen and (min-width: 768px) and (max-width: 992px) {
+@media screen and (min-width: 768px) and (max-width: 869px) {
     :root {
         --branco:#ffff;
         --coral:#F37160;
@@ -159,8 +210,59 @@
         position: relative;
         left: 15%;
       }
+      .images-sec {
+        margin-top: 100px;
+        height: 700px;
+      }
+      .images-sec > h2 {
+        width: fit-content;
+        position: relative;
+        top: 50px;
+        left: 19%;
+        
+      }
+      .content {
+        position: relative;
+        top: 80px;
+        left: -20%;
+        height: 650px;
+        
+      }
+      .content > .image1 {
+        border: 1px solid black;
+        width: 300px;
+        height: 496px;
+        margin: auto;
+      }
+      .content > .image2 {
+        border: 1px solid black;
+        width: 300px;
+        height: 240px;
+        margin: auto;
+        position: relative;
+        top: -496px;
+        left: 40%;
+      }
+      .content > .image3 {
+        border: 1px solid black;
+        width: 300px;
+        height: 240px;
+        margin: auto;
+        position: relative;
+        top: -480px;
+        left: 40%;
+      }
+      #voltar_ao_topo {
+        position: fixed;
+        bottom: 50px;
+        right: 10px;
+        cursor: pointer;
+        background-color: #F37160;
+        border-radius: 5px;
+        color: white;
+      }
 }
-@media screen and (min-width: 1024px) and (max-width: 1440px) {
+@media screen and (min-width: 1024px) and (max-width: 1159px) {
     /*:root {
         --branco:#ffff;
         --coral:#F37160;
@@ -292,5 +394,56 @@
       .produto {
         position: relative;
         left: 15%;
+      }
+      .images-sec {
+        margin-top: 100px;
+        height: 700px;
+      }
+      .images-sec > h2 {
+        width: fit-content;
+        position: relative;
+        top: 50px;
+        left: 19%;
+        
+      }
+      .content {
+        position: relative;
+        top: 80px;
+        left: -20%;
+        height: 650px;
+        
+      }
+      .content > .image1 {
+        border: 1px solid black;
+        width: 400px;
+        height: 496px;
+        margin: auto;
+      }
+      .content > .image2 {
+        border: 1px solid black;
+        width: 400px;
+        height: 240px;
+        margin: auto;
+        position: relative;
+        top: -496px;
+        left: 40%;
+      }
+      .content > .image3 {
+        border: 1px solid black;
+        width: 400px;
+        height: 240px;
+        margin: auto;
+        position: relative;
+        top: -480px;
+        left: 40%;
+      }
+      #voltar_ao_topo {
+        position: fixed;
+        bottom: 50px;
+        right: 10px;
+        cursor: pointer;
+        background-color: #F37160;
+        border-radius: 5px;
+        color: white;
       }
 }

@@ -247,3 +247,60 @@ main > h2 {
   font-weight: bold;
   color: #F37160;
 }
+.images-sec {
+  margin-top: 100px;
+  height: 700px;
+}
+.images-sec > h2 {
+  width: fit-content;
+  position: relative;
+  top: 50px;
+  left: 19%;
+}
+.content {
+  position: relative;
+  top: 80px;
+  left: -15%;
+  height: 500px;
+}
+.content > .image1 {
+  border: 1px solid black;
+  width: 616px;
+  height: 496px;
+  margin: auto;
+}
+.content > .image2 {
+  border: 1px solid black;
+  width: 496px;
+  height: 240px;
+  margin: auto;
+  position: relative;
+  top: -496px;
+  left: 30%;
+}
+.content > .image3 {
+  border: 1px solid black;
+  width: 496px;
+  height: 240px;
+  margin: auto;
+  position: relative;
+  top: -480px;
+  left: 30%;
+}
+#voltar_ao_topo {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  cursor: pointer;
+  background-color: #F37160;
+  border-radius: 5px;
+  color: white;
+}
+.mini-banner2 {
+  border: 2px solid red;
+  position: relative;
+  top: 100px;
+  width: 1180px;
+  height: 215px;
+  margin: auto;
+}
