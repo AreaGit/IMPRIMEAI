@@ -38,4 +38,5 @@ let voltar_ao_topo = document.getElementById('voltar_ao_topo');
 
 voltar_ao_topo.addEventListener('click', function () {
   window.scrollTo(0,0);
+  console.log('Voltou ao topo');
 });
