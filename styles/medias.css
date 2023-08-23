@@ -41,7 +41,7 @@
     .icons-header {
         position: relative;
         top: 20px;
-        left: 40%;
+        left: 35%;
         cursor: pointer;
         width: fit-content;
         padding-left: 5px;
@@ -64,7 +64,7 @@
         color: #646464;
         padding: 1rem 2rem;
         border-radius: 30px;
-        width: 380px;
+        width: 350px;
         transition: all ease-in-out .5s;
         margin-right: -2rem;
       }
@@ -88,9 +88,12 @@
       .content {
         position: relative;
         top: 80px;
-        left: 0%;
+        left: -1%;
         height: 650px;
         
+      }
+      .content > h2 {
+        width: fit-content;
       }
       .content > .image1 {
         border: 1px solid black;
@@ -446,4 +449,111 @@
         border-radius: 5px;
         color: white;
       }
+}
+@media screen and (min-width: 1160px) and (max-width: 1439px) {
+      .icons-header {
+        position: relative;
+        left: 5%;
+      }
+      .search__input {
+        width: 480px;
+      }
+      .logo-imprimeai {
+        position: relative;
+        left: 10%;
+      }
+      .slider-container {
+        width: max-content;
+        position: relative;
+        left: 1%;
+      }
+      .produtos {
+        position: relative;
+        left: -19%;
+      }
+      .content {
+        position: relative;
+        top: 80px;
+        left: -20%;
+        height: 650px;
+        
+      }
+      .content > .image1 {
+        border: 1px solid black;
+        width: 460px;
+        height: 496px;
+        margin: auto;
+      }
+      .content > .image2 {
+        border: 1px solid black;
+        width: 460px;
+        height: 240px;
+        margin: auto;
+        position: relative;
+        top: -496px;
+        left: 40%;
+      }
+      .content > .image3 {
+        border: 1px solid black;
+        width: 460px;
+        height: 240px;
+        margin: auto;
+        position: relative;
+        top: -480px;
+        left: 40%;
+      }
+      #voltar_ao_topo {
+        position: fixed;
+        bottom: 50px;
+        right: 81px;
+        cursor: pointer;
+        background-color: #F37160;
+        border-radius: 5px;
+        color: white;
+      }
+}
+@media screen and (min-width: 1440px) and (max-width: 1600px){
+    .logo-imprimeai {
+      position: relative;
+      left: 15%;
+    }
+    .search__input {
+      width: 600px;
+    }
+    .slider-container {
+      position: relative;
+      left: 10%;
+    }
+    .produtos {
+      position: relative;
+      left: -10%;
+    }
+    .content > .image1 {
+      border: 1px solid black;
+      width:  496px;
+      height: 496px;
+      margin: auto;
+    }
+    .content > .image2 {
+      border: 1px solid black;
+      width:  496px;
+      height: 240px;
+      margin: auto;
+      position: relative;
+      top: -496px;
+      left: 35%;
+    }
+    .content > .image3 {
+      border: 1px solid black;
+      width:  496px;
+      height: 240px;
+      margin: auto;
+      position: relative;
+      top: -480px;
+      left: 35%;
+    }
+    #voltar_ao_topo {
+      position: fixed;
+      right: 81px;
+    }
 }
