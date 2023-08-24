@@ -123,7 +123,12 @@ header > p {
     width: 1.3em;
     fill: #b4b4b4;
   }
-  .elem1 > p {
+  .lnk {
+    text-decoration: none;
+    color: black;
+  }
+  .par {
+    text-decoration: none;
     position: relative;
     top: -60px;
     left: 70%;

@@ -1,0 +1,57 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: 0px;
+    font-family: 'Open Sans';
+}
+.logo-imprimeai {
+    position: absolute;
+    top: 20%;
+    left: 45%;
+}
+form {
+    
+    position: absolute;
+    top: 30%;
+    left: 34%;
+}
+form > h1 {
+    text-align: center;
+    font-size: 40px;
+}
+form > p {
+    text-align: center;
+    padding: 20px 0px 20px 0px;
+}
+form > input {
+    width: 580px;
+    height: 60px;
+    text-indent: 20px;
+    margin: 10px;
+}
+button {
+    width: 580px;
+    height: 40px;
+    margin: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #EF4126;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    transform: translateY(-5px);
+    transition: 1s;
+}
+.btns > a {
+    text-decoration: none;
+    width: 580px;
+    height: 40px;
+    margin: 10px;
+    padding: 10px 245px 10px 245px;
+    text-align: center;
+    position: relative;
+    top: 10px;
+    color: #EF4126;
+}

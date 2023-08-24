@@ -78,7 +78,7 @@
         top: 11%;
         left: 49%;
       }
-      .elem1 > p {
+      .par {
         display: none;
       }
       .menu  {
@@ -215,7 +215,7 @@
         top: 21%;
         left: 92%;
       }
-      .elem1 > p {
+      .par {
         display: none;
       }
       .menu  {
@@ -360,7 +360,7 @@
         top: 21%;
         left: 82%;
       }
-      .elem1 > p {
+      .par {
         display: none;
       }
       .menu  {
