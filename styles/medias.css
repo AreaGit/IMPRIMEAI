@@ -68,6 +68,16 @@
         transition: all ease-in-out .5s;
         margin-right: -2rem;
       }
+      #carrinho_compras {
+        position: absolute;
+        top: 13%;
+        left: 45%;
+      }
+      #totalItens {
+        position: absolute;
+        top: 11%;
+        left: 49%;
+      }
       .elem1 > p {
         display: none;
       }
@@ -195,6 +205,16 @@
         transition: all ease-in-out .5s;
         margin-right: -2rem;
       }
+      #carrinho_compras {
+        position: absolute;
+        top: 23%;
+        left: 90%;
+      }
+      #totalItens {
+        position: absolute;
+        top: 21%;
+        left: 92%;
+      }
       .elem1 > p {
         display: none;
       }
@@ -266,56 +286,6 @@
       }
 }
 @media screen and (min-width: 1024px) and (max-width: 1159px) {
-    /*:root {
-        --branco:#ffff;
-        --coral:#F37160;
-        --flamingo:#F69896;
-        --concreto:#A7A9AC;
-        --preto:#000000;
-        --vermelho:#EF4126;
-        --font-padrao:'Open Sans';
-    }
-    * {
-        margin: 0px;
-        padding: 0px;
-        box-sizing: border-box;
-    }
-    body {
-        font-family: var(--font-padrao);
-    }
-    header {
-        height: 300px;
-    }
-    header > p {
-        position: relative;
-        top: 30px;
-        left: 5%;
-        font-size: 14px;
-        letter-spacing: 0.4px;
-        width: fit-content;
-    }
-    .elem1 > p {
-        width: fit-content;
-    }
-    .menu2 {
-        position: relative;
-        left: 35%;
-    }
-    .logo-imprimeai {
-        position: relative;
-        left: 10%;
-    }
-    .search__input {
-        width: 350px;
-    }
-    .slider-container {
-        position: relative;
-        left: 8%;
-        width: 90%;
-    }
-    .produto > p {
-        width: fit-content;
-    }*/
     :root {
         --branco:#ffff;
         --coral:#F37160;
@@ -379,6 +349,16 @@
         width: 390px;
         transition: all ease-in-out .5s;
         margin-right: -2rem;
+      }
+      #carrinho_compras {
+        position: absolute;
+        top: 23%;
+        left: 80%;
+      }
+      #totalItens {
+        position: absolute;
+        top: 21%;
+        left: 82%;
       }
       .elem1 > p {
         display: none;
@@ -462,6 +442,16 @@
         position: relative;
         left: 10%;
       }
+      #carrinho_compras {
+        position: absolute;
+        top: 20%;
+        left: 85%;
+      }
+      #totalItens {
+        position: absolute;
+        top: 18%;
+        left: 87%;
+      }
       .slider-container {
         width: max-content;
         position: relative;
@@ -519,6 +509,16 @@
     }
     .search__input {
       width: 600px;
+    }
+    #carrinho_compras {
+      position: absolute;
+      top: 16%;
+      left: 85%;
+    }
+    #totalItens {
+      position: absolute;
+      top: 14%;
+      left: 86%;
     }
     .slider-container {
       position: relative;

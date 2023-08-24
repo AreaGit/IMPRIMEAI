@@ -40,3 +40,19 @@ voltar_ao_topo.addEventListener('click', function () {
   window.scrollTo(0,0);
   console.log('Voltou ao topo');
 });
+
+
+
+//CARRINHO
+
+const cart = [];
+
+function addToCart(price) {
+  cart.push(price);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const totalItensSpan = document.getElementById('totalItens');
+  totalItensSpan.textContent = cart.length;
+}

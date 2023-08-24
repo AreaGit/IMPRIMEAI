@@ -130,6 +130,19 @@ header > p {
     font-size: 14px;
     width: fit-content;
   }
+  #carrinho_compras {
+    position: absolute;
+    top: 18%;
+    left: 78%;
+  }
+  #totalItens {
+    background-color: #F37160;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 16%;
+    left: 79%;
+  }
   .menu {
     position: relative;
     top: -50px;
