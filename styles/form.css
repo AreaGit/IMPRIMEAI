@@ -10,7 +10,6 @@
     left: 45%;
 }
 form {
-    
     position: absolute;
     top: 30%;
     left: 34%;
@@ -69,17 +68,17 @@ button:hover {
         left: 0%;
     }
     form > input {
-        width: 280px;
+        width: 240px;
     }
     button {
-        width: 280px;
+        width: 240px;
     }
     .btns > a {
         text-decoration: none;
         width: 580px;
         height: 40px;
         margin: 10px;
-        padding: 10px 90px 10px 100px;
+        padding: 10px 90px 10px 80px;
     }    
 }
 @media screen and (min-width: 320px) and (max-width: 380px) {
@@ -133,7 +132,7 @@ button:hover {
 @media screen and (min-width: 768px) and (max-width: 1440px) {
     .logo-imprimeai {
         position: relative;
-        left: 40%;
+        left: 30%;
     }
     form {
         position: relative;
@@ -141,19 +140,16 @@ button:hover {
         left: 0%;
     }
     form > input {
-        width: /*740px*/ 95vw;
+        width: 95vw;
     }
     button {
-        width: /*740px*/ 95vw;
+        width: 95vw;
     }
     .btns > a {
         text-decoration: none;
         width: 580px;
         height: 40px;
         margin: 10px;
-        top: 100%;
-        position: absolute;
-        left: -22%;
-        /*padding: 10px 123px 10px 325px;*/
-    }    
+        padding-left: 44%;
+    }
 }

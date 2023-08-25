@@ -79,7 +79,10 @@
         left: 49%;
       }
       .par {
-        display: none;
+        display: block;
+        font-size: 10px;
+        position: relative;
+        top: -90px;
       }
       .menu  {
         font-size: 13px;
@@ -216,7 +219,10 @@
         left: 92%;
       }
       .par {
-        display: none;
+        display: block;
+        position: relative;
+        top: -90px;
+        left: 80%;
       }
       .menu  {
         font-size: 13px;
@@ -361,7 +367,9 @@
         left: 82%;
       }
       .par {
-        display: none;
+        display: block;
+        position: relative;
+        left: 85%;
       }
       .menu  {
         font-size: 13px;
