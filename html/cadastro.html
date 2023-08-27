@@ -11,20 +11,20 @@
 </head>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
-    <form action="" method="get">
+    <form id="cadastroForm" action="form.html" method="post">
         <h1>Crie sua Conta</h1>
-        <p>Novo por aqui? Cadastre-se já!</p>
+        <p id="msg">Novo por aqui? Cadastre-se já!</p>
 
-        <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required>
+        <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required minlength="3">
         <br>
-        <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" required>
+        <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" minlength="8" required>
 
         <div class="btns">
-            <button id="btnCad" type="submit">Cadastrar</button>
+            <button id="btnCad" type="submit" onclick="adicionarUsuarios()">Cadastrar</button>
             <br>
             <a href="form.html">Faça o login</a>
         </div>
-        <script src="../scripts/acesso.js"></script>
+        <script src="../scripts/cadastro.js"></script>
     </form>
 </body>
 </html>

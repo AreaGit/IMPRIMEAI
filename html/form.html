@@ -11,19 +11,20 @@
 </head>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
-    <form action="" method="get">
+    <form action="../index.html" method="post">
         <h1>Entrar</h1>
-        <p>Se já possui uma conta, preencha os dados para entrar.</p>
+        <p id="msg">Se já possui uma conta, preencha os dados para entrar.</p>
 
         <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required>
         <br>
         <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" required>
 
         <div class="btns">
-            <button id="btn" type="submit">Entrar</button>
+            <button id="btn" type="submit" onclick="entrar()">Entrar</button>
             <br>
             <a href="cadastro.html">Cadastre-se</a>
         </div>
     </form>
+    <script src="../scripts/login.js"></script>
 </body>
 </html>
