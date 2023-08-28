@@ -20,7 +20,9 @@ function entrar() {
     });
 
     if(email.value == userValid.email && pass.value == userValid.pass) {
-        //window.location.href = '../index.html'
+        setTimeout(() => {
+            window.location.href = '../index.html'
+        }, 3000)
 
         let token = Math.random().toString(16).substring(2)
         localStorage.setItem('token', token)

@@ -42,7 +42,7 @@ function adicionarUsuarios() {
         
         setTimeout(() => {
             window.location.href = 'form.html'
-        }, 5000)
+        }, 3000)
        
     } else {
         msg.setAttribute('style', 'color: red')
