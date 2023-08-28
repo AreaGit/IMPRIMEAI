@@ -1,3 +1,5 @@
+const usuario = document.getElementById('usuario')
+let validUsuario = false
 const email = document.getElementById('email')
 let validEmail = false
 const pass = document.getElementById('pass')
@@ -5,6 +7,15 @@ let validPass = false
 const msg = document.getElementById('msg')
 
 //VALIDANDO CAMPOS
+usuario.addEventListener('keyup', () => {
+    if(usuario.value.length <= 5) {
+        usuario.setAttribute('style', 'color: red; border-color: red;')
+        validUsuario=false
+    } else {
+        usuario.setAttribute('style', 'color: black; border-color: green;')
+        validUsuario = true
+    }
+})
 email.addEventListener('keyup', () => {
     if(email.value.length <= 3) {
         email.setAttribute('style', 'color: red; border-color: red;')
@@ -27,10 +38,11 @@ pass.addEventListener('keyup', () => {
 
 
 function adicionarUsuarios() {
-    if(validEmail && validPass) {
+    if(validEmail && validPass && validUsuario) {
         let listaUser = JSON.parse(localStorage.getItem('listaUser') || '[]')
         listaUser.push (
             {
+                usuarioCad: usuario.value,
                 emailCad: email.value,
                 passCad: pass.value
             }

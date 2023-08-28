@@ -139,9 +139,9 @@ header > p {
     width: fit-content;
     font-weight: lighter;
     position: relative;
-    left: 69%;
+    left: 70%;
     top: -30%;
-    font-size: 14px;
+    font-size: 18px;
   }
   #carrinho_compras {
     position: absolute;

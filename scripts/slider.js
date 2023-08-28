@@ -60,7 +60,7 @@ function updateCartUI() {
 let userLogado = JSON.parse(localStorage.getItem('userLogado'))
 let logado = document.getElementById('logado')
 
-logado.innerHTML = `Olá ${userLogado.email}`
+logado.innerHTML = `Olá ${userLogado.usuario}`
 
 let sairBtn = document.getElementById('sairBtn')
 sairBtn.setAttribute('style', 'display:block')
