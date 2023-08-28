@@ -130,10 +130,18 @@ header > p {
   .par {
     text-decoration: none;
     position: relative;
-    top: -60px;
+    top: -80px;
     left: 70%;
     font-size: 14px;
     width: fit-content;
+  }
+  #logado {
+    width: fit-content;
+    font-weight: lighter;
+    position: relative;
+    left: 69%;
+    top: -30%;
+    font-size: 14px;
   }
   #carrinho_compras {
     position: absolute;
@@ -321,4 +329,53 @@ main > h2 {
   width: 1180px;
   height: 215px;
   margin: auto;
+}
+#sairBtn {
+  position: relative;
+  top: -35px;
+  left: 70%;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  padding: 0px 6px 0px 6px;
+  border: 3px solid #F37160;
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1);
+  color: #F69896;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1;
+  cursor: pointer;
+}
+
+/*#sairBtn:before {
+  transition: 0.5s all ease;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  opacity: 0;
+  content: '';
+  background-color: #EF4126;
+  z-index: -1;
+}
+
+#sairBtn:hover, button:focus {
+  color: white;
+}
+
+#sairBtn:hover:before, button:focus:before {
+  transition: 0.5s all ease;
+  left: 0;
+  right: 0;
+  opacity: 1;
+}*/
+
+#sairBtn:active {
+  transform: scale(0.9);
 }

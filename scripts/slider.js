@@ -62,10 +62,16 @@ let logado = document.getElementById('logado')
 
 logado.innerHTML = `Olá ${userLogado.email}`
 
-if(localStorage.getItem('token') == null) {
+let sairBtn = document.getElementById('sairBtn')
+sairBtn.setAttribute('style', 'display:block')
+
+
+let conviteCad = document.getElementById('conviteCad')
+conviteCad.setAttribute('style', 'display:none  ')
+/*if(localStorage.getItem('token') == null) {
   alert('Você precisa estar logado para acessar a página')
   window.location.href = '../html/form.html'
-}
+}*/
 
 
 function sair() {

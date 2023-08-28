@@ -29,7 +29,7 @@
             </div>
         </nav>
         <div class="elem1">
-            <img class="logo-imprimeai" src="images/logo-imprimeai2.png" alt="">
+           <a href="index.html"><img class="logo-imprimeai" src="images/logo-imprimeai2.png" alt=""></a>
             <div class="input-pesq">
                 <input type="text" class="search__input" placeholder="O que você está procurando?">
             <button class="search__button">
@@ -39,7 +39,9 @@
                 </g>
             </svg>
             </div>
-            <a id="logado" href="html/cadastro.html" class="lnk"><p class="par">Olá, bem-vindo! <br> Entre ou cadastre-se</p></a> <button onclick="sair()">sair</button>
+            <div id="logado"></div>
+            <a id="conviteCad" href="html/cadastro.html" class="lnk"><p class="par">Olá, bem-vindo! <br> Entre ou cadastre-se</p></a>
+            <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
                 <span id="carrinho_compras" class="material-icons">shopping_cart</span>
                 <span id="totalItens">0</span>
 

@@ -51,6 +51,14 @@
       top: -5px;
       left: 0%;
   }
+  #logado {
+    width: fit-content;
+    font-weight: lighter;
+    position: relative;
+    left: 30%;
+    top: -40%;
+    font-size: 14px;
+  }
   .input-pesq {
       position: relative;
       top: 10px;
@@ -71,12 +79,18 @@
     #carrinho_compras {
       position: absolute;
       top: 13%;
-      left: 45%;
+      left: 50%;
     }
     #totalItens {
       position: absolute;
       top: 11%;
-      left: 49%;
+      left: 55%;
+    }
+    #sairBtn {
+      position: relative;
+      left: 85%;
+      top: -100px;
+      padding: 3px 1px 3px 1px;
     }
     .par {
       display: block;
@@ -195,6 +209,27 @@
       position: relative;
       top: 10px;
       left: 35%;
+  }
+  #logado {
+    position: relative;
+    top: -80px;
+    left: 60%;
+  }
+  #carrinho_compras {
+    position: absolute;
+    top: 13%;
+    left: 50%;
+  }
+  #totalItens {
+    position: absolute;
+    top: 11%;
+    left: 55%;
+  }
+  #sairBtn {
+    position: relative;
+    left: 85%;
+    top: -110px;
+    padding: 3px 1px 3px 1px;
   }
   .search__input {
       font-family: inherit;
@@ -319,6 +354,27 @@
       font-size: 14px;
       letter-spacing: 0.4px;
       width: fit-content;
+  }
+  #logado {
+    position: relative;
+    top: -80px;
+    left: 60%;
+  }
+  #carrinho_compras {
+    position: absolute;
+    top: 13%;
+    left: 50%;
+  }
+  #totalItens {
+    position: absolute;
+    top: 11%;
+    left: 55%;
+  }
+  #sairBtn {
+    position: relative;
+    left: 80%;
+    top: -110px;
+    padding: 3px 1px 3px 1px;
   }
   .menu2 {
       list-style: none;
@@ -520,12 +576,12 @@
   }
   #carrinho_compras {
     position: absolute;
-    top: 16%;
+    top: 18%;
     left: 85%;
   }
   #totalItens {
     position: absolute;
-    top: 14%;
+    top: 16%;
     left: 86%;
   }
   .slider-container {
