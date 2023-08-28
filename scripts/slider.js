@@ -56,3 +56,19 @@ function updateCartUI() {
   const totalItensSpan = document.getElementById('totalItens');
   totalItensSpan.textContent = cart.length;
 }
+
+let userLogado = JSON.parse(localStorage.getItem('userLogado'))
+let logado = document.getElementById('logado')
+
+logado.innerHTML = `Olá ${userLogado.email}`
+
+if(localStorage.getItem('token') == null) {
+  alert('Você precisa estar logado para acessar a página')
+  window.location.href = '../html/form.html'
+}
+
+
+function sair() {
+  localStorage.removeItem('token')
+  window.location.href = '../html/form.html'
+}
