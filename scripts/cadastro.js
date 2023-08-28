@@ -1,35 +1,51 @@
-function entrar() {
-    let email = document.getElementById('email');
-    let pass = document.getElementById('pass');
-    let msg = document.getElementById('msg');
-    let listaUser = [];
-    let userValid = {
-        email: '',
-        pass: ''
-    };
+const email = document.getElementById('email')
+let validEmail = false
+const pass = document.getElementById('pass')
+let validPass = false
+const msg = document.getElementById('msg')
 
-    listaUser = JSON.parse(localStorage.getItem('listaUser'));
-
-    listaUser.forEach((item) => {
-        if (email.value === item.emailCad && pass.value === item.passCad) {
-            userValid = {
-                email: item.emailCad,
-                pass: item.passCad
-            };
-        }
-    });
-
-    if(email.value == userValid.email && pass.value == userValid.pass) {
-        //window.location.href = '../index.html'
-
-        let token = Math.random().toString(16).substring(2)
-        localStorage.setItem('token', token)
-        localStorage.setItem('userLogado', JSON.stringify(userValid))
+//VALIDANDO CAMPOS
+email.addEventListener('keyup', () => {
+    if(email.value.length <= 3) {
+        email.setAttribute('style', 'color: red; border-color: red;')
+        validEmail = false
     } else {
-        email.setAttribute('style', 'color:red')
-        pass.setAttribute('style', 'color:red')
+        email.setAttribute('style', 'color: black; border-color: green;')
+        validEmail = true
+    }
+})
+pass.addEventListener('keyup', () => {
+    if(pass.value.length <= 8) {
+        pass.setAttribute('style', 'color: red; border-color: red;')
+        validPass = false
+    } else {
+        pass.setAttribute('style', 'color: black; border-color: green;')
+        validPass = true
+    }
+})
+
+
+
+function adicionarUsuarios() {
+    if(validEmail && validPass) {
+        let listaUser = JSON.parse(localStorage.getItem('listaUser') || '[]')
+        listaUser.push (
+            {
+                emailCad: email.value,
+                passCad: pass.value
+            }
+        )
+        localStorage.setItem('listaUser', JSON.stringify(listaUser))
+
+        msg.setAttribute('style', 'color: green')
+        msg.innerHTML = '<strong>Cadastrado com Sucesso!...</strong>'
+        
+        setTimeout(() => {
+            window.location.href = 'form.html'
+        }, 5000)
+       
+    } else {
         msg.setAttribute('style', 'color: red')
-        msg.innerHTML = '<strong>Usuário ou senha incorretos</strong>'
-        email.focus()
+        msg.innerHTML = '<strong>Preencha todos os campos corretamente <br> antes de cadastrar...</strong>'
     }
 }
