@@ -149,7 +149,7 @@ header > p {
     left: 78%;
   }
   #totalItens {
-    background-color: #F37160;
+    background-color: white;
     border-radius: 100px;
     padding: 1px;
     position: absolute;
@@ -332,24 +332,28 @@ main > h2 {
 }
 #sairBtn {
   position: relative;
-  top: -35px;
-  left: 70%;
-  font-size: 18px;
+  top: -75px;
+  left: 76%;
+  font-size: 16px;
   letter-spacing: 2px;
   text-transform: uppercase;
   display: inline-block;
   text-align: center;
   font-weight: bold;
-  padding: 0px 6px 0px 6px;
-  border: 3px solid #F37160;
-  border-radius: 2px;
+  padding: 1px 3px 1px 3px;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 40%;
   position: relative;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1);
-  color: #F69896;
+  color: black;
   text-decoration: none;
   transition: 0.3s ease all;
   z-index: 1;
   cursor: pointer;
+  background-color: white;
+}
+#sairBtn:hover {
+  transform: translateY(-10px);
+  transition: 1s;
 }
 
 /*#sairBtn:before {

@@ -75,6 +75,6 @@ conviteCad.setAttribute('style', 'display:none  ')
 
 
 function sair() {
-  localStorage.removeItem('token')
+  localStorage.removeItem('passCad')
   window.location.href = '../html/form.html'
 }
