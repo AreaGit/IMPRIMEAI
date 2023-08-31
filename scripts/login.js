@@ -12,9 +12,9 @@ function entrar() {
     listaUser = JSON.parse(localStorage.getItem('listaUser'));
 
     listaUser.forEach((item) => {
-        if (usuario.value === item.usuarioCad &&email.value === item.emailCad && pass.value === item.passCad) {
+        if (usuario.value === item.userCad &&email.value === item.emailCad && pass.value === item.passCad) {
             userValid = {
-                usuario: item.usuarioCad,
+                usuario: item.userCad,
                 email: item.emailCad,
                 pass: item.passCad
             };
