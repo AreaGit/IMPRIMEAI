@@ -78,3 +78,5 @@ function sair() {
   localStorage.removeItem('passCad')
   window.location.href = '../html/form.html'
 }
+
+//CAIXA DE PESQUISA 

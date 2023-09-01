@@ -72,22 +72,25 @@ pass.addEventListener('keyup', () => {
     }
 }*/
 
-function adicionarUsuarios() {
+/*function adicionarUsuarios() {
     if(validEmail && validPass && validUsuario) {
         const User = require("../models/User");
         const newUser = new User ({
-            userCad : usuario.value ,
-            emailCad : email.value ,
+            userCad : usuario.value,
+            emailCad : email.value,
             passCad : pass.value,
             });
             console.log("usuario", newUser );
             //salvando no banco
             newUser.save().then((result)=>{
                 console.log ("resultado do salvar" + result ) ;
-                alert ('Usuário Cadastrado Com sucesso!!!');
+                msg.innerHTML = '<strong>Usuário Cadastrado com Sucesso!</strong>'
+                msg.setAttribute('style', 'color: green;')
+                window.location.href = 'http://10.0.0.122:5500/html/form.html'
                 }).catch ((err)=>console.log ( "erro ao salvar"+ err));
                 }else{
-                    alert ('preencha todos os dados para continuar...');
+                    msg.innerHTML = '<strong>Usuário Foi Cadastrado com Sucesso!</strong>'
+                    msg.setAttribute('style', 'color: red;')
                     }
 }
  // Certifique-se de que o caminho está correto
@@ -117,3 +120,37 @@ btnCad.addEventListener('click', function adicionarUsuarios() {
         msg.innerHTML = '<strong>Preencha todos os campos corretamente <br> antes de cadastrar...</strong>';
     }
 })*/
+
+document.addEventListener('DOMContentLoaded', function () {
+    const btnCad = document.getElementById('btnCad');
+    const cadastroForm = document.getElementById('cadastroForm');
+
+    btnCad.addEventListener('click', function () {
+        const usuario = document.getElementById('usuario').value;
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+
+        // Montar os dados do formulário em um objeto
+        const xmlData = `<user>
+        <userCad>${usuario}</userCad>
+        <emailCad>${email}</emailCad>
+        <passCad>${pass}</passCad>`
+
+        // Enviar os dados para o servidor usando fetch
+        fetch('/cadastrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/xml'
+            },
+            body: xmlData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message); // Mensagem do backend
+            // Redirecionar ou mostrar uma mensagem de sucesso para o usuário
+        })
+        .catch(error => {
+            console.error('Erro ao cadastrar usuário:', error);
+        });
+    });
+});

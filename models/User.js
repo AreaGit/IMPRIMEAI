@@ -11,14 +11,14 @@ const  User = db.define('users', {
     },
     userCad: {
         type : Sequelize.STRING(10),
-        allowNull: false,
+        allowNull: true,
     },
     emailCad: {
-        type: Sequelize.STRING(),
+        type: Sequelize.STRING(255),
         allowNull: true
     },
     passCad: {
-        type: Sequelize.STRING(),
+        type: Sequelize.STRING(255),
         allowNull: true
     }
 })

@@ -1,0 +1,31 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+.produtos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: 900px;
+}
+.produto {
+    width: calc(28.28% - 10px);
+    height: 408px;
+    position: relative;
+    left: 0%;
+    margin: 3px;
+    border-radius: 5px;
+}
+.produto > h3 {
+    font-size: 16px;
+}
+.produto > p {
+    font-size: 13px;
+    color: #6C757D;
+}
+.imagem {
+    border: 1px solid red;
+    overflow: hidden;
+    height: 60%;
+}
