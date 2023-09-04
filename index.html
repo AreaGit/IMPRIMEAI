@@ -11,6 +11,393 @@
 <link rel="stylesheet" href="styles/medias.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+    :root {
+    --branco:#ffff;
+    --coral:#F37160;
+    --flamingo:#F69896;
+    --concreto:#A7A9AC;
+    --preto:#000000;
+    --vermelho:#EF4126;
+    --font-padrao:'Open Sans';
+}
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body {
+    font-family: var(--font-padrao);
+}
+/*HEADER*/
+header {
+    height: 300px;
+}
+.mini-banner {
+    height: 50px;
+    background-color: #EF4126;
+}
+header > p {
+    position: relative;
+    top: 30px;
+    left: 18%;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    width: fit-content;
+}
+.menu2 {
+    display: flex;
+    list-style: none;
+    width: max-content;
+    position: relative;
+    top: 13px;
+    left: 60%;
+}
+.menu2 > a {
+    padding-left: 28px;
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+}
+.menu2 > a:hover {
+    transform: translateY(-10px);
+    transition: 1s;
+    text-decoration: underline;
+}
+.icons {
+    position: relative;
+    top: -10px;
+    left: 80%;
+    cursor: pointer;
+    width: fit-content;
+    padding-left: 5px;
+}
+.icons:hover {
+    transform: translateY(-10px);
+    transition: 1s;
+}
+.elem1 {
+    height: 175px;
+}
+.logo-imprimeai {
+    position: relative;
+    top: 35px;
+    left: 18%;
+}
+.input-pesq {
+    width: max-content;
+    position: relative;
+    left: 27%;
+    top: -15px;
+
+}
+.search__input {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #f4f2f2;
+    border: none;
+    color: #646464;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    width: 800px;
+    transition: all ease-in-out .5s;
+    margin-right: -2rem;
+  }
+  
+  .search__input:hover, .search__input:focus {
+    box-shadow: 0 0 1em #00000013;
+  }
+  
+  .search__input:focus {
+    outline: none;
+    background-color: #f0eeee;
+  }
+  
+  .search__input::-webkit-input-placeholder {
+    font-weight: 100;
+    color: #ccc;
+  }
+  
+  .search__input:focus + .search__button {
+    background-color: #f0eeee;
+  }
+  
+  .search__button {
+    border: none;
+    background-color: #f4f2f2;
+    margin-top: .1em;
+  }
+  
+  .search__button:hover {
+    cursor: pointer;
+  }
+  
+  .search__icon {
+    height: 1.3em;
+    width: 1.3em;
+    fill: #b4b4b4;
+  }
+  .lnk {
+    text-decoration: none;
+    color: black;
+  }
+  .par {
+    text-decoration: none;
+    position: relative;
+    top: -80px;
+    left: 70%;
+    font-size: 14px;
+    width: fit-content;
+  }
+  #logado {
+    width: fit-content;
+    font-weight: lighter;
+    position: relative;
+    left: 70%;
+    top: -30%;
+    font-size: 18px;
+  }
+  #carrinho_compras {
+    position: absolute;
+    top: 18%;
+    left: 78%;
+  }
+  #totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 16%;
+    left: 79%;
+  }
+  .menu {
+    position: relative;
+    top: -50px;
+  }
+  .menu ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .menu ul li {
+    margin-right: 20px;
+    position: relative;
+  }
+  
+  .menu ul li a {
+    padding-left: 20px;
+    text-decoration: none;
+    color: black;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 102%;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid rgba(48, 47, 47, 0.63);
+    height: 301px;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 10px;
+    white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+    border-top: 1px solid rgb(114, 112, 112);
+    font-weight: lighter;
+  }
+  .dropdown-content a:hover {
+    background-color: #F37160;
+  }
+  .menu ul li:hover .dropdown-content {
+    display: block;
+  }
+  /*MAIN*/
+  main {
+    position: absolute;
+    width: 100%;
+    height: 900px;
+  }
+  .slider-container {
+    width: 1140px;
+    height: 320px;
+    position: relative;
+    left: 20%;
+  }
+  .slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+.slide.active {
+    opacity: 0.8;
+    display: block;
+}
+main > h2 {
+  text-align: center;
+  margin-top: 50px;
+}
+.produtos {
+  height: 385px;
+  margin-top: 50px;
+}
+.produto {
+  height: 420px;
+  width: 280px;
+  float: left;
+  position: relative;
+  left: 19%;
+  margin-left: 10px;
+  opacity: 0.5;
+}
+.produto:hover {
+  opacity: 1;
+  transform: translateY(-10px);
+  transition: 1s;
+  box-shadow: -1px -1px 5px black;
+  border-radius: 5px;
+}
+.image-prod {
+  height: 276px;
+}
+.text-prod {
+  position: relative;
+  top: 30px;
+  left: 10px;
+}
+.text-prod > h1 {
+  font-size: 16px;
+}
+.text-prod > p {
+  font-size: 13px;
+  color: #6C757D;
+}
+.text-prod > span {
+  font-size: 24px;
+  font-weight: bold;
+  color: #F37160;
+}
+.images-sec {
+  margin-top: 100px;
+  height: 700px;
+}
+.images-sec > h2 {
+  width: fit-content;
+  position: relative;
+  top: 50px;
+  left: 19%;
+}
+.content {
+  position: relative;
+  top: 80px;
+  left: -15%;
+  height: 500px;
+}
+.content > .image1 {
+  border: 1px solid black;
+  width: 616px;
+  height: 496px;
+  margin: auto;
+}
+.content > .image2 {
+  border: 1px solid black;
+  width: 496px;
+  height: 240px;
+  margin: auto;
+  position: relative;
+  top: -496px;
+  left: 30%;
+}
+.content > .image3 {
+  border: 1px solid black;
+  width: 496px;
+  height: 240px;
+  margin: auto;
+  position: relative;
+  top: -480px;
+  left: 30%;
+}
+#voltar_ao_topo {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  cursor: pointer;
+  background-color: #F37160;
+  border-radius: 5px;
+  color: white;
+}
+.mini-banner2 {
+  border: 2px solid red;
+  position: relative;
+  top: 100px;
+  width: 1180px;
+  height: 215px;
+  margin: auto;
+}
+#sairBtn {
+  position: relative;
+  top: -75px;
+  left: 76%;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  padding: 1px 3px 1px 3px;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 40%;
+  position: relative;
+  color: black;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1;
+  cursor: pointer;
+  background-color: white;
+}
+#sairBtn:hover {
+  transform: translateY(-10px);
+  transition: 1s;
+}
+
+/*#sairBtn:before {
+  transition: 0.5s all ease;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  opacity: 0;
+  content: '';
+  background-color: #EF4126;
+  z-index: -1;
+}
+
+#sairBtn:hover, button:focus {
+  color: white;
+}
+
+#sairBtn:hover:before, button:focus:before {
+  transition: 0.5s all ease;
+  left: 0;
+  right: 0;
+  opacity: 1;
+}*/
+
+#sairBtn:active {
+  transform: scale(0.9);
+}
+</style>
 <body>
     <header>
         <div class="mini-banner">

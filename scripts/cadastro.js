@@ -131,26 +131,41 @@ document.addEventListener('DOMContentLoaded', function () {
         const pass = document.getElementById('pass').value;
 
         // Montar os dados do formulário em um objeto
-        const xmlData = `<user>
-        <userCad>${usuario}</userCad>
-        <emailCad>${email}</emailCad>
-        <passCad>${pass}</passCad>`
+// Dados para enviar no corpo da solicitação
+    const userData = {
+    userCad: usuario,
+    emailCad: email,
+    passCad: pass
+};
 
-        // Enviar os dados para o servidor usando fetch
-        fetch('/cadastrar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/xml'
-            },
-            body: xmlData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message); // Mensagem do backend
-            // Redirecionar ou mostrar uma mensagem de sucesso para o usuário
-        })
-        .catch(error => {
+    fetch('/cadastrar', {
+    method: 'POST', // Usar o método POST
+    headers: {
+        'Content-Type': 'application/json' // Definir o cabeçalho para JSON
+    },
+    body: JSON.stringify(userData) // Converter os dados para JSON
+})
+    .then(response => response.json())
+    .then(data => {
+        if(validUsuario && validEmail && validPass) {
+            console.log(data.message); 
+    msg.innerHTML = '<strong>Usuário Cadastrado com Sucesso</strong>'
+    msg.setAttribute('style', 'color: green;')
+    setTimeout(() => {
+        window.location.href = 'http://localhost:8080/html/form.html'
+    },3000)
+        } else {
+            msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
+            msg.setAttribute('style', 'color:red;')
             console.error('Erro ao cadastrar usuário:', error);
-        });
+        }
+    
+})
+    .catch(error => {
+        msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
+        msg.setAttribute('style', 'color:red;')
+        console.error('Erro ao cadastrar usuário:', error);
+});
+
     });
 });
