@@ -3,10 +3,13 @@ const app = express();
 const path = require('path');
 const fs = require('fs')
 const User = require('./models/User'); // Certifique-se de que o caminho para o arquivo User.js está correto
+const { where } = require('sequelize');
+const cookieParser = require('cookie-parser');
 const PORT = 5500;
 
 app.use(express.json());
 app.use(express.static(__dirname));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     try {
@@ -48,6 +51,34 @@ app.get("/login", (req, res) => {
     res.sendFile(filePath);
 });
 
+app.post("/login", async (req, res) => {
+    try {
+      const { emailCad, passCad } = req.body;
+  
+      // Verifique se o usuário existe no banco de dados
+      const user = await User.findOne({ where: { emailCad: emailCad} });
+  
+      if (!user) {
+        return res.status(401).json({ message: "Usuário não encontrado" });
+      }
+  
+      // Verifique se a senha está correta
+      if (passCad !== user.passCad) {
+        return res.status(401).json({ message: "Senha incorreta" });
+      }
+
+      res.cookie('userCad', user.userCad);
+  
+      // Gere um token de autenticação (exemplo simples)
+      const token = Math.random().toString(16).substring(2);
+  
+      res.json({ message: "Login bem-sucedido", token: token });
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
+    }
+  });
+  
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
     console.log('Servido de Cadastro rodando na Porta 8080 http://localhost:8080/html/cadastro.html')

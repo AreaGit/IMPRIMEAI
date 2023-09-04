@@ -57,26 +57,31 @@ function updateCartUI() {
   totalItensSpan.textContent = cart.length;
 }
 
-let userLogado = JSON.parse(localStorage.getItem('userLogado'))
-let logado = document.getElementById('logado')
+const logado = document.getElementById('logado')
+const conviteCad = document.getElementById('conviteCad')
+const sairBtn = document.getElementById('sairBtn')
 
-logado.innerHTML = `Olá ${userLogado.usuario}`
-
-let sairBtn = document.getElementById('sairBtn')
-sairBtn.setAttribute('style', 'display:block')
-
-
-let conviteCad = document.getElementById('conviteCad')
-conviteCad.setAttribute('style', 'display:none  ')
-/*if(localStorage.getItem('token') == null) {
-  alert('Você precisa estar logado para acessar a página')
-  window.location.href = '../html/form.html'
-}*/
-
-
-function sair() {
-  localStorage.removeItem('passCad')
-  window.location.href = '../html/form.html'
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+          return cookie.substring(name.length + 1);
+      }
+  }
+  return null;
 }
 
+// Ler o valor do cookie 'userCad'
+const userCad = getCookie('userCad');
+
+// Exibir o valor do 'userCad' na página
+const userCadDisplay = document.getElementById("userCadDisplay");
+if (userCad) {
+  logado.innerHTML = `Olá ${userCad}`;
+  conviteCad.setAttribute('style', 'display:none')
+  sairBtn.setAttribute('style', 'display:block')
+} else {
+  
+}
 //CAIXA DE PESQUISA 
