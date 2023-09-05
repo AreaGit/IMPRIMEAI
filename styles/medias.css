@@ -1,7 +1,7 @@
 /*DIVERSAS TELAS*/
 
 
-@media screen and (min-width: 320px) and (max-width: 425px) {
+/*@media screen and (min-width: 320px) and (max-width: 425px) {
   :root {
       --branco:#ffff;
       --coral:#F37160;
@@ -156,6 +156,261 @@
       color: white;
     }
   .slider-container {display: none;}
+}*/
+@media screen and (max-width: 480px) {
+    header>p {
+      font-size: 12px;
+      position: relative;
+      top: -3px;
+      left: -1px;
+    }
+    .menu2 {
+      width: 37%;
+    }
+    .menu2 > a {
+      font-size: 12px;
+      padding: 5px;
+      position: relative;
+      top: -35px;
+      left: -10px;
+    }
+    .icons-header {
+      position: relative;
+      left: 55px;
+      width: max-content;
+    }
+    .logo-imprimeai {
+      position: relative;
+      top: -50px;
+      left: -2px;
+    }
+    .input-pesq {
+      position: relative;
+      top: 10px;
+      left: 0%;
+  }
+  .search__input {
+      font-family: inherit;
+      font-size: inherit;
+      background-color: #f4f2f2;
+      border: none;
+      color: #646464;
+      padding: 1rem 2rem;
+      border-radius: 30px;
+      width: 318px;
+      transition: all ease-in-out .5s;
+      margin-right: -2rem;
+    }
+    #conviteCad {
+      position: relative;
+      top: -10px;
+      left: -50%;
+    }
+    #logado {
+      position: relative;
+      top: -70px;
+      left: -0%;
+    }
+    #sairBtn {
+      position: relative;
+      top: -93px;
+      left: 23%;
+    }
+    .menu > ul > li > a {
+      padding: 0px;
+      font-size: 12px;
+    }
+    .slider-container {
+      display: none;
+    }
+    .images-sec {
+      margin-top: 100px;
+      height: 700px;
+    }
+    .images-sec > h2 {
+      width: fit-content;
+      position: relative;
+      top: 50px;
+      left: 19%;
+      
+    }
+    .content {
+      position: relative;
+      top: 80px;
+      left: -1%;
+      height: 650px;
+      
+    }
+    .content > h2 {
+      width: fit-content;
+    }
+    .content > .image1 {
+      border: 1px solid black;
+      width: 300px;
+      height: 200px;
+      margin: auto;
+    }
+    .content > .image2 {
+      border: 1px solid black;
+      width: 300px;
+      height: 200px;
+      margin: auto;
+      position: relative;
+      top: 10px;
+      left: 0%;
+    }
+    .content > .image3 {
+      border: 1px solid black;
+      width: 300px;
+      height: 200px;
+      margin: auto;
+      position: relative;
+      top: 25px;
+      left: 0%;
+    }
+    #voltar_ao_topo {
+      position: fixed;
+      bottom: 50px;
+      right: 40px;
+      cursor: pointer;
+      background-color: #F37160;
+      border-radius: 5px;
+      color: white;
+    }
+    /*.produtos {
+      position: relative;
+      left: -50px;
+    }*/
+}
+@media screen and (min-width:481px) and (max-width:767px) {
+  header>p {
+    font-size: 12px;
+    position: relative;
+    top: -3px;
+    left: -1px;
+  }
+  .menu2 {
+    width: 37%;
+  }
+  .menu2 > a {
+    font-size: 12px;
+    padding: 5px;
+    position: relative;
+    top: -35px;
+    left: -10px;
+  }
+  .icons-header {
+    position: relative;
+    left: 55px;
+    width: max-content;
+  }
+  .logo-imprimeai {
+    position: relative;
+    top: -50px;
+    left: -2px;
+  }
+  .input-pesq {
+    position: relative;
+    top: 10px;
+    left: 0%;
+}
+.search__input {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #f4f2f2;
+    border: none;
+    color: #646464;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    width: 318px;
+    transition: all ease-in-out .5s;
+    margin-right: -2rem;
+  }
+  #conviteCad {
+    position: relative;
+    top: -10px;
+    left: -50%;
+  }
+  #logado {
+    position: relative;
+    top: -30px;
+    left: 70%;
+  }
+  #sairBtn {
+    position: relative;
+    top: -53px;
+    left: 86%;
+  }
+  .menu > ul > li > a {
+    padding: 0px;
+    font-size: 12px;
+  }
+  .slider-container {
+    display: none;
+  }
+  .images-sec {
+    margin-top: 100px;
+    height: 700px;
+  }
+  .images-sec > h2 {
+    width: fit-content;
+    position: relative;
+    top: 50px;
+    left: 19%;
+    
+  }
+  .content {
+    position: relative;
+    top: 80px;
+    left: -1%;
+    height: 650px;
+    
+  }
+  .content > h2 {
+    width: fit-content;
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 10px;
+    left: 0%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 25px;
+    left: 0%;
+  }
+  #voltar_ao_topo {
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    cursor: pointer;
+    background-color: #F37160;
+    border-radius: 5px;
+    color: white;
+  }
+}
+@media screen and (min-width:580px) and (max-width:767px) {
+  .produtos {
+    position: relative;
+    left: -10%;
+  }
+  .search__input {
+    width: 400px;
+  }
 }
 @media screen and (min-width: 768px) and (max-width: 869px) {
   :root {
@@ -326,7 +581,327 @@
       color: white;
     }
 }
-@media screen and (min-width: 1024px) and (max-width: 1159px) {
+@media screen and (min-width:768px) and (max-width:1023px) {
+  #carrinho_compras {
+    position: absolute;
+    top: 10%;
+    left: 73%;
+  }
+  #totalItens {
+    position: absolute;
+    top: 8%;
+    left: 75%;
+  }
+  #logado {
+    position: relative;
+    top: -30px;
+    left: 87%;
+  }
+  #sairBtn {
+    position: relative;
+    top: -20px;
+    left: 90%;
+  }
+}
+@media screen and (min-width:870px) and (max-width:1023px) {
+  header > p {
+    position: relative;
+    top: 30px;
+    left: 5%;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    width: fit-content;
+}
+#carrinho_compras {
+  position: absolute;
+  top: 10%;
+  left: 73%;
+}
+#totalItens {
+  position: absolute;
+  top: 8%;
+  left: 75%;
+}
+#logado {
+  position: relative;
+  top: -30px;
+  left: 87%;
+}
+#sairBtn {
+  position: relative;
+  top: -20px;
+  left: 90%;
+}
+.menu2 {
+    list-style: none;
+    width: max-content;
+    position: relative;
+    left: 35%;
+}
+.icons-header {
+    position: relative;
+    top: 0px;
+    left: 70%;
+    cursor: pointer;
+    width: fit-content;
+    padding-left: 5px;
+}
+.logo-imprimeai {
+    position: relative;
+    top: 63px;
+    left: 10%;
+}
+.input-pesq {
+    position: relative;
+    top: 10px;
+    left: 35%;
+}
+.search__input {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #f4f2f2;
+    border: none;
+    color: #646464;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    width: 390px;
+    transition: all ease-in-out .5s;
+    margin-right: -2rem;
+  }
+  #carrinho_compras {
+    position: absolute;
+    top: 23%;
+    left: 80%;
+  }
+  #totalItens {
+    position: absolute;
+    top: 21%;
+    left: 82%;
+  }
+  .par {
+    display: block;
+    position: relative;
+    left: 85%;
+  }
+  .menu  {
+    font-size: 13px;
+  }
+  .slider-container {
+    width: 100%;
+    position: relative;
+    left: 0%;
+}
+  .produtos {
+    position: relative;
+    left: -10%;
+    height: 850px;
+  }
+  .produto {
+    position: relative;
+    left: 15%;
+  }
+  .images-sec {
+    margin-top: 100px;
+    height: 700px;
+  }
+  .images-sec > h2 {
+    width: fit-content;
+    position: relative;
+    top: 50px;
+    left: 19%;
+    
+  }
+  .content {
+    position: relative;
+    top: 80px;
+    left: -20%;
+    height: 650px;
+    
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width: 400px;
+    height: 496px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width: 400px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -496px;
+    left: 40%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width: 400px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -480px;
+    left: 40%;
+  }
+  #voltar_ao_topo {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    cursor: pointer;
+    background-color: #F37160;
+    border-radius: 5px;
+    color: white;
+  }
+}
+@media screen and (min-width:1024px) and (max-width:1279px) {
+  header > p {
+    position: relative;
+    top: 30px;
+    left: 5%;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    width: fit-content;
+}
+#carrinho_compras {
+  position: absolute;
+  top: 10%;
+  left: 73%;
+}
+#totalItens {
+  position: absolute;
+  top: 8%;
+  left: 75%;
+}
+#logado {
+  position: relative;
+  top: -30px;
+  left: 87%;
+}
+#sairBtn {
+  position: relative;
+  top: -20px;
+  left: 90%;
+}
+.menu2 {
+    list-style: none;
+    width: max-content;
+    position: relative;
+    left: 35%;
+}
+.icons-header {
+    position: relative;
+    top: 0px;
+    left: 70%;
+    cursor: pointer;
+    width: fit-content;
+    padding-left: 5px;
+}
+.logo-imprimeai {
+    position: relative;
+    top: 63px;
+    left: 10%;
+}
+.input-pesq {
+    position: relative;
+    top: 10px;
+    left: 35%;
+}
+.search__input {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #f4f2f2;
+    border: none;
+    color: #646464;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    width: 390px;
+    transition: all ease-in-out .5s;
+    margin-right: -2rem;
+  }
+  #carrinho_compras {
+    position: absolute;
+    top: 23%;
+    left: 80%;
+  }
+  #totalItens {
+    position: absolute;
+    top: 21%;
+    left: 82%;
+  }
+  .par {
+    display: block;
+    position: relative;
+    left: 85%;
+  }
+  .menu  {
+    font-size: 13px;
+  }
+  .slider-container {
+    width: 100%;
+    position: relative;
+    left: 0%;
+}
+  .produtos {
+    position: relative;
+    left: -10%;
+    height: 850px;
+  }
+  .produto {
+    position: relative;
+    left: 15%;
+  }
+  .images-sec {
+    margin-top: 100px;
+    height: 700px;
+  }
+  .images-sec > h2 {
+    width: fit-content;
+    position: relative;
+    top: 50px;
+    left: 19%;
+    
+  }
+  .content {
+    position: relative;
+    top: 80px;
+    left: -20%;
+    height: 650px;
+    
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width: 400px;
+    height: 496px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width: 400px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -496px;
+    left: 40%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width: 400px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -480px;
+    left: 40%;
+  }
+  #voltar_ao_topo {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    cursor: pointer;
+    background-color: #F37160;
+    border-radius: 5px;
+    color: white;
+  }
+}
+/*@media screen and (min-width: 1024px) and (max-width: 1159px) {
   :root {
       --branco:#ffff;
       --coral:#F37160;
@@ -493,7 +1068,7 @@
       border-radius: 5px;
       color: white;
     }
-}
+}*/
 @media screen and (min-width: 1160px) and (max-width: 1439px) {
     .icons-header {
       position: relative;

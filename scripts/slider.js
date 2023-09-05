@@ -57,6 +57,8 @@ function updateCartUI() {
   totalItensSpan.textContent = cart.length;
 }
 
+//MOSTRA O NOME  DO USUÁRIO LOGADO A PARTIR DOS COOKIES
+
 const logado = document.getElementById('logado')
 const conviteCad = document.getElementById('conviteCad')
 const sairBtn = document.getElementById('sairBtn')
@@ -84,4 +86,12 @@ if (userCad) {
 } else {
   
 }
+
+//BOTÃO DE LOGOUT
+
+sairBtn.addEventListener("click", function () {
+  // Redirecionar para a rota de logout no servidor
+  window.location.href = "/logout";
+});
+
 //CAIXA DE PESQUISA 

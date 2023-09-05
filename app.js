@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const fs = require('fs')
-const User = require('./models/User'); // Certifique-se de que o caminho para o arquivo User.js está correto
+const User = require('./models/User');
 const { where } = require('sequelize');
 const cookieParser = require('cookie-parser');
 const PORT = 5500;
@@ -79,6 +79,21 @@ app.post("/login", async (req, res) => {
     }
   });
   
+
+  app.get("/logout", (req, res) => {
+    // Verifique se o usuário está autenticado (você pode usar middleware de autenticação aqui)
+    if (!req.cookies.userCad) {
+        // Se o usuário não estiver autenticado, redirecione para a página de login ou onde desejar
+        return res.redirect("/login");
+    }
+
+    // Excluir o cookie "userCad"
+    res.clearCookie("userCad");
+
+    // Redirecionar para a página de login ou para onde desejar
+    res.redirect("/login");
+});
+
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
     console.log('Servido de Cadastro rodando na Porta 8080 http://localhost:8080/html/cadastro.html')

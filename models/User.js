@@ -10,7 +10,7 @@ const  User = db.define('users', {
         primaryKey: true
     },
     userCad: {
-        type : Sequelize.STRING(10),
+        type : Sequelize.STRING(255),
         allowNull: true,
     },
     emailCad: {
