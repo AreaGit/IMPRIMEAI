@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs')
 const axios = require('axios')
 const User = require('./models/User');
+const Produtos = require('./models/Produtos');
+const multer = require('multer');
 const { where } = require('sequelize');
 const cookieParser = require('cookie-parser');
 const PORT = 5500;
@@ -12,6 +14,8 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.static(__dirname));
 app.use(cookieParser());
+const storage = multer.memoryStorage(); // Armazenar imagem em memória
+const upload = multer({ storage: storage });
 
 const geocodeBaseUrl = 'https://nominatim.openstreetmap.org/search';
 
@@ -102,9 +106,38 @@ app.post("/login", async (req, res) => {
     res.redirect("/login");
 });
 
+
+// Rota para servir o formulário de cadastro de produtos
+app.get("/cadastrar-produto", (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'cad-prods.html');
+  res.sendFile(filePath);
+});
+
+// Rota para processar o envio do formulário
+app.post('/cadastrar-produto', upload.single('imagem'), async (req, res) => {
+  try {
+      const { nome, preco, descricao, categoria } = req.body;
+      const imagem = req.file; // O arquivo de imagem é acessado aqui
+
+      // Insira os dados na tabela Produtos
+      const novoProduto = await Produtos.create({
+          nome: nome,
+          preco: preco,
+          descricao: descricao,
+          categoria: categoria,
+          imagem: imagem ? imagem.buffer.toString('base64') : null, // Converta a imagem para base64
+      });
+
+      res.json({ message: 'Produto cadastrado com sucesso', produto: novoProduto });
+  } catch (error) {
+      console.error('Erro ao cadastrar o produto:', error);
+      res.status(500).json({ error: 'Erro ao cadastrar o produto', message: error.message });
+  }
+});
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
     console.log('Servido de Cadastro rodando na Porta 8080 http://localhost:8080/html/cadastro.html')
     console.log('Servido de Login rodando na Porta 8080 http://localhost:8080/html/form.html')
     console.log('Servidor de buscar rodando na Porta 8080 http://localhost:8080/cep.html')
+    console.log('Serivdor de Cadastro de Produtos rodando na Porta 8080 http://localhost:8080/html/cad-prods.html')
 });
