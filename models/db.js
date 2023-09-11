@@ -4,7 +4,6 @@ const sequelize = new Sequelize("listauser", "root", "", {
     host: "localhost",
     dialect: 'mysql'
 })
-
 sequelize.authenticate()
 .then(function () {
     console.log("Conectado ao banco de dados com sucesso!")

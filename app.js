@@ -2,14 +2,18 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const fs = require('fs')
+const axios = require('axios')
 const User = require('./models/User');
 const { where } = require('sequelize');
 const cookieParser = require('cookie-parser');
 const PORT = 5500;
 
+app.use(express.static('public'));
 app.use(express.json());
 app.use(express.static(__dirname));
 app.use(cookieParser());
+
+const geocodeBaseUrl = 'https://nominatim.openstreetmap.org/search';
 
 app.get("/", (req, res) => {
     try {
@@ -19,6 +23,10 @@ app.get("/", (req, res) => {
         console.error("Erro ao ler o arquivo index.html:", err);
         res.status(500).send("Erro interno do servidor");
       }
+});
+
+app.get("/cep", (req, res) => {
+  res.sendFile(__dirname + "/cep.html"); // Verifique o caminho do arquivo
 });
 
 // Adicione uma rota GET para servir a página de cadastro
@@ -98,4 +106,5 @@ app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
     console.log('Servido de Cadastro rodando na Porta 8080 http://localhost:8080/html/cadastro.html')
     console.log('Servido de Login rodando na Porta 8080 http://localhost:8080/html/form.html')
+    console.log('Servidor de buscar rodando na Porta 8080 http://localhost:8080/cep.html')
 });

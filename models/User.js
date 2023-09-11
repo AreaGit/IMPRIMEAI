@@ -23,6 +23,8 @@ const  User = db.define('users', {
     }
 })
 
+
+
 //CRIAR A TABELA
 User.sync()
 

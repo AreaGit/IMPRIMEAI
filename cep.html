@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encontre a Gráfica Mais Próxima</title>
+</head>
+<body>
+  <h1>Encontre a Gráfica Mais Próxima</h1>
+  <label for="cep">Digite o CEP:</label>
+  <input type="text" id="cep" placeholder="Digite o CEP">
+  <button id="buscar">Buscar</button>
+  <div id="resultado"></div>
+
+  <script>
+    document.getElementById('buscar').addEventListener('click', () => {
+      const cep = document.getElementById('cep').value;
+
+      fetch('/encontrar-grafica', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cep }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const resultado = document.getElementById('resultado');
+          if (data.grafica) {
+            resultado.innerHTML = `
+              <h2>Gráfica mais próxima:</h2>
+              <p>Nome: ${data.grafica.nome}</p>
+              <p>Endereço: ${data.grafica.endereco}</p>
+              <p>CEP: ${data.grafica.cep}</p>
+            `;
+          } else {
+            resultado.innerHTML = '<p>Nenhuma gráfica encontrada.</p>';
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          const resultado = document.getElementById('resultado');
+          resultado.innerHTML = '<p>Erro ao buscar gráfica.</p>';
+        });
+    });
+  </script>
+</body>
+</html>

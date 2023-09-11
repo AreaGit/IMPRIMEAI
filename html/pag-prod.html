@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/style.css" media="all">
+<link rel="stylesheet" href="../styles/pag-prods.css">
+<link rel="stylesheet" href="styles/medias.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="mini-banner">
+            <!-- IMAGEM <img src="image.jpg" alt="...">-->
+        </div>
+        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <nav>
+            <ul class='menu2'>
+                <a href="#">Meus Pedidos</a>
+                <a href="#">Central de Ajuda</a>
+            </ul>
+            <div class="icons-header">
+                <img class="icons" src="../images/facebook-icon.png" alt="...">
+                <img class="icons" src="../images/youtube-icon.png" alt="...">
+                <img class="icons" src="../images/instagram-icon.png" alt="...">
+            </div>
+        </nav>
+        <div class="elem1">
+           <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+            <div class="input-pesq">
+                <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
+                <button id="btnPesq" class="search__button">
+            <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+                <g>
+                    <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+                </g>
+            </svg>
+            </div>
+            <div id="logado"></div>
+            <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
+                <span id="carrinho_compras" class="material-icons">shopping_cart</span>
+                <span id="totalItens">0</span>
+
+        </div>
+        <div class="menu">
+            <ul>
+              <li><a href="../index.html">Início</a></li>
+              <li class="dropdown">
+                <a href="#">Produtos ∇</a>
+                <div class="dropdown-content">
+                  <a href="comunicacao-visual.html">Comunicação Visual</a>
+                  <a href="adesivos-etiquetas.html">Adesivos e Etiquetas</a>
+                  <a href="papelaria.html">Papelaria</a>
+                  <a href="brindes.html">Brindes e Promocionais</a>
+                  <a href="cartazes.html">Cartazes</a>
+                  <a href="impressoes.html">Impressões</a>
+                  <a href="#">Orçamentos Especiais</a>
+                </div>
+              </li>
+              <li><a href="#">Sobre Nós</a></li>
+              <li><a href="#">Contato</a></li>
+            </ul>
+          </div>
+    </header>
+    <main>
+        <section class="prod">
+            <div class="image-prod">
+                <img src="../images/NÃO HÁ IMAGEM DO PRODUTO NO MOMENTO!.png" alt="...">
+            </div>
+            <label for="file-upload" class="custom-file-input">
+                Envie seu PDF
+            </label>
+            <input type="file" id="file-upload" style="display: none;" accept="application/pdf" onchange="handleFileSelect(this)">
+            <p class="prg">*Envie sua Arte em formato PDF</p>
+            <div class="text-prod">
+                <h1>TÍTULO DO PRODUTO</h1>
+            </div>
+            <div class="esp-prod">
+                <label for="select-option">Selecione uma opção:</label>
+                <select id="select-option" class="custom-select">
+                    <option value="opcao1">Opção 1</option>
+                    <option value="opcao2">Opção 2</option>
+                    <option value="opcao3">Opção 3</option>
+                </select>
+                <label for="select-option">Selecione uma opção:</label>
+                <select id="select-option" class="custom-select">
+                    <option value="opcao1">Opção 1</option>
+                    <option value="opcao2">Opção 2</option>
+                    <option value="opcao3">Opção 3</option>
+                </select>
+                <label for="select-option">Selecione uma opção:</label>
+                <select id="select-option" class="custom-select">
+                    <option value="opcao1">Opção 1</option>
+                    <option value="opcao2">Opção 2</option>
+                    <option value="opcao3">Opção 3</option>
+                </select>
+                <label for="select-option">Selecione uma opção:</label>
+                <select id="select-option" class="custom-select">
+                    <option value="opcao1">Opção 1</option>
+                    <option value="opcao2">Opção 2</option>
+                    <option value="opcao3">Opção 3</option>
+                </select>
+                <label for="select-option">Selecione uma opção:</label>
+                <select id="select-option" class="custom-select">
+                    <option value="opcao1">Opção 1</option>
+                    <option value="opcao2">Opção 2</option>
+                    <option value="opcao3">Opção 3</option>
+                </select>
+            </div>
+            <div class="quant">
+                <label>Escolha a quantidade:</label>
+                <div class="radio-option">
+                    <input type="radio" id="opcao1" name="quantidade" value="1" checked>
+                    <label for="opcao1">1 un</label>
+                    <span>R$ 30,97</span>
+                    <span>(R$ 30,97/un)</span>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="opcao2" name="quantidade" value="5">
+                    <label for="opcao2">5 un</label>
+                    <span>R$ 129,97</span>
+                    <span>(R$ 26,00/un)</span>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="opcao3" name="quantidade" value="10">
+                    <label for="opcao3">10 un</label>
+                    <span>R$ 237,97</span>
+                    <span>(R$ 23,80/un)</span>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="opcao4" name="quantidade" value="25">
+                    <label for="opcao4">25 un</label>
+                    <span>R$ 561,97</span>
+                    <span>(R$ 22,48/un)</span>
+                </div>
+            </div>
+            <div class="total">
+                <label for="inp-num">Quantidade</label>
+                <input type="number" name="inp-num" id="inp-num" min="1" max="99" required>
+                <p>Total</p>
+                <span>R$ 00,00</span>
+                <button class="addCart">Adicionar ao Carrinho</button>
+                <a href="#">Comprar</a>
+            </div>
+        </section>
+        <section class="desc">
+            <h2>Descrição</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus obcaecati voluptatum maiores officia nobis corrupti eius repudiandae, sint animi rerum libero facilis itaque aspernatur delectus mollitia consequatur accusantium, illum fugiat.</p>
+        </section>
+    </main>
+    <span id="voltar_ao_topo" class="material-icons">expand_less</span>
+    <script src="../scripts/slider.js"></script>
+</body>
+</html>

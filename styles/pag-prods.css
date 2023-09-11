@@ -29,3 +29,183 @@
     overflow: hidden;
     height: 60%;
 }
+
+/*PÁGINA DE COMPRA*/
+
+.image-prod {
+    box-shadow: -1px -1px 8px black;
+    border: 1px solid rgba(0, 0, 0, 0.281);
+    border-radius: 5px;
+    width: 380px;
+    height: 380px;
+    position: relative;
+    left: 20%;
+    overflow: hidden;
+}
+.text-prod {
+    position: relative;
+    top: -371px;
+    left: 52%;
+    width: fit-content;
+}
+.text-prod > h1 {
+    font-size: 30px;
+    font-weight: bold;
+    width: fit-content;
+}
+.esp-prod {
+    width: 400px;
+    height: 900px;
+    position: relative;
+    top: -280px;
+    left: 50%;
+}
+.quant {
+    width: 380px;
+    height: 380px;
+    position: relative;
+    top: -1160px;
+    left: 75%;
+}
+.total {
+    width: 400px;
+    height: 200px;
+    position: relative;
+    top: -1000px;
+    left: 75%;
+}
+.desc {
+    width: fit-content;
+    position: absolute;
+    top: 120%;
+    left: 3%;
+}
+.desc > h2 {
+    text-align: center;
+}
+.custom-file-input {
+    position: relative;
+    top: 10px;
+    left: 25%;
+    display: inline-block;
+    padding: 10px 20px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Oculte o elemento de arquivo real (deixe apenas o botão visível) */
+.custom-file-input input[type="file"] {
+    display: none;
+}
+.prg {
+    width: fit-content;
+    font-size: 12px;
+    font-weight: bold;
+    position: relative;
+    top: 12px;
+    left: 24%;
+}
+/* Estilos para a lista suspensa */
+.custom-select {
+    margin: 20px 0px 50px 0px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+/* Estilize o rótulo */
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Estilize a caixa de seleção quando houver foco (quando o usuário clica nela) */
+.custom-select:focus {
+    border-color: #F37160;
+    outline: none;
+    box-shadow: 0 0 5px #F37160;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"] + label {
+    margin-left: 10px;
+    padding: 8px 15px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+input[type="radio"]:checked + label {
+    background-color: #F37160;
+    color: #fff;
+}
+
+/* Estilos para os rótulos de preço */
+span {
+    font-size: 14px;
+    margin-left: 10px;
+}
+#inp-num {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    margin-left: 5px;
+}
+.total>label {
+    font-weight: lighter;
+}
+.total > p {
+    width: fit-content;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+    top: -60px;
+    left: 40%;
+}
+.total > span {
+    position: relative;
+    top: -50px;
+    left: 30%;
+    font-size: 25px;
+    color: #F37160;
+    font-weight: bold;
+}
+.addCart {
+    padding: 18px 28px 18px 28px;
+    background-color: white;
+    border: 1px solid #F37160;
+    color: #F37160;
+    font-weight: bold;
+    position: relative;
+    top: 20px;
+    left: -130px;
+    cursor: pointer;
+}
+.total > a {
+    text-decoration: none;
+    background-color: #8EC8AA;
+    color: green;
+    padding: 14px 28px 14px 28px;
+    position: relative;
+    top: -20px;
+    left: 50%;
+}
