@@ -3,150 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Produtos</title>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Open Sans';
-        }
-         .logo {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .logo img {
-            max-width: 200px;
+<link rel="stylesheet" href="../styles/style.css" media="all">
+<style>
+     form {
+            position: relative;
+            top: 50px;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
         }
 
         h1 {
             text-align: center;
-            margin-top: 20px;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 400px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-top: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
 
         input[type="text"],
         input[type="number"],
+        input[type="file"],
         select {
-            width: 90%;
+            width: 100%;
             padding: 10px;
-            margin-top: 5px;
+            margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
 
-        input[type="file"] {
-            width: 100%;
-            margin-top: 5px;
+        select {
+            appearance: none;
         }
 
-        button[type="submit"] {
-            background-color: #007bff;
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #EF4126;
             color: #fff;
             border: none;
-            padding: 10px 20px;
+            border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px;
-            border-radius: 4px;
         }
 
-        button[type="submit"]:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: #F37160;
         }
 
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
         }
-    </style>
+
+        .logo img {
+            max-width: 100px;
+        }
+</style>
 </head>
 <body>
-    <div class="logo">
-        <img src="../images/logo-imprimeai2.PNG" alt="...">
-    </div>
-    <h1>Cadastro de Produtos</h1>
+    <!--FORMULÁRIO PARA CADASTRO DE PRODUTOS-->
     <form action="/cadastrar-produto" method="POST" enctype="multipart/form-data">
-        <label for="nome">Nome do Produto: </label>
-        <input type="text" name="nome" id="nome" required>
+        <div class="logo">
+            <img src="../images/logo-imprimeai2.PNG" alt="...">
+        </div>
+
+        <h1>Cadastro de Produtos</h1>
+        <label for="nomeProd">Nome do Produto</label>
+        <input type="text" name="nomeProd" id="nomeProd" required>
         <br>
-        <label for="preco">Preço</label>
-        <input type="number" name="preco" id="preco" step="0.01" required>
+        <label for="descProd">Descrição do Produto</label>
+        <input type="text" name="descProd" id="descProd" required>
         <br>
-        <label for="imagem">Imagem do Produto</label>
-        <input type="file" name="imagem" id="imagem">
+        <label for="valorProd">Valor do Produto</label>
+        <input type="number" name="valorProd" id="valorProd" required step="0.1">
         <br>
-        <label for="descricao">Descrição do Produto</label>
-        <input type="text" name="descricao" id="descricao">
+        <label for="imgProd">Imagem do Produto</label>
+        <input type="file" name="imgProd" id="imgProd" required>
         <br>
-        <label for="categoria">Categoria do Produto</label>
-        <select name="categoria" id="categoria">
-            <option value="" disabled selected>Selecione a Categoria</option>
-            <option value="Comunicação Visual">Comunicação Visual</option>
-            <option value="Adesivos e Etiquetas">Adesivos e Etiquetas</option>
-            <option value="Papelaria">Papelaria</option>
-            <option value="Brindes">Brindes</option>
-            <option value="Cartazes">Cartazes</option>
-        </select>
-        <button type="submit">Cadastrar Produto</button>
+        <label for="categoriaProd">Categoria do Produto</label>
+        <input type="text" name="categoriaProd" id="categoriaProd" required>
+        <br>
+        <button type="submit" id="btnCadProd">Cadastrar Produto</button>
     </form>
     <script>
-        // Seu código JavaScript para enviar o formulário permanece o mesmo
-        // ...
+        document.addEventListener('DOMContentLoaded', () => {
+            const nomeProd = document.getElementById('nomeProd');
+            const descProd = document.getElementById('descProd');
+            const valorProd = document.getElementById('valorProd');
+            const imgProd = document.getElementById('imgProd');
+            const categoriaProd = document.getElementById('categoriaProd');
+            const btnCadProd = document.getElementById('btnCadProd');
 
-        
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
+            btnCadProd.addEventListener('click', cadastrarProduto);
 
-        form.addEventListener("submit", function (event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+            function cadastrarProduto(event) {
+                event.preventDefault(); // Evitar o comportamento padrão do formulário (recarregar a página)
 
-            // Coleta os dados do formulário
-            const nome = document.querySelector('input[name="nome"]').value;
-            const preco = document.querySelector('input[name="preco"]').value;
-            const imagem = document.querySelector('input[name="imagem"]').files[0];
-            const descricao = document.querySelector('input[name="descricao"]').value;
-            const categoria = document.querySelector('select[name="categoria"]').value;
+                const produto = {
+                    nomeProd: nomeProd.value,
+                    descProd: descProd.value,
+                    valorProd: parseFloat(valorProd.value), // Converte para número decimal
+                    categoriaProd: categoriaProd.value,
+                    imgProd: imgProd.files[0], // O arquivo de imagem selecionado
+                };
 
-            // Cria um objeto FormData para enviar dados de formulário, incluindo arquivos
-            const formData = new FormData();
-            formData.append("nome", nome);
-            formData.append("preco", preco);
-            formData.append("imagem", imagem);
-            formData.append("descricao", descricao);
-            formData.append("categoria", categoria);
+                const formData = new FormData();
+                formData.append('nomeProd', produto.nomeProd);
+                formData.append('descProd', produto.descProd);
+                formData.append('valorProd', produto.valorProd);
+                formData.append('categoriaProd', produto.categoriaProd);
+                formData.append('imgProd', produto.imgProd);
 
-            // Envia uma solicitação POST para o servidor
-            fetch(form.action, {
-                method: "POST",
-                body: formData,
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data); // Exibe a resposta do servidor (por exemplo, "Produto cadastrado com sucesso")
-                // Redirecione ou faça algo com base na resposta, se necessário
-            })
-            .catch((error) => {
-                console.error("Erro ao cadastrar o produto:", error);
-                // Lida com erros de envio, se necessário
-            });
+                fetch('/cadastrar-produto', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Lidar com a resposta do servidor aqui, como exibir uma mensagem de sucesso.
+                        console.log(data);
+                        // Limpar os campos do formulário, se necessário
+                        nomeProd.value = '';
+                        descProd.value = '';
+                        valorProd.value = '';
+                        imgProd.value = '';
+                        categoriaProd.value = '';
+                    })
+                    .catch((error) => console.error(error));
+            }
         });
-    });
     </script>
 </body>
 </html>

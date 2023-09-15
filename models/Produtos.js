@@ -1,36 +1,27 @@
-const Sequelize = require('sequelize')
-const db = require('./db')
+const Sequelize = require('sequelize');
+const db = require('./db'); // Certifique-se de que o caminho para o arquivo de configuração do banco de dados esteja correto.
 
 const Produtos = db.define('produtos', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    nome: {
-        type: Sequelize.STRING(255),
-        allowNull: false // Corrigido para allowNull em vez de allownull
-    },
-    preço: {
-        type: Sequelize.DECIMAL(10, 2),
-        allowNull: true // Corrigido para allowNull em vez de allownull
-    },
-    categoria: {
-        type: Sequelize.ENUM("Comunicação Visual", "Adesivos e Etiquetas", "Papelaria", "Brindes", "Cartazes"),
-        allowNull: true // Corrigido para allowNull em vez de allownull
-    },
-    descrição: {
-        type: Sequelize.TEXT(),
-        allowNull: true // Corrigido para allowNull em vez de allownull
-    },
-    imagem: {
-        type: Sequelize.TEXT(),
-        allowNull: true // Corrigido para allowNull em vez de allownull
-    }
-})
+  nomeProd: {
+    type: Sequelize.STRING(255),
+    allowNull: false, // Não permitir valores nulos
+  },
+  descProd: {
+    type: Sequelize.TEXT, // Use TEXT para descrições mais longas
+    allowNull: false,
+  },
+  valorProd: {
+    type: Sequelize.FLOAT, // Use FLOAT para valores decimais
+    allowNull: false,
+  },
+  categProd: {
+    type: Sequelize.STRING, // Use STRING para categorias
+    allowNull: false,
+  },
+  imgProd: {
+    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    allowNull: true,
+  },
+});
 
-// CRIAR A TABELA
-Produtos.sync();
-
-// Exportar o modelo Produtos
 module.exports = Produtos;
