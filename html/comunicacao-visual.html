@@ -68,7 +68,7 @@
     </header>
     <main>
         <h2>Comunicação Visual</h2>
-        <section class="produtos">
+        <!--<section class="produtos">
             <div class="produto">
                 <div class="imagem">
                     <img src="image.jpg" alt="...">
@@ -110,10 +110,45 @@
                 </div>
                 <h3>TITLE PROD</h3>
                 <p>Description</p>
-            </div>
+            </div>-->
         </section>
+        <div class="product-cards">
+
+              </div>
     </main>
     <span id="voltar_ao_topo" class="material-icons">expand_less</span>
     <script src="../scripts/slider.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+  // Realiza uma solicitação AJAX para obter os produtos da categoria "Comunicação Visual"
+  fetch('/api/produtos/comunicacao-visual')
+    .then((response) => response.json())
+    .then((data) => {
+      // Obtém a div onde os cards de produtos serão inseridos
+      const productContainer = document.querySelector('.product-cards');
+
+      // Loop através dos produtos e gere os cards
+      data.produtos.forEach((produto) => {
+        const productCard = document.createElement('div');
+        productCard.classList.add('product-card');
+
+        // Certifique-se de que produto.valorProd seja tratado como um número antes de usar toFixed
+        const valorProd = parseFloat(produto.valorProd);
+        
+        // Preenche as informações do produto no card
+        productCard.innerHTML = `
+            <img src="${produto.imgProd}" alt="">
+            <h2>${produto.nomeProd}</h2>
+            <p>${produto.descProd}</p>
+            <p>Valor: R$ ${valorProd.toFixed(2)}</p>
+        `;
+
+        // Adiciona o card de produto à div de contêiner
+        productContainer.appendChild(productCard);
+      });
+    })
+    .catch((error) => console.error(error));
+});
+    </script>
 </body>
 </html>

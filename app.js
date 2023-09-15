@@ -7,6 +7,11 @@ const User = require('./models/User');
 const Produtos = require('./models/Produtos');
 const multer = require('multer');
 const { where } = require('sequelize');
+const ejs = require('ejs');
+
+// Configurar o mecanismo de template EJS
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 const cookieParser = require('cookie-parser');
 const PORT = 5500;
 
@@ -127,12 +132,79 @@ app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
       imgProd: imgProd ? imgProd.buffer : null, // Armazena a imagem como buffer
     });
 
-    res.json({ message: 'Produto cadastrado com sucesso', produto: novoProduto });
-    console.log(req.body);
+    const categoria = categoriaProd.toLowerCase().replace(/ /g, '-'); // Transforma a categoria em formato de URL
+    res.json({
+      message: 'Produto cadastrado com sucesso',
+      produto: novoProduto,
+      categoria: categoria, // Envie a categoria de volta como parte da resposta
+    });
   } catch (error) {
     console.error('Erro ao cadastrar o produto:', error);
     res.status(500).json({ error: 'Erro ao cadastrar o produto', message: error.message });
   }
+});
+
+//ROTAS DAS MINHAS PÁGINAS DE PRODUTOS
+
+app.get('/comunicação-visual', async (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'comunicacao-visual.html');
+  res.sendFile(filePath);
+
+  try {
+    // Consulta o banco de dados para obter os produtos de Comunicação Visual
+    const produtosComunicacaoVisual = await Produtos.findAll({
+      where: {
+        categProd: 'Comunicação Visual',
+      },
+    });
+
+    // Renderiza a página HTML com os produtos em cards
+    res.render('comunicacao-visual', {
+      produtos: produtosComunicacaoVisual,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
+});
+
+app.get('/api/produtos/comunicacao-visual', async (req, res) => {
+  try {
+    // Consulta o banco de dados para obter os produtos de Comunicação Visual
+    const produtosComunicacaoVisual = await Produtos.findAll({
+      where: {
+        categProd: 'Comunicação Visual',
+      },
+    });
+
+    // Envia os produtos como resposta JSON
+    res.json({ produtos: produtosComunicacaoVisual });
+  } catch (error) {
+    console.error('Erro ao buscar produtos de Comunicação Visual:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
+});
+
+
+
+app.get('/adesivos-etiquetas', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'adesivos-etiquetas.html');
+  res.sendFile(filePath);
+});
+
+app.get('/brindes', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'brindes.html');
+  res.sendFile(filePath);
+});
+
+app.get('/cartazes', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'cartazes.html');
+  res.sendFile(filePath);
+});
+
+app.get('/papelaria', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'papelaria.html');
+  res.sendFile(filePath);
 });
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
