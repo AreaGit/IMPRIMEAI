@@ -29,6 +29,37 @@
     overflow: hidden;
     height: 60%;
 }
+.product-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Três colunas com tamanhos iguais */
+    gap: 20px; /* Espaçamento entre os elementos */
+  }
+  
+  .product-card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .product-card img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .product-card h2 {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  
+  .product-card p {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  .product-card p:last-child {
+    font-weight: bold;
+  }
+  
 
 /*PÁGINA DE COMPRA*/
 
