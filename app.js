@@ -13,7 +13,7 @@ const ejs = require('ejs');
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 const cookieParser = require('cookie-parser');
-const PORT = 5500;
+const PORT = 8080;
 
 app.use(express.static('public'));
 app.use(express.json());
@@ -136,7 +136,7 @@ app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
     res.json({
       message: 'Produto cadastrado com sucesso',
       produto: novoProduto,
-      categoria: categoria, // Envie a categoria de volta como parte da resposta
+      categoria: categoria,// Envie a categoria de volta como parte da resposta
     });
   } catch (error) {
     console.error('Erro ao cadastrar o produto:', error);
@@ -185,6 +185,36 @@ app.get('/api/produtos/comunicacao-visual', async (req, res) => {
   }
 });
 
+app.get('/imagens/:id', async (req, res) => {
+  try {
+    const idDoProduto = req.params.id;
+
+    // Consulta o banco de dados para obter a imagem do produto pelo ID
+    const produto = await Produtos.findByPk(idDoProduto);
+
+    if (!produto || !produto.imgProd) {
+      // Se o produto não for encontrado ou não houver imagem, envie uma resposta de erro 404
+      return res.status(404).send('Imagem não encontrada');
+    }
+
+    const imgBuffer = produto.imgProd;
+
+    // Detecta a extensão da imagem com base no tipo de arquivo
+    let extensao = 'jpg'; // Default para JPEG
+    if (imgBuffer[0] === 0x89 && imgBuffer[1] === 0x50 && imgBuffer[2] === 0x4E && imgBuffer[3] === 0x47) {
+      extensao = 'png'; // Se os primeiros bytes correspondem a PNG, use PNG
+    }
+
+    // Define o cabeçalho da resposta com base na extensão
+    res.setHeader('Content-Type', `image/${extensao}`);
+
+    // Envie a imagem como resposta
+    res.end(imgBuffer);
+  } catch (error) {
+    console.error('Erro ao buscar imagem do produto:', error);
+    res.status(500).send('Erro interno do servidor');
+  }
+});
 
 
 app.get('/adesivos-etiquetas', (req, res) => {
@@ -208,8 +238,8 @@ app.get('/papelaria', (req, res) => {
 });
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
-    console.log('Servido de Cadastro rodando na Porta 8080 http://localhost:8080/html/cadastro.html')
+    /*console.log('Servido de Cadastro rodando na Porta 8080 http://localhost:8080/html/cadastro.html')
     console.log('Servido de Login rodando na Porta 8080 http://localhost:8080/html/form.html')
     console.log('Servidor de buscar rodando na Porta 8080 http://localhost:8080/cep.html')
-    console.log('Serivdor de Cadastro de Produtos rodando na Porta 8080 http://localhost:8080/html/cad-prods.html')
+    console.log('Serivdor de Cadastro de Produtos rodando na Porta 8080 http://localhost:8080/html/cad-prods.html')*/
 });

@@ -20,12 +20,11 @@ const Produtos = db.define('produtos', {
   },
   imgProd: {
     type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
-    allowNull: true,
+    allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
 });
 
-Produtos.sync()
-
-//Produtos.sync({ force: true })
+Produtos.sync() // Use isso para criar ou atualizar a tabela
+// Produtos.sync({ force: true }) // Use isso para recriar a tabela (cuidado, dados existentes serão apagados)
 
 module.exports = Produtos;
