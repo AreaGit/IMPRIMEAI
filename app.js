@@ -337,9 +337,44 @@ app.get('/api/produtos/cartazes', async (req, res) => {
   }
 });
 
-app.get('/papelaria', (req, res) => {
+app.get('/papelaria', async(req, res) => {
   const filePath = path.join(__dirname, 'html', 'papelaria.html');
   res.sendFile(filePath);
+
+  try {
+    // Consulta o banco de dados para obter os produtos de Catazes
+    const produtosPapelaria = await Produtos.findAll({
+      where: {
+        categProd: 'Papelaria',
+      },
+    });
+
+    // Renderiza a página HTML com os produtos em cards
+    res.render('papelaria', {
+      produtos: produtosPapelaria,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
+
+});
+
+app.get('/api/produtos/papelaria', async (req, res) => {
+  try {
+    // Consulta o banco de dados para obter os produtos de Cartazes
+    const produtosPapelaria = await Produtos.findAll({
+      where: {
+        categProd: 'Papelaria',
+      },
+    });
+
+    // Envia os produtos como resposta JSON
+    res.json({ produtos: produtosPapelaria });
+  } catch (error) {
+    console.error('Erro ao buscar produtos de Papelaria:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
 });
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
