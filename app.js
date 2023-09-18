@@ -297,9 +297,44 @@ app.get('/api/produtos/brindes', async (req, res) => {
   }
 });
 
-app.get('/cartazes', (req, res) => {
+app.get('/cartazes', async(req, res) => {
   const filePath = path.join(__dirname, 'html', 'cartazes.html');
   res.sendFile(filePath);
+
+  try {
+    // Consulta o banco de dados para obter os produtos de Catazes
+    const produtosCartazes = await Produtos.findAll({
+      where: {
+        categProd: 'Cartazes',
+      },
+    });
+
+    // Renderiza a página HTML com os produtos em cards
+    res.render('cartazes', {
+      produtos: produtosCartazes,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
+
+});
+
+app.get('/api/produtos/cartazes', async (req, res) => {
+  try {
+    // Consulta o banco de dados para obter os produtos de Cartazes
+    const produtosCartazes = await Produtos.findAll({
+      where: {
+        categProd: 'Cartazes',
+      },
+    });
+
+    // Envia os produtos como resposta JSON
+    res.json({ produtos: produtosCartazes });
+  } catch (error) {
+    console.error('Erro ao buscar produtos de Cartazes:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
 });
 
 app.get('/papelaria', (req, res) => {
