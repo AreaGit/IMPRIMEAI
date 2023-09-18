@@ -24,4 +24,8 @@ const Produtos = db.define('produtos', {
   },
 });
 
+Produtos.sync()
+
+//Produtos.sync({ force: true })
+
 module.exports = Produtos;

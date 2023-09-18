@@ -37,6 +37,6 @@ const Grafica = db.define('graficas', {
 
 // CRIAR A TABELA
 Grafica.sync();
-
+//Grafica.sync({ force: true })
 // Exportar o modelo Grafica para uso em outros lugares
 module.exports = Grafica;
