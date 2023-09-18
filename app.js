@@ -185,6 +185,8 @@ app.get('/api/produtos/comunicacao-visual', async (req, res) => {
   }
 });
 
+//ROTA PARA IMAGENS DOS PRODUTOS
+
 app.get('/imagens/:id', async (req, res) => {
   try {
     const idDoProduto = req.params.id;
@@ -217,9 +219,43 @@ app.get('/imagens/:id', async (req, res) => {
 });
 
 
-app.get('/adesivos-etiquetas', (req, res) => {
+app.get('/adesivos-etiquetas', async (req, res) => {
   const filePath = path.join(__dirname, 'html', 'adesivos-etiquetas.html');
   res.sendFile(filePath);
+
+  try {
+    // Consulta o banco de dados para obter os produtos de Adesivos e Etiquetas
+    const produtosAdesivosEtiquetas = await Produtos.findAll({
+      where: {
+        categProd: 'Adesivos e Etiquetas',
+      },
+    });
+
+    // Renderiza a página HTML com os produtos em cards
+    res.render('adesivos-etiquetas', {
+      produtos: produtosAdesivosEtiquetas,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
+});
+
+app.get('/api/produtos/adesivos-etiquetas', async (req, res) => {
+  try {
+    // Consulta o banco de dados para obter os produtos de Comunicação Visual
+    const produtosAdesivosEtiquetas = await Produtos.findAll({
+      where: {
+        categProd: 'Adesivos e Etiquetas',
+      },
+    });
+
+    // Envia os produtos como resposta JSON
+    res.json({ produtos: produtosAdesivosEtiquetas });
+  } catch (error) {
+    console.error('Erro ao buscar produtos de Comunicação Visual:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
 });
 
 app.get('/brindes', (req, res) => {
