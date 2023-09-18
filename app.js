@@ -243,7 +243,7 @@ app.get('/adesivos-etiquetas', async (req, res) => {
 
 app.get('/api/produtos/adesivos-etiquetas', async (req, res) => {
   try {
-    // Consulta o banco de dados para obter os produtos de Comunicação Visual
+    // Consulta o banco de dados para obter os produtos de Adesivos e Etiquetas
     const produtosAdesivosEtiquetas = await Produtos.findAll({
       where: {
         categProd: 'Adesivos e Etiquetas',
@@ -253,14 +253,48 @@ app.get('/api/produtos/adesivos-etiquetas', async (req, res) => {
     // Envia os produtos como resposta JSON
     res.json({ produtos: produtosAdesivosEtiquetas });
   } catch (error) {
-    console.error('Erro ao buscar produtos de Comunicação Visual:', error);
+    console.error('Erro ao buscar produtos de Adesivos e Etiquetas:', error);
     res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
   }
 });
 
-app.get('/brindes', (req, res) => {
+app.get('/brindes', async(req, res) => {
   const filePath = path.join(__dirname, 'html', 'brindes.html');
   res.sendFile(filePath);
+
+  try {
+    // Consulta o banco de dados para obter os produtos de Brindes
+    const produtosBrindes = await Produtos.findAll({
+      where: {
+        categProd: 'Brindes',
+      },
+    });
+
+    // Renderiza a página HTML com os produtos em cards
+    res.render('brindes', {
+      produtos: produtosBrindes,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
+});
+
+app.get('/api/produtos/brindes', async (req, res) => {
+  try {
+    // Consulta o banco de dados para obter os produtos de Brindes
+    const produtosBrindes = await Produtos.findAll({
+      where: {
+        categProd: 'Brindes',
+      },
+    });
+
+    // Envia os produtos como resposta JSON
+    res.json({ produtos: produtosBrindes });
+  } catch (error) {
+    console.error('Erro ao buscar produtos de Brindes:', error);
+    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+  }
 });
 
 app.get('/cartazes', (req, res) => {
