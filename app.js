@@ -398,6 +398,28 @@ app.get('/pesquisar-produtos', async (req, res) => {
   }
 });
 
+app.get('/produto/:id', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+    const produto = await Produtos.findByPk(productId); // Use o método correto para buscar o produto
+
+    if (!produto) {
+      res.status(404).json({ mensagem: 'Produto não encontrado' });
+    } else {
+      res.json({
+        id: produto.id,
+        nomeProd: produto.nomeProd,
+        descProd: produto.descProd,
+        valorProd: produto.valorProd,
+        // Adicione outras propriedades do produto conforme necessário
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do produto:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+}); 
+
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
 });
