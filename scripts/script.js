@@ -1,62 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<style>
-.product-card {
-  display: flex;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 10px 0;
-  padding: 10px;
-  max-height: 120px;
-  overflow: hidden;
-}
-
-.product-card img {
-  max-width: 80px;
-  height: auto;
-  margin-right: 10px;
-}
-
-.product-card h2 {
-  font-size: 16px;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  position: relative;
-  top: 27px;
-}
-</style>
-<body>
-  <form id="formPesquisa">
-    <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
-    <button type="submit" id="btnPesq" class="search__button">
-      <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
-        <g>
-          <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
-        </g>
-      </svg>
-    </button>
-    <button id="limparPesq" class="search__button">
-      Limpar
-  </button>
-  </form>
-  <!-- Adicione um contêiner para os resultados da pesquisa -->
-  <div id="resultadosPesquisa" class="product-cards"></div>
-  
-  <script>
-    // Adicione este código JavaScript para lidar com a pesquisa de produtos
-    document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const formPesquisa = document.getElementById('formPesquisa');
   const caixaPesq = document.getElementById('caixaPesq');
   const resultadosPesquisa = document.getElementById('resultadosPesquisa');
+  const limparPesq = document.getElementById('limparPesq')
+  
+
 
   formPesquisa.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -64,6 +12,7 @@
     const query = caixaPesq.value.trim();
 
     if (query === '') {
+      resultadosPesquisa.style.display = 'none';
       resultadosPesquisa.innerHTML = '';
       return;
     }
@@ -94,6 +43,7 @@
 
           resultadosPesquisa.appendChild(cardProduto);
         });
+        resultadosPesquisa.style.display = 'block';
       }
     } catch (error) {
       console.error('Erro na pesquisa de produtos:', error);
@@ -105,6 +55,7 @@ btnPesq.addEventListener('click', () => {
                 const query = caixaPesq.value.trim();
                 if (query !== '') {
                     pesquisarProdutos(query);
+                    resultadosPesquisa.setAttribute('style', 'dislplay:block;')
                 }
             });
 
@@ -114,6 +65,7 @@ btnPesq.addEventListener('click', () => {
                     const query = caixaPesq.value.trim();
                     if (query !== '') {
                         pesquisarProdutos(query);
+                        resultadosPesquisa.setAttribute('style', 'dislplay:block;')
                     }
                 }
             });
@@ -123,6 +75,3 @@ btnPesq.addEventListener('click', () => {
                 caixaPesq.value = ''; // Limpa o campo de pesquisa
                 resultadosPesquisa.innerHTML = ''; // Limpa os resultados da pesquisa
             });
-  </script>
-</body>
-</html>

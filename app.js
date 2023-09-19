@@ -8,6 +8,7 @@ const Produtos = require('./models/Produtos');
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
+const { Op } = require('sequelize');
 
 // Configurar o mecanismo de template EJS
 app.set('view engine', 'ejs');
@@ -376,10 +377,27 @@ app.get('/api/produtos/papelaria', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
   }
 });
+
+app.get('/pesquisar-produtos', async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    // Realize a pesquisa de produtos usando o operador "like" para correspondência parcial
+    const produtos = await Produtos.findAll({
+      where: {
+        nomeProd: {
+          [Op.like]: `%${query}%`
+        }
+      }
+    });
+
+    res.json({ produtos });
+  } catch (error) {
+    console.error('Erro na pesquisa de produtos:', error);
+    res.status(500).json({ error: 'Erro na pesquisa de produtos', message: error.message });
+  }
+});
+
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
-    /*console.log('Servido de Cadastro rodando na Porta 8080 http://localhost:8080/html/cadastro.html')
-    console.log('Servido de Login rodando na Porta 8080 http://localhost:8080/html/form.html')
-    console.log('Servidor de buscar rodando na Porta 8080 http://localhost:8080/cep.html')
-    console.log('Serivdor de Cadastro de Produtos rodando na Porta 8080 http://localhost:8080/html/cad-prods.html')*/
 });

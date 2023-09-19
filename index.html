@@ -30,15 +30,23 @@
         </nav>
         <div class="elem1">
            <a href="index.html"><img class="logo-imprimeai" src="images/logo-imprimeai2.png" alt=""></a>
-            <div class="input-pesq">
-                <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
-                <button id="btnPesq" class="search__button">
-            <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+           <form id="formPesquisa">
+            <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
+            <button type="submit" id="btnPesq" class="search__button">
+              <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
                 <g>
-                    <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+                  <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
                 </g>
-            </svg>
-            </div>
+              </svg>
+            </button>
+            <!--<span id="limparPesq" class="material-icons">close</span>-->
+            <button id="limparPesq" class="search__button">
+                &#x2613;
+          </button>
+          </form>
+          
+          <!-- Adicione um contêiner para os resultados da pesquisa -->
+          <div id="resultadosPesquisa" class="product-cards"></div>
             <div id="logado"></div>
             <a id="conviteCad" href="html/cadastro.html" class="lnk"><p class="par">Olá, bem-vindo! <br> Entre ou cadastre-se</p></a>
             <button style="display: none;" id="sairBtn" onclick="sair()">&RightArrow;</button>
@@ -139,5 +147,6 @@
     </main>
     <span id="voltar_ao_topo" class="material-icons">expand_less</span>
     <script src="scripts/slider.js"></script>
+    <script src="scripts/script.js"></script>
 </body>
 </html>

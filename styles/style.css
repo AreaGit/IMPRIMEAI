@@ -123,6 +123,67 @@ header > p {
     width: 1.3em;
     fill: #b4b4b4;
   }
+  #formPesquisa {
+    width: fit-content;
+    position: absolute;
+    top: 17%;
+    left: 26%;
+  }
+  #resultadosPesquisa {
+    display: none;
+    position: absolute;
+    top: 226px;
+    left: 518px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    /*max-height: 258px;*/
+    overflow-y: hidden;
+    padding: 10px;
+    width: 40%;
+    height: auto;
+  }
+  
+  #resultadosPesquisa>.product-card {
+    display: flex;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    padding: 5px; /* Reduzir o espaço interno */
+    max-height: 100px; /* Diminuir a altura do card */
+    overflow: hidden;
+  }
+  
+  #resultadosPesquisa>.product-card img {
+    max-width: 60px; /* Diminuir o tamanho da imagem */
+    height: auto;
+    margin-right: 10px;
+    align-self: center; /* Centraliza verticalmente a imagem */
+  }
+  
+  #resultadosPesquisa>.product-card h2 {
+    font-size: 14px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    position: relative;
+    top: 18px;
+  }
+  #limparPesq {
+    color: #B5B5B5;
+    background-color: transparent;
+    font-size: 18px;
+    position: relative;
+    left: -63px;
+    padding: 10px;
+  }
   .lnk {
     text-decoration: none;
     color: black;
@@ -130,7 +191,7 @@ header > p {
   .par {
     text-decoration: none;
     position: relative;
-    top: -80px;
+    top: -5px;
     left: 70%;
     font-size: 14px;
     width: fit-content;
