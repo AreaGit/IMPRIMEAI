@@ -69,9 +69,17 @@
     <main>
         <section class="prod">
             <div id="produtos">
-                <!-- Detalhes do produto serão adicionados aqui -->
+                
             </div>
-            <!-- Outros elementos da seção de detalhes do produto aqui -->
+            <input type="file" class="custom-file-input" name="custom-file-input" id="arquivo" accept="application/pdf">
+            <label for="custom-file-input">Envie seu Arquivo PDF</label>
+
+            <label for="inp-num" class="lb-num">Quantidade</label>
+            <input type="number" name="inp-num" id="inp-num" min="1" max="99" value="1">
+            <button class="addCart">Adicionar ao Carrinho</button>
+            <a href="#" class="lnk-comp">Comprar</a>
+
+            <h2 class="descProd">Descrição do Produto</h2>
         </section>
         <!-- Outras seções da página aqui -->
     </main>
@@ -104,8 +112,8 @@
                     produtoCard.innerHTML = `
                         <img src="/imagens/${data.id}" alt="Imagem do Produto">
                         <h2>${data.nomeProd}</h2>
-                        <p>${data.descProd}</p>
-                        <p>Valor: R$ ${data.valorProd.toFixed(2)}</p>
+                        <p id="desc">${data.descProd}</p>
+                        <span id="valor">R$ ${data.valorProd.toFixed(2)}</span>
                     `;
 
                     produtos.appendChild(produtoCard); // Adicione o produtoCard à div produtos

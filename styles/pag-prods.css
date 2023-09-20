@@ -63,7 +63,7 @@
 
 /*PÁGINA DE COMPRA*/
 
-.image-prod {
+.produtoCard > img {
     box-shadow: -1px -1px 8px black;
     border: 1px solid rgba(0, 0, 0, 0.281);
     border-radius: 5px;
@@ -79,10 +79,14 @@
     left: 52%;
     width: fit-content;
 }
-.text-prod > h1 {
+.produtoCard > h2 {
+    color: #222529;
     font-size: 30px;
     font-weight: bold;
     width: fit-content;
+    position: relative;
+    left: 50%;
+    top: -375px;
 }
 .esp-prod {
     width: 400px;
@@ -115,20 +119,28 @@
     text-align: center;
 }
 .custom-file-input {
-    position: relative;
-    top: 10px;
-    left: 25%;
-    display: inline-block;
-    padding: 10px 20px;
-    color: black;
-    border: 1px solid black;
-    border-radius: 5px;
-    cursor: pointer;
+    display: none;
 }
 
-/* Oculte o elemento de arquivo real (deixe apenas o botão visível) */
-.custom-file-input input[type="file"] {
-    display: none;
+/* Oculte o texto padrão do input file */
+.custom-file-input + label {
+    display: inline-block;
+    overflow: hidden;
+    width: 10%;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.404);
+    position: relative;
+    left: 25%;
+    top: -68px;
+    padding: 18px 8px 18px 8px;
+    border-radius: 5px;
+    font-weight: normal;
+}
+
+/* Quando o input file estiver ativo (foi clicado), estilize o botão */
+.custom-file-input:focus + .custom-file-label {
+    background-color: #0056b3;
 }
 .prg {
     width: fit-content;
@@ -200,6 +212,9 @@ span {
     font-size: 16px;
     outline: none;
     margin-left: 5px;
+    position: relative;
+    top: -92px;
+    left: 73%;
 }
 .total>label {
     font-weight: lighter;
@@ -227,16 +242,40 @@ span {
     color: #F37160;
     font-weight: bold;
     position: relative;
-    top: 20px;
-    left: -130px;
+    top: -20px;
+    left: 70%;
     cursor: pointer;
 }
-.total > a {
+.lnk-comp {
     text-decoration: none;
     background-color: #8EC8AA;
     color: green;
     padding: 14px 28px 14px 28px;
     position: relative;
     top: -20px;
-    left: 50%;
+    left: 70%;
+}
+.lb-num {
+    position: relative;
+    left: 73%;
+    top: -78px;
+    width: fit-content;
+}
+#valor {
+    color: #F37160;
+    font-size: 25px;
+    position: relative;
+    left: 83%;
+    top: 44px;
+}
+.descProd {
+    text-align: center;
+    position: relative;
+    top: 30px;
+}
+#desc {
+    position: relative;
+    top: 300px;
+    left: 43%;
+    width: fit-content;
 }
