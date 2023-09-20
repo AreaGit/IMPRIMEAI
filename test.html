@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local de Entrega</title>
+    <!-- Inclua a chave da API do Google Maps abaixo -->
+    <script src="https://ipinfo.io/json?callback=recordData"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Local de Entrega</h1>
+        <label for="endereco">Informe o local de entrega:</label>
+        <input type="text" id="endereco" placeholder="Digite seu endereço">
+        <button id="buscar">Buscar Gráficas Próximas</button>
+        <div id="map"></div>
+        <div id="graficas"></div>
+    </div>
+    <script>
+        // Variável global para o mapa
+let map;
+
+// Função para inicializar o mapa
+function initMap() {
+    // Configurar as opções do mapa
+    const mapOptions = {
+        center: { lat: -23.5505, lng: -46.6333 }, // Coordenadas de São Paulo (pode ser alterado)
+        zoom: 13, // Zoom padrão
+    };
+
+    // Criar um novo mapa no elemento com o ID "map"
+    map = new google.maps.Map(document.getElementById("map"), mapOptions);
+}
+
+// Função para buscar gráficas próximas
+function buscarGraficasProximas() {
+    // Obter o endereço inserido pelo usuário
+    const endereco = document.getElementById("endereco").value;
+
+    // Fazer uma solicitação ao servidor Node.js para obter as gráficas próximas com base no endereço
+
+    // Exibir as gráficas no elemento "graficas"
+    const graficasElement = document.getElementById("graficas");
+    graficasElement.innerHTML = "Gráficas próximas serão exibidas aqui.";
+}
+
+// Associar a função "buscarGraficasProximas" ao botão "Buscar Gráficas Próximas"
+document.getElementById("buscar").addEventListener("click", buscarGraficasProximas);
+
+    </script>
+</body>
+</html>

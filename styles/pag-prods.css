@@ -119,7 +119,19 @@
     text-align: center;
 }
 .custom-file-input {
-    display: none;
+    display: block;
+    position: relative;
+    left: 480px;
+    top: -68px;
+    display: inline-block;
+    overflow: hidden;
+    width: 10%;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.404);
+    padding: 18px 8px 18px 8px;
+    border-radius: 5px;
+    font-weight: normal;
 }
 
 /* Oculte o texto padrão do input file */
@@ -129,10 +141,9 @@
     width: 10%;
     white-space: nowrap;
     cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.404);
     position: relative;
-    left: 25%;
-    top: -68px;
+    left: 15%;
+    top: -98px;
     padding: 18px 8px 18px 8px;
     border-radius: 5px;
     font-weight: normal;

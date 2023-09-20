@@ -200,8 +200,8 @@ header > p {
     width: fit-content;
     font-weight: lighter;
     position: relative;
-    left: 70%;
-    top: -30%;
+    left: 68%;
+    top: 3%;
     font-size: 14px;
   }
   #carrinho_compras {
@@ -393,7 +393,7 @@ main > h2 {
 }
 #sairBtn {
   position: relative;
-  top: -75px;
+  top: -17px;
   left: 76%;
   font-size: 16px;
   letter-spacing: 2px;
@@ -443,4 +443,78 @@ main > h2 {
 
 #sairBtn:active {
   transform: scale(0.9);
+}
+footer {
+  color: #343A40;
+  height: 500px;
+  background-color: #F4F4F4;
+}
+.redes {
+  width: 12%;
+  height: 19%;
+  position: relative;
+  top: 40px;
+  left: 70%;
+}
+.redes > img {
+  position: relative;
+  top: 35px;
+  left: 18%;
+}
+.redes > h2 {
+  font-size: 16px;
+  font-weight: bold;
+  width: fit-content;
+  position: relative;
+  left: 43px;
+}
+.atend {
+  width: fit-content;
+  position: relative;
+  top: 200px;
+  left: 5%;
+}
+.atend > h2,p {
+  font-size: 16px;
+  font-weight: bold;
+}
+.form-pag {
+  height: 30%;
+  width: 30%;
+  position: relative;
+  top: -60px;
+  left: 5%;
+}
+.form-pag > h2  {
+  font-size: 16px;
+}
+.form-pag > svg {
+  margin-top: 10px;
+}
+footer > p {
+  font-weight: lighter;
+  width: fit-content;
+  font-size: 12px;
+  position: relative;
+  top: 84px;
+  left: 45%;
+}
+.ins {
+  width: fit-content;
+  position: relative;
+  top: -200px;
+  left: 35%;
+}
+.ins > h2 {
+  font-size: 16px;
+}
+.ins > ul > li {
+  list-style: none;
+  margin: 10px;
+  font-size: 12px;
+  text-decoration: none;
+}
+.ins > ul > li > a{
+  color: #343A40;
+  text-decoration: none;
 }

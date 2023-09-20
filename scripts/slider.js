@@ -80,7 +80,7 @@ const userCad = getCookie('userCad');
 // Exibir o valor do 'userCad' na página
 const userCadDisplay = document.getElementById("userCadDisplay");
 if (userCad) {
-  logado.innerHTML = `Olá ${userCad}`;
+  logado.innerHTML = `<a href="html/perfil.html?id=${userCad}" style="text-decoration:none;color:black;">Olá ${userCad}</a>`;
   conviteCad.setAttribute('style', 'display:none')
   sairBtn.setAttribute('style', 'display:block')
 } else {

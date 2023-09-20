@@ -7,7 +7,7 @@ let validPass = false
 const msg = document.getElementById('msg')
 
 //VALIDANDO CAMPOS
-usuario.addEventListener('keyup', () => {
+/*usuario.addEventListener('keyup', () => {
     if(usuario.value.length <= 5) {
         usuario.setAttribute('style', 'color: red; border-color: red;')
         validUsuario=false
@@ -15,7 +15,19 @@ usuario.addEventListener('keyup', () => {
         usuario.setAttribute('style', 'color: black; border-color: green;')
         validUsuario = true
     }
-})
+})*/
+usuario.addEventListener('keyup', () => {
+    const usuarioValue = usuario.value.trim(); // Remove espaços em branco do início e do fim
+    if (usuarioValue.length <= 5 || usuarioValue.includes(' ')) {
+        usuario.style.color = 'red';
+        usuario.style.borderColor = 'red';
+        validUsuario = false;
+    } else {
+        usuario.style.color = 'black';
+        usuario.style.borderColor = 'green';
+        validUsuario = true;
+    }
+});
 email.addEventListener('keyup', () => {
     if(email.value.length <= 3) {
         email.setAttribute('style', 'color: red; border-color: red;')

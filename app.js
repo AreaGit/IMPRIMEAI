@@ -9,6 +9,11 @@ const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
 const { Op } = require('sequelize');
+const geolib = require('geolib');
+const fetch = require('node-fetch');
+
+
+
 
 // Configurar o mecanismo de template EJS
 app.set('view engine', 'ejs');
@@ -419,6 +424,11 @@ app.get('/produto/:id', async (req, res) => {
     res.status(500).json({ mensagem: 'Erro interno do servidor' });
   }
 }); 
+
+app.get('/perfil', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'perfil.html');
+  res.sendFile(filePath);
+});
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
