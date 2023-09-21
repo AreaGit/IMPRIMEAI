@@ -11,7 +11,7 @@ const ejs = require('ejs');
 const { Op } = require('sequelize');
 const geolib = require('geolib');
 const fetch = require('node-fetch');
-
+const bcrypt = require('bcrypt')
 
 
 
@@ -54,6 +54,7 @@ app.post("/cadastrar", async (req, res) => {
 
     try {
         const { userCad, cpfCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;
+        const hashedPassword = await bcrypt.hash(passCad, 10);
 
         const newUser = await User.create({
             userCad: userCad,
@@ -65,7 +66,7 @@ app.post("/cadastrar", async (req, res) => {
             inscricaoEstadualCad: inscricaoEstadualCad,
             telefoneCad: telefoneCad,
             emailCad: emailCad,
-            passCad: passCad
+            passCad: hashedPassword
         });
 
         res.json({ message: 'Usuário cadastrado com sucesso!', user: newUser });
@@ -91,9 +92,11 @@ app.post("/login", async (req, res) => {
       if (!user) {
         return res.status(401).json({ message: "Usuário não encontrado" });
       }
+
+      const passwordMatch = await bcrypt.compare(passCad, user.passCad);
   
       // Verifique se a senha está correta
-      if (passCad !== user.passCad) {
+      if (!passwordMatch) {
         return res.status(401).json({ message: "Senha incorreta" });
       }
 
