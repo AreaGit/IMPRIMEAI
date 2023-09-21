@@ -12,7 +12,15 @@ const { Op } = require('sequelize');
 const geolib = require('geolib');
 const fetch = require('node-fetch');
 const bcrypt = require('bcrypt')
+const session = require('express-session');
 
+
+
+app.use(session({
+  secret: 'seuSegredoDeSessao', // Substitua com um segredo seguro
+  resave: false,
+  saveUninitialized: true
+}));
 
 
 // Configurar o mecanismo de template EJS
@@ -443,6 +451,55 @@ app.get('/perfil', (req, res) => {
 app.get('/carrinho', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'carrinhho.html');
   res.sendFile(filePath);
+});
+
+app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
+  try {
+    const produtoId = req.params.produtoId;
+    const { quantidade } = req.body; // A quantidade do produto a ser adicionada
+
+    // Verifique se a quantidade é um número válido
+    if (typeof quantidade !== 'number' || quantidade <= 0) {
+      return res.status(400).json({ message: 'Quantidade inválida' });
+    }
+
+    // Consulte o banco de dados para obter as informações do produto
+    const produto = await Produtos.findByPk(produtoId);
+
+    // Verifique se o produto existe
+    if (!produto) {
+      return res.status(404).json({ message: 'Produto não encontrado' });
+    }
+
+    // Inicialize o carrinho se ainda não existir na sessão
+    if (!req.session.carrinho) {
+      req.session.carrinho = [];
+    }
+
+    // Verifique se o produto já está no carrinho
+    const produtoNoCarrinho = req.session.carrinho.find((item) => item.produtoId === produto.id);
+
+    if (produtoNoCarrinho) {
+      // Se o produto já estiver no carrinho, atualize a quantidade
+      produtoNoCarrinho.quantidade += quantidade;
+      produtoNoCarrinho.subtotal = produtoNoCarrinho.quantidade * produto.valorProd;
+    } else {
+      // Caso contrário, adicione o produto ao carrinho
+      req.session.carrinho.push({
+        produtoId: produto.id,
+        nomeProd: produto.nomeProd,
+        quantidade: quantidade,
+        valorUnitario: produto.valorProd,
+        subtotal: quantidade * produto.valorProd,
+      });
+    }
+
+    // Responda com uma mensagem de sucesso e o carrinho atualizado
+    res.json({ message: 'Produto adicionado ao carrinho com sucesso', carrinho: req.session.carrinho });
+  } catch (error) {
+    console.error('Erro ao adicionar o produto ao carrinho:', error);
+    res.status(500).json({ message: 'Erro ao adicionar o produto ao carrinho' });
+  }
 });
 
 app.listen(8080, () => {

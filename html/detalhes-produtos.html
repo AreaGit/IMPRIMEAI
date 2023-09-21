@@ -76,7 +76,7 @@
 
             <label for="inp-num" class="lb-num">Quantidade</label>
             <input type="number" name="inp-num" id="inp-num" min="1" max="99" value="1">
-            <button class="addCart">Adicionar ao Carrinho</button>
+            <button id="adicionarCarrinho" class="addCart">Adicionar ao Carrinho</button>
             <a href="#" class="lnk-comp">Comprar</a>
 
             <h2 class="descProd">Descrição do Produto</h2>
@@ -127,6 +127,41 @@
                     document.getElementById('produtos').appendChild(errorMessageElement);
                 });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+  // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
+  const params = new URLSearchParams(window.location.search);
+  const produtoId = params.get('id');
+
+  // Seletor do botão "Adicionar ao Carrinho"
+  const adicionarAoCarrinhoBtn = document.getElementById('adicionarCarrinho');
+
+  // Lida com o clique no botão "Adicionar ao Carrinho"
+  adicionarAoCarrinhoBtn.addEventListener('click', async () => {
+    try {
+      // Faça uma solicitação POST para adicionar o produto ao carrinho
+      const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantidade: 1 }) // Você pode ajustar a quantidade conforme necessário
+      });
+
+      if (response.ok) {
+        // Produto adicionado com sucesso ao carrinho
+        alert('Produto adicionado ao carrinho com sucesso!');
+      } else {
+        // Trate qualquer erro de adição ao carrinho
+        alert('Erro ao adicionar o produto ao carrinho');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar o produto ao carrinho:', error);
+      alert('Erro ao adicionar o produto ao carrinho');
+    }
+  });
+});
+
     </script>
 </body>
 </html>
