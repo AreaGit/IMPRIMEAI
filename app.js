@@ -440,6 +440,11 @@ app.get('/perfil', (req, res) => {
   res.sendFile(filePath);
 });
 
+app.get('/carrinho', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'carrinhho.html');
+  res.sendFile(filePath);
+});
+
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
 });

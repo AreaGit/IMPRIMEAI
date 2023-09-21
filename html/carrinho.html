@@ -12,6 +12,34 @@
 <link rel="stylesheet" href="styles/medias.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+    .carrinho-vazio {
+        width: fit-content;
+        position: absolute;
+        left: 40%;
+
+    }
+    .carrinho-vazio > h1 {
+        font-size: 16px;
+        color: #D9D9D9;
+        text-align: center;
+    }
+    .carrinho-vazio > p {
+        font-size: 12px;
+        color: #D9D9D9;
+        text-align: center;
+    }
+    .carrinho-vazio > a {
+        border: 1px solid #F37160;
+        padding: 0.7em 1.2em;
+        text-decoration: none;
+        color: #EF4126;
+        border-radius: 5px;
+        position: absolute;
+        top: 102%;
+        left: 34%;
+    }
+</style>
 <body>
     <header>
         <div class="mini-banner">
@@ -44,30 +72,15 @@
             <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
                 <span id="carrinho_compras" class="material-icons">shopping_cart</span>
                 <span id="totalItens">0</span>
-
         </div>
-       <!-- <div class="menu">
-            <ul>
-              <li><a href="../index.html">Início</a></li>
-              <li class="dropdown">
-                <a href="#">Produtos ∇</a>
-                <div class="dropdown-content">
-                  <a href="comunicacao-visual.html">Comunicação Visual</a>
-                  <a href="adesivos-etiquetas.html">Adesivos e Etiquetas</a>
-                  <a href="papelaria.html">Papelaria</a>
-                  <a href="brindes.html">Brindes e Promocionais</a>
-                  <a href="cartazes.html">Cartazes</a>
-                  <a href="impressoes.html">Impressões</a>
-                  <a href="#">Orçamentos Especiais</a>
-                </div>
-              </li>
-              <li><a href="#">Sobre Nós</a></li>
-              <li><a href="#">Contato</a></li>
-            </ul>
-          </div>-->
     </header>
     <main>
-        
+        <div class="carrinho-vazio">
+            <img src="../images/CARRINHO VAZIO.png" alt="...">
+            <h1>Seu Carrinho está Vazio</h1>
+            <p>Adicione mais Produto ao Carrinho</p>
+            <a href="http://localhost:8080/index.html">Ir para Loja</a>
+        </div>
     </main>
     <span id="voltar_ao_topo" class="material-icons">expand_less</span>
     <script src="../scripts/slider.js"></script>

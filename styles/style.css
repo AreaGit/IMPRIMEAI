@@ -518,3 +518,7 @@ footer > p {
   color: #343A40;
   text-decoration: none;
 }
+.lnk-cart {
+  text-decoration: none;
+  color: black;
+}
