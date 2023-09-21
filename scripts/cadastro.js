@@ -5,6 +5,20 @@ let validEmail = false
 const pass = document.getElementById('pass')
 let validPass = false
 const msg = document.getElementById('msg')
+const endereço = document.getElementById('endereço')
+let validEndereco = false
+const cep = document.getElementById('cep')
+let validCep = false
+const cidade = document.getElementById('cidade')
+let validCidade = false
+const estado = document.getElementById('estado')
+let validEstado = false
+const telefone = document.getElementById('telefone')
+let validTelefone = false
+const cpf = document.getElementById('cpf')
+let validCPF = false
+const inscricaoEstadual = document.getElementById('inscricaoEstadual')
+
 
 //VALIDANDO CAMPOS
 /*usuario.addEventListener('keyup', () => {
@@ -54,6 +68,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnCad.addEventListener('click', function () {
         const usuario = document.getElementById('usuario').value;
+        const cpf = document.getElementById('cpf').value;
+        const endereço = document.getElementById('endereço').value;
+        const cep = document.getElementById('cep').value;
+        const cidade = document.getElementById('cidade').value;
+        const estado = document.getElementById('estado').value;
+        const telefone = document.getElementById('telefone').value;
+        const inscricaoEstadual = document.getElementById('inscricaoEstadual').value;
         const email = document.getElementById('email').value;
         const pass = document.getElementById('pass').value;
 
@@ -61,6 +82,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // Dados para enviar no corpo da solicitação
     const userData = {
     userCad: usuario,
+    endereçoCad: endereço,
+    cepCad: cep,
+    cidadeCad: cidade,
+    estadoCad: estado,
+    cpfCad: cpf,
+    telefoneCad: telefone,
+    inscricaoEstadualCad: inscricaoEstadual,
     emailCad: email,
     passCad: pass
 };

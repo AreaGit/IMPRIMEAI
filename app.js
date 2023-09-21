@@ -53,10 +53,17 @@ app.get("/cadastrar", (req, res) => {
 app.post("/cadastrar", async (req, res) => {
 
     try {
-        const { userCad, emailCad, passCad } = req.body;
+        const { userCad, cpfCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;
 
         const newUser = await User.create({
             userCad: userCad,
+            cpfCad: cpfCad,
+            endereçoCad: endereçoCad,
+            cepCad: cepCad,
+            cidadeCad: cidadeCad,
+            estadoCad: estadoCad,
+            inscricaoEstadualCad: inscricaoEstadualCad,
+            telefoneCad: telefoneCad,
             emailCad: emailCad,
             passCad: passCad
         });

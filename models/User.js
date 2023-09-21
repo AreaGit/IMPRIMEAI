@@ -13,6 +13,34 @@ const  User = db.define('users', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
+    endereçoCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    cepCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    cidadeCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    estadoCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    cpfCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    telefoneCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    inscricaoEstadualCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
     emailCad: {
         type: Sequelize.STRING(255),
         allowNull: true
@@ -26,10 +54,10 @@ const  User = db.define('users', {
 
 
 //CRIAR A TABELA
-User.sync()
+//User.sync()
 //User.sync({ force: true })
 
 
-//User.sync({ force: true})
+User.sync({ force: true})
 
 module.exports = User
