@@ -42,6 +42,60 @@ usuario.addEventListener('keyup', () => {
         validUsuario = true;
     }
 });
+endereço.addEventListener('keyup', () => {
+    if(endereço.value.length <= 5) {
+        endereço.setAttribute('style', 'color: red; border-color: red;')
+        validEndereco = false
+    } else {
+        endereço.setAttribute('style', 'color: black; border-color: green;')
+        validEndereco = true
+    }
+})
+cep.addEventListener('keyup', () => {
+    if(cep.value.length <= 8) {
+        cep.setAttribute('style', 'color: red; border-color: red;')
+        validCep = false
+    } else {
+        cep.setAttribute('style', 'color: black; border-color: green;')
+        validCep = true
+    }
+})
+cidade.addEventListener('keyup', () => {
+    if(cidade.value.length <= 3) {
+        cidade.setAttribute('style', 'color: red; border-color: red;')
+        validCidade = false
+    } else {
+        cidade.setAttribute('style', 'color: black; border-color: green;')
+        validCidade = true
+    }
+})
+estado.addEventListener('keyup', () => {
+    if(estado.value.length <= 3) {
+        estado.setAttribute('style', 'color: red; border-color: red;')
+        validEstado = false
+    } else {
+        estado.setAttribute('style', 'color: black; border-color: green;')
+        validEstado = true
+    }
+})
+cpf.addEventListener('keyup', () => {
+    if(cpf.value.length <= 11) {
+        cpf.setAttribute('style', 'color: red; border-color: red;')
+        validCPF = false
+    } else {
+        cpf.setAttribute('style', 'color: black; border-color: green;')
+        validCPF = true
+    }
+})
+telefone.addEventListener('keyup', () => {
+    if(telefone.value.length <= 8) {
+        telefone.setAttribute('style', 'color: red; border-color: red;')
+        validTelefone = false
+    } else {
+        telefone.setAttribute('style', 'color: black; border-color: green;')
+        validTelefone = true
+    }
+})
 email.addEventListener('keyup', () => {
     if(email.value.length <= 3) {
         email.setAttribute('style', 'color: red; border-color: red;')
