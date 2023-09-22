@@ -234,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.ok) {
                     // Produto removido com sucesso do carrinho
                     // Atualize a visualização do carrinho após a remoção
+                    location.reload();
                     carregarProdutosCarrinho();
                 } else {
                      new Error('Erro ao remover o produto do carrinho');

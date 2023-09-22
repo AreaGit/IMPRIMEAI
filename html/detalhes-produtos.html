@@ -42,7 +42,7 @@
             </div>
             <div id="logado"></div>
             <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
-                <span id="carrinho_compras" class="material-icons">shopping_cart</span>
+            <a class="lnk-cart" href="http://localhost:8080/html/carrinho.html"><span id="carrinho_compras" class="material-icons">shopping_cart</span></a>
                 <span id="totalItens">0</span>
 
         </div>
@@ -150,7 +150,7 @@
 
       if (response.ok) {
         // Produto adicionado com sucesso ao carrinho
-        alert('Produto adicionado ao carrinho com sucesso!' + produtoId);
+        console.log('Produto adicionado ao carrinho com sucesso! Com o ID ' + produtoId);
       } else {
         // Trate qualquer erro de adição ao carrinho
         alert('Erro ao adicionar o produto ao carrinho');
