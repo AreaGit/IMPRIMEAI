@@ -448,10 +448,6 @@ app.get('/perfil', (req, res) => {
   res.sendFile(filePath);
 });
 
-app.get('/carrinho', (req, res) => {
-  const filePath = path.join(__dirname, 'html', 'carrinhho.html');
-  res.sendFile(filePath);
-});
 
 app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   try {
@@ -499,6 +495,70 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   } catch (error) {
     console.error('Erro ao adicionar o produto ao carrinho:', error);
     res.status(500).json({ message: 'Erro ao adicionar o produto ao carrinho' });
+  }
+});
+
+app.get('/carrinho', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'carrinho.html');
+  res.sendFile(filePath);
+});
+
+app.get('/api/carrinho', (req, res) => {
+  try {
+    // Obtenha os dados do carrinho da sessão
+    const carrinho = req.session.carrinho || [];
+
+    // Envie os dados do carrinho como resposta em JSON
+    res.json(carrinho);
+  } catch (error) {
+    console.error('Erro ao obter os dados do carrinho:', error);
+    res.status(500).json({ message: 'Erro ao obter os dados do carrinho' });
+  }
+});
+
+app.delete('/remover-do-carrinho/:produtoId', (req, res) => {
+  try {
+    const produtoId = req.params.produtoId;
+
+    // Verifique se o carrinho existe na sessão
+    if (!req.session.carrinho) {
+      return res.status(400).json({ message: 'Carrinho vazio' });
+    }
+
+    // Encontre o índice do produto no carrinho
+    const index = req.session.carrinho.findIndex(item => item.produtoId == produtoId);
+
+    if (index === -1) {
+      return res.status(404).json({ message: 'Produto não encontrado no carrinho' });
+    }
+
+    // Remova o produto do carrinho
+    req.session.carrinho.splice(index, 1);
+
+    // Responda com uma mensagem de sucesso
+    res.json({ message: 'Produto removido do carrinho com sucesso' });
+  } catch (error) {
+    console.error('Erro ao remover o produto do carrinho:', error);
+    res.status(500).json({ message: 'Erro ao remover o produto do carrinho' });
+  }
+});
+
+app.post('/finalizar-compra', async (req, res) => {
+  try {
+    // Obtenha os detalhes da compra do corpo da solicitação
+    const { totalItens, totalAPagar } = req.body;
+
+    // Aqui você pode adicionar a lógica para finalizar a compra,
+    // como registrar a compra no banco de dados e gerar um recibo, por exemplo.
+
+    // Após a finalização bem-sucedida, você pode limpar o carrinho, pois os itens foram comprados
+    req.session.carrinho = [];
+
+    // Responda com uma mensagem de sucesso ou redirecione o usuário para uma página de confirmação
+    res.json({ message: 'Compra finalizada com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao finalizar a compra:', error);
+    res.status(500).json({ message: 'Erro ao finalizar a compra' });
   }
 });
 
