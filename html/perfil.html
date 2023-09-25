@@ -11,6 +11,20 @@
 <link rel="stylesheet" href="../styles/medias.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+  body {
+    color: #222529;
+  }
+  #nomeUser {
+    position: relative;
+    top: 60px;
+    left: 20%;
+    width: fit-content;
+  }
+  #nomeUser > h1 {
+    font-size: 20px;
+  }
+</style>
 <body>
     <header>
         <div class="mini-banner">
@@ -76,6 +90,10 @@
     </header>
     <main>
         <div id="nomeUser"></div>
+        <div id="email"></div>
+        <div id="cep"></div>
+        <div id="cidade"></div>
+        <div id="estado"></div>
     </main>
     <script>
         const logado = document.getElementById('logado')
