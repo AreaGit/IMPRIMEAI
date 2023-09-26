@@ -54,10 +54,10 @@ const  User = db.define('users', {
 
 
 //CRIAR A TABELA
-//User.sync()
+User.sync()
 //User.sync({ force: true })
 
 
-User.sync({ force: true})
+//User.sync({ force: true})
 
 module.exports = User

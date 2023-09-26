@@ -5,6 +5,7 @@ const fs = require('fs')
 const axios = require('axios')
 const User = require('./models/User');
 const Produtos = require('./models/Produtos');
+const Cartoes = require('./models/Cartoes');
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
@@ -48,14 +49,30 @@ app.get("/", (req, res) => {
       }
 });
 
-app.get("/cep", (req, res) => {
-  res.sendFile(__dirname + "/cep.html"); // Verifique o caminho do arquivo
+app.get("/test", (req, res) => {
+  res.sendFile(__dirname + "/test.html"); // Verifique o caminho do arquivo
 });
 
-// Adicione uma rota GET para servir a página de cadastro
-app.get("/cadastrar", (req, res) => {
-    const filePath = path.join(__dirname, 'html', 'cadastro.html');
-    res.sendFile(filePath);
+app.get("/cadastro-cartao", (req, res) => {
+  res.sendFile(__dirname + "html" , "/cadastro-cartao.html"); // Verifique o caminho do arquivo
+});
+
+app.post('/cadastro-cartao', async (req, res) => {
+  const { cardNumber, cardHolderName, expirationDate, cvv } = req.body;
+
+  try {
+    // Salva o cartão de crédito no banco de dados
+    const newCard = await Cartoes.create({
+      cardNumber,
+      cardHolderName,
+      expirationDate,
+      cvv,
+    });
+    console.log('Cartão de crédito cadastrado com sucesso.');
+    res.json({ success: true, message: 'Cartão de crédito cadastrado com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao cadastrar cartão de crédito:', error);
+  }
 });
 
 app.post("/cadastrar", async (req, res) => {
@@ -447,6 +464,8 @@ app.get('/perfil', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'perfil.html');
   res.sendFile(filePath);
 });
+
+
 
 
 app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {

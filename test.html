@@ -3,51 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local de Entrega</title>
-    <!-- Inclua a chave da API do Google Maps abaixo -->
-    <script src="https://ipinfo.io/json?callback=recordData"></script>
-    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/style.css" media="all">
+<link rel="stylesheet" href="../styles/pag-prods.css">
+<link rel="stylesheet" href="styles/medias.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+    form {
+        width: 25%;
+        position: relative;
+        top: 262px;
+        left: 40%;
+    }
+    label {
+        margin: 10px;
+        font-size: 14px;
+        margin-left: 5px;
+        font-weight: bold;
+    }
+    input {
+        padding: 10px 28px 10px 28px;
+        border: 1px solid rgba(0, 0, 0, 0.507);
+        border-radius: 5px;
+    }
+    .cvv {
+        padding: 10px 10px 10px 10px;
+        width: 14%;
+        position: relative;
+        top: -78px;
+        left: 37%;
+    }
+    .lbl-cvv {
+        position: relative;
+        top: -78px;
+        left: 38%;
+        width: fit-content;
+    }
+    .exp-date {
+        padding: 10px 0px 10px 0px;
+        width: 27%;
+    }
+    button {
+        padding: 18px 18px 18px 18px;
+        background-color: #2225294b;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        position: relative;
+        top: -40px;
+        left: 3%;
+        font-weight: bold;
+    }
+</style>
 <body>
-    <div class="container">
-        <h1>Local de Entrega</h1>
-        <label for="endereco">Informe o local de entrega:</label>
-        <input type="text" id="endereco" placeholder="Digite seu endereço">
-        <button id="buscar">Buscar Gráficas Próximas</button>
-        <div id="map"></div>
-        <div id="graficas"></div>
-    </div>
+    <form action="/cadastro-cartao" method="post">
+  <label for="cardNumber">Número do Cartão</label>
+  <input type="text" id="cardNumber" name="cardNumber" required>
+  <br>
+  <label for="cardHolderName">Nome do Titular</label>
+  <input type="text" id="cardHolderName" name="cardHolderName" required>
+  <br>
+  <label for="expirationDate">Data de Vencimento</label>
+  <input type="date" id="expirationDate" name="expirationDate" class="exp-date" required>
+  <br>
+  <label for="cvv" class="lbl-cvv">CVV</label>
+  <input type="number" id="cvv" name="cvv" class="cvv" min-length="3" max-length="3" required>
+  <br>
+  <button type="submit" id="btnCad">Cadastrar Cartão</button>
+</form>
+  
     <script>
-        // Variável global para o mapa
-let map;
+    document.addEventListener('DOMContentLoaded', function () {
+  const btnCad = document.getElementById('btnCad');
 
-// Função para inicializar o mapa
-function initMap() {
-    // Configurar as opções do mapa
-    const mapOptions = {
-        center: { lat: -23.5505, lng: -46.6333 }, // Coordenadas de São Paulo (pode ser alterado)
-        zoom: 13, // Zoom padrão
+  btnCad.addEventListener('click', function () {
+    const cardNumber = document.getElementById('cardNumber').value;
+    const cardHolderName = document.getElementById('cardHolderName').value;
+    const expirationDate = document.getElementById('expirationDate').value;
+    const cvv = document.getElementById('cvv').value;
+
+    // Montar os dados do formulário em um objeto
+    const cartaoData = {
+      cardNumber: cardNumber,
+      cardHolderName: cardHolderName,
+      expirationDate: expirationDate,
+      cvv: cvv,
     };
 
-    // Criar um novo mapa no elemento com o ID "map"
-    map = new google.maps.Map(document.getElementById("map"), mapOptions);
-}
-
-// Função para buscar gráficas próximas
-function buscarGraficasProximas() {
-    // Obter o endereço inserido pelo usuário
-    const endereco = document.getElementById("endereco").value;
-
-    // Fazer uma solicitação ao servidor Node.js para obter as gráficas próximas com base no endereço
-
-    // Exibir as gráficas no elemento "graficas"
-    const graficasElement = document.getElementById("graficas");
-    graficasElement.innerHTML = "Gráficas próximas serão exibidas aqui.";
-}
-
-// Associar a função "buscarGraficasProximas" ao botão "Buscar Gráficas Próximas"
-document.getElementById("buscar").addEventListener("click", buscarGraficasProximas);
-
+    fetch('/cadastro-cartao', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartaoData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Cartão cadastrado com sucesso
+          console.log('Cartão cadastrado com sucesso:', data.message);
+          // Recarrega a página após o cadastro bem-sucedido
+        } else {
+          // Erro no cadastro
+          console.error('Erro ao cadastrar cartão:', data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao cadastrar cartão:', error);
+      });
+  });
+});
     </script>
 </body>
 </html>

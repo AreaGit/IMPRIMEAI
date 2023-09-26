@@ -1,7 +1,7 @@
 /*DIVERSAS TELAS*/
 
 
-/*@media screen and (min-width: 320px) and (max-width: 425px) {
+@media screen and (min-width: 320px) and (max-width: 425px) {
   :root {
       --branco:#ffff;
       --coral:#F37160;
@@ -156,7 +156,7 @@
       color: white;
     }
   .slider-container {display: none;}
-}*/
+}
 @media screen and (max-width: 480px) {
     header>p {
       font-size: 12px;
