@@ -25,7 +25,7 @@ const Cartoes = db.define('cartoes', {
     }
 })
 
-//Cartoes.sync({force:true})
-Cartoes.sync()
+Cartoes.sync({force:true})
+//Cartoes.sync()
 
 module.exports = Cartoes

@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
-    form {
+    /*form {
         width: 25%;
         position: relative;
         top: 262px;
@@ -58,10 +58,54 @@
         top: -40px;
         left: 3%;
         font-weight: bold;
+    }*/
+    .conteudo {
+      border: 1px solid red;
+      width: 80%;
+      height: 150px;
     }
+    .conteudo2 {
+      margin-top: 5px;
+      display: none;
+      border: 1px solid red;
+      width: 80%;
+      height: 150px;
+    }    
+    .conteudo3 {
+      display: none;
+      border: 1px solid red;
+      width: 80%;
+      height: 150px;
+    }
+    .popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.popup-content {
+    background-color: white;
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
 </style>
 <body>
-    <form action="/cadastro-cartao" method="post">
+    <!--<form action="/cadastro-cartao" method="post">
   <label for="cardNumber">Número do Cartão</label>
   <input type="text" id="cardNumber" name="cardNumber" required>
   <br>
@@ -75,7 +119,28 @@
   <input type="number" id="cvv" name="cvv" class="cvv" min-length="3" max-length="3" required>
   <br>
   <button type="submit" id="btnCad">Cadastrar Cartão</button>
-</form>
+</form>-->
+
+<div class="conteudo" id="conteudo">
+  <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
+  <h2>Cartão de crédito</h2>
+  <p>Escolha entre seus cartões de crédito ou cadastre um novo</p>
+</div>
+<div class="conteudo2" id="conteudo2">
+    <span>+</span>
+    <a href="#" id="openPopupBtn">Cadastrar novo Cartão</a>
+</div>
+<div class="conteudo3" id="conteudo3">
+  
+</div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" id="closePopupBtn">&times;</span>
+            <h2>Minha Popup</h2>
+            <p>Este é o conteúdo da minha popup.</p>
+        </div>
+    </div>
   
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -117,6 +182,47 @@
         console.error('Erro ao cadastrar cartão:', error);
       });
   });
+});
+
+
+const conteudo = document.getElementById('conteudo')
+const conteudo2 = document.getElementById('conteudo2')
+const conteudo3 = document.getElementById('conteudo3')
+
+let isDisplayBlock = false; // Variável para rastrear o estado atual
+
+conteudo.addEventListener('click', () => {
+  // Inverte o estado atual
+  isDisplayBlock = !isDisplayBlock;
+
+  // Define o estilo de acordo com o estado atual
+  if (isDisplayBlock) {
+    conteudo2.style.display = 'block';
+  } else {
+    conteudo2.style.display = 'none';
+  }
+});
+
+
+const openPopupBtn = document.getElementById('openPopupBtn');
+const popup = document.getElementById('popup');
+const closePopupBtn = document.getElementById('closePopupBtn');
+
+// Função para abrir a popup
+openPopupBtn.addEventListener('click', () => {
+    popup.style.display = 'block';
+});
+
+// Função para fechar a popup
+closePopupBtn.addEventListener('click', () => {
+    popup.style.display = 'none';
+});
+
+// Fechar a popup se o usuário clicar fora dela
+window.addEventListener('click', (event) => {
+    if (event.target === popup) {
+        popup.style.display = 'none';
+    }
 });
     </script>
 </body>
