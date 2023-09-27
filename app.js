@@ -53,7 +53,7 @@ app.get("/test", (req, res) => {
   res.sendFile(__dirname + "/test.html"); // Verifique o caminho do arquivo
 });
 
-app.get("/cadastro-cartao", (req, res) => {
+app.get("/cartao", (req, res) => {
   res.sendFile(__dirname + "html" , "/cadastro-cartao.html"); // Verifique o caminho do arquivo
 });
 

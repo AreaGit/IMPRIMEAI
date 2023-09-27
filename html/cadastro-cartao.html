@@ -12,7 +12,143 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
-   
+.container {
+    width: 100%;
+    height: 100%;
+    margin: 3% auto;
+}
+
+.ui {
+    border: 0;
+    border-radius: 10px;
+    width: 60%;
+    margin: 0 auto;
+    padding: 10%;
+    display: flex;
+    gap: 20px;
+    position: relative;
+    top: -165px;
+    left: 0%;
+}
+
+.container-left {
+    width: 50%;
+}
+
+.container-right {
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.card {
+    width: 360px;
+    height: 230px;
+    margin: 0 auto;
+    background: linear-gradient(45deg, rgba(2,0,36,1) 0%, rgba(0,140,177,1) 35%, rgba(0,29,125,1) 100%);
+    border: 1px solid rgba(0,0,0,.3);
+    border-radius: 15px;
+}
+
+.intern {
+    padding: 20px;
+}
+
+.approximation {
+    width: 30px;
+    transform: rotate(90deg);
+}
+
+.chip {
+    height: 30px;
+    position: relative;
+    left: 87%;
+    bottom: 20px;
+}
+
+.card-number {
+    margin-top: 40px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+}
+
+.card-holder {
+    color: whitesmoke;
+}
+
+.card label {
+    font-size: .7rem;
+}
+
+.card-infos {
+    display: flex;
+    width: 40%;
+    justify-content: space-between;
+    color: white;
+}
+
+#credit-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-size: 1.1rem;
+    color: white;
+    text-transform: uppercase;
+}
+
+.number-container, .name-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.expiration-container, .cvv-container {
+    width: 50%;
+}
+
+input {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    color: black;
+    font-weight: 600;
+    font-size: 1.1rem;
+    outline: 0;
+    width: 90%;
+}
+
+input[type="text"]:focus {
+    border: 1px solid #EF4126;
+}
+
+input#valid-thru-text, input#cvv-text {
+    width: 80%;
+}
+
+input[type="submit"] {
+    width: 90%;
+    background-color: #EF4126;
+    cursor: pointer;
+    color: white;
+}
+
+.infos-container {
+    display: flex;
+}
+
+@media (max-width: 1024px) {
+    .ui {
+        flex-direction: column-reverse;
+    }
+
+    .container-left, .container-right {
+        width: 100%;
+    }
+}
+label {
+    color: #333333;
+}
 </style>
 <body>
     <header>
@@ -26,13 +162,13 @@
                 <a href="#">Central de Ajuda</a>
             </ul>
             <div class="icons-header">
-                <img class="icons" src="images/facebook-icon.png" alt="...">
-                <img class="icons" src="images/youtube-icon.png" alt="...">
-                <img class="icons" src="images/instagram-icon.png" alt="...">
+                <img class="icons" src="../images/facebook-icon.png" alt="...">
+                <img class="icons" src="../images/youtube-icon.png" alt="...">
+                <img class="icons" src="../images/instagram-icon.png" alt="...">
             </div>
         </nav>
         <div class="elem1">
-           <a href="index.html"><img class="logo-imprimeai" src="images/logo-imprimeai2.png" alt=""></a>
+           <a href="index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
            <form id="formPesquisa">
             <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
             <button type="submit" id="btnPesq" class="search__button">
@@ -77,7 +213,7 @@
             </ul>
           </div>
     </header>
-    <main>
+    <!--<main>
         <form action="/cadastro-cartao" method="post">
             <label for="cardNumber">Número do Cartão</label>
             <input type="text" id="cardNumber" name="cardNumber" required>
@@ -91,9 +227,71 @@
             <label for="cvv" class="lbl-cvv">CVV</label>
             <input type="number" id="cvv" name="cvv" class="cvv" min-length="3" max-length="3" required>
             <br>
-            <button type="submit" id="btnCad">Cadastrar Cartão</button>
+            <button type="submit" id="btnCad" class="btnCard">Cadastrar Cartão</button>
           </form>
+    </main>-->
+    <main class="container">
+        <section class="ui">
+            <div class="container-left">
+                <form id="credit-card">
+                    <div class="number-container">
+                        <label for="cardNumber">Número do Cartão</label>
+                        <input type="text" name="card-number" id="cardNumber" maxlength="19" placeholder="1234 5678 9101 1121"
+                        required
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    </div>
+                    <div class="name-container">
+                        <label for="cardHolderName">Nome do Titular</label>
+                        <input type="text" name="name-text" id="cardHolderName" maxlength="30" placeholder="Digite o nome do Titular"
+                        required
+                        onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || event.key == ' '">
+                    </div>
+                    <div class="infos-container">
+                        <div class="expiration-container">
+                            <label for="expirationDate">Data de Expiração</label>
+                            <input type="text" name="valid-thru-text" id="expirationDate" maxlength="5" placeholder="02/40"
+                            required
+                            
+                            onkeypress="return event.charCode >=48 && event.charCode <= 57">
+                        </div>
+                        <div class="cvv-container">
+                            <label for="cvv">CVV</label>
+                            <input type="text" name="cvv-text" id="cvv" maxlength="4" placeholder="1234"
+                            required
+                            onkeypress="return event.charCode >=48 && event.charCode <= 57">
+                        </div>
+                    </div>
+                    <input type="submit" value="Cadastrar Cartão" id="btnCad">
+                </form>
+            </div>
+            <div class="container-right">
+                <div class="card">
+                    <div class="intern">
+                        <img class="approximation" src="https://raw.githubusercontent.com/jovenan/Credit-card-form-ui/main/img/aprox.png" alt="aproximation">
+                        <div class="card-number">
+                            <div class="number-vl">1234 5678 9101 1121</div>
+                        </div>
+                        <div class="card-holder">
+                            <label>Nome Completo</label>
+                            <div class="name-vl">NOME DO TITULAR</div>
+                        </div>
+                        <div class="card-infos">
+                            <div class="exp">
+                                <label>Data de Expiração</label>
+                                <div class="expiration-vl">02/40</div>
+                            </div>
+                            <div class="cvv">
+                                <label>CVV</label>
+                                <div class="cvv-vl">123</div>
+                            </div>
+                        </div>
+                        <img class="chip" src="https://raw.githubusercontent.com/jovenan/Credit-card-form-ui/main/img/chip.png" alt="chip">
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
     <script>
                 document.addEventListener('DOMContentLoaded', function () {
                 const btnCad = document.getElementById('btnCad');
@@ -135,6 +333,71 @@
         });
     });
     });
+
+    const form = document.querySelector("#credit-card");
+
+const cardNumber = document.querySelector("#cardNumber");
+const cardHolder = document.querySelector("#cardHolderName");
+const cardExpiration = document.querySelector("#expirationDate");
+const cardCVV = document.querySelector("#cvv");
+
+const cardNumberText = document.querySelector(".number-vl");
+const cardHolderText = document.querySelector(".name-vl");
+const cardExpirationText = document.querySelector(".expiration-vl");
+const cardCVVText = document.querySelector(".cvv-vl");
+
+cardNumber.addEventListener("keyup", (e) => {
+    if (!e.target.value) {
+        cardNumberText.innerText = "1234 5678 9101 1121";
+    } else {
+        const valuesOfInput = e.target.value.replaceAll(" ", "");
+
+        if (e.target.value.length > 14) {
+            e.target.value = valuesOfInput.replace(/(\d{4})(\d{4})(\d{4})(\d{0,4})/, "$1 $2 $3 $4");
+            cardNumberText.innerHTML = valuesOfInput.replace(/(\d{4})(\d{4})(\d{4})(\d{0,4})/, "$1 $2 $3 $4");
+        } else if (e.target.value.length > 9) {
+            e.target.value = valuesOfInput.replace(/(\d{4})(\d{4})(\d{0,4})/, "$1 $2 $3");
+            cardNumberText.innerHTML = valuesOfInput.replace(/(\d{4})(\d{4})(\d{0,4})/, "$1 $2 $3");
+        } else if (e.target.value.length > 4) {
+            e.target.value = valuesOfInput.replace(/(\d{4})(\d{0,4})/, "$1 $2");
+            cardNumberText.innerHTML = valuesOfInput.replace(/(\d{4})(\d{0,4})/, "$1 $2");
+        } else {
+            cardNumberText.innerHTML = valuesOfInput
+        }
+    }
+})
+
+cardHolder.addEventListener("keyup", (e) => {
+    if (!e.target.value) {
+        cardHolderText.innerHTML = "NOME DO TITULAR";
+    } else {
+        cardHolderText.innerHTML = e.target.value.toUpperCase();
+    }
+})
+
+cardExpiration.addEventListener("keyup", (e) => {
+    if (!e.target.value) {
+        cardExpirationText.innerHTML = "02/40";
+    } else {
+        const valuesOfInput = e.target.value.replace("/", "");
+
+        if (e.target.value.length > 2) {
+            e.target.value = valuesOfInput.replace(/^(\d{2})(\d{0,2})/, "$1/$2");
+            cardExpirationText.innerHTML = valuesOfInput.replace(/^(\d{2})(\d{0,2})/, "$1/$2");
+        } else {
+            cardExpirationText.innerHTML = valuesOfInput;
+        }
+    }
+})
+
+cardCVV.addEventListener("keyup", (e) => {
+    if (!e.target.value) {
+        cardCVVText.innerHTML = "123";
+    } else {
+        cardCVVText.innerHTML = e.target.value;
+    }
+})
+
   
     </script>
     <span id="voltar_ao_topo" class="material-icons">expand_less</span>
