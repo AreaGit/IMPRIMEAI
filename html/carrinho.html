@@ -221,10 +221,10 @@
 }
 
 .chip {
-    height: 22px;
+    height: 27px;
     position: relative;
     left: 37%;
-    bottom: 26px;
+    bottom: -60px;
 }
 
 .card-number {
@@ -357,17 +357,22 @@ label {
   top: 24px;
 }
 .card-holder {
-  position: relative;
-  left: -30%;
+  position: fixed;
+  left: 58%;
 }
 .exp {
-  position: relative;
-  left: -22%;
+    position: fixed;
+    top: 416px;
+    left: 58%;
 }
 .cvv {
-  position: relative;
-  left: -27%;
-  top: 15px;
+    position: fixed;
+    left: 64%;
+    top: 417px;
+}
+.number-vl {
+    position: relative;
+    left: -5%;
 }
 </style>
 <body>
@@ -433,7 +438,7 @@ label {
               <span class="close" id="closePopupBtn">&times;</span>
               <section class="ui">
                 <div class="container-left">
-                    <form id="credit-card" method="post">
+                    <form id="credit-card" method="get">
                         <div class="number-container">
                             <label for="cardNumber" class="lbl-cardNum">Número do Cartão</label>
                             <input type="text" name="card-number" id="cardNumber" maxlength="19" placeholder="1234 5678 9101 1121"
@@ -511,10 +516,12 @@ document.addEventListener('DOMContentLoaded', function() {
       // Obtenha os dados do carrinho em formato JSON
       const produtos = await response.json();
       const carrinhoProdutos = document.getElementById('carrinhoProdutos');
+      const conteudo = document.getElementById('conteudo')
 
       // Limpe os produtos existentes no carrinho
       carrinhoProdutos.innerHTML = '';
       resumoCompra.setAttribute('style', 'display:none')
+      conteudo.setAttribute('style', 'display:none;')
 
 
       // Verifique se há produtos no carrinho
@@ -534,6 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const produtoElement = document.createElement('div');
           produtoElement.classList.add('produto-carrinho');
           resumoCompra.setAttribute('style', 'display:block')
+          conteudo.setAttribute('style', 'display:block;')
 
           produtoElement.innerHTML = `
             <img src="/imagens/${produto.produtoId}" alt="Imagem do Produto">
