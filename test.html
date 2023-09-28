@@ -13,217 +13,103 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
-    /*form {
-        width: 25%;
-        position: relative;
-        top: 262px;
-        left: 40%;
-    }
-    label {
-        margin: 10px;
-        font-size: 14px;
-        margin-left: 5px;
-        font-weight: bold;
-    }
-    input {
-        padding: 10px 28px 10px 28px;
-        border: 1px solid rgba(0, 0, 0, 0.507);
-        border-radius: 5px;
-    }
-    .cvv {
-        padding: 10px 10px 10px 10px;
-        width: 14%;
-        position: relative;
-        top: -78px;
-        left: 37%;
-    }
-    .lbl-cvv {
-        position: relative;
-        top: -78px;
-        left: 38%;
-        width: fit-content;
-    }
-    .exp-date {
-        padding: 10px 0px 10px 0px;
-        width: 27%;
-    }
-    button {
-        padding: 18px 18px 18px 18px;
-        background-color: #2225294b;
-        border: none;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        position: relative;
-        top: -40px;
-        left: 3%;
-        font-weight: bold;
-    }*/
-    .conteudo {
-      border: 1px solid red;
-      width: 80%;
-      height: 150px;
-    }
-    .conteudo2 {
-      margin-top: 5px;
-      display: none;
-      border: 1px solid red;
-      width: 80%;
-      height: 150px;
-    }    
-    .conteudo3 {
-      display: none;
-      border: 1px solid red;
-      width: 80%;
-      height: 150px;
-    }
-    .popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-}
-
-.popup-content {
-    background-color: white;
-    width: 300px;
-    margin: 100px auto;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  main > h1 {
+    font-size: 20px;
+    font-weight: bold;
+    width: fit-content;
     position: relative;
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-}
+    top: -20px;
+    left: 50px;
+  }
+   p {
+    font-size: 14px;
+    font-weight: lighter;
+  }
+  .container-right {
+    position: relative;
+    top: -40%;
+    left: 80%;
+    width: fit-content;
+    background-color: #a7a9ac75;
+  }
+  .container-left {
+    position: relative;
+    top: 30px;
+    left: 30%;
+  }
 </style>
 <body>
-    <!--<form action="/cadastro-cartao" method="post">
-  <label for="cardNumber">Número do Cartão</label>
-  <input type="text" id="cardNumber" name="cardNumber" required>
-  <br>
-  <label for="cardHolderName">Nome do Titular</label>
-  <input type="text" id="cardHolderName" name="cardHolderName" required>
-  <br>
-  <label for="expirationDate">Data de Vencimento</label>
-  <input type="date" id="expirationDate" name="expirationDate" class="exp-date" required>
-  <br>
-  <label for="cvv" class="lbl-cvv">CVV</label>
-  <input type="number" id="cvv" name="cvv" class="cvv" min-length="3" max-length="3" required>
-  <br>
-  <button type="submit" id="btnCad">Cadastrar Cartão</button>
-</form>-->
-
-<div class="conteudo" id="conteudo">
-  <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
-  <h2>Cartão de crédito</h2>
-  <p>Escolha entre seus cartões de crédito ou cadastre um novo</p>
-</div>
-<div class="conteudo2" id="conteudo2">
-    <span>+</span>
-    <a href="#" id="openPopupBtn">Cadastrar novo Cartão</a>
-</div>
-<div class="conteudo3" id="conteudo3">
-  
-</div>
-
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="close" id="closePopupBtn">&times;</span>
-            <h2>Minha Popup</h2>
-            <p>Este é o conteúdo da minha popup.</p>
-        </div>
+  <header>
+    <div class="mini-banner">
+        <!-- IMAGEM <img src="image.jpg" alt="...">-->
     </div>
-  
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-  const btnCad = document.getElementById('btnCad');
-
-  btnCad.addEventListener('click', function () {
-    const cardNumber = document.getElementById('cardNumber').value;
-    const cardHolderName = document.getElementById('cardHolderName').value;
-    const expirationDate = document.getElementById('expirationDate').value;
-    const cvv = document.getElementById('cvv').value;
-
-    // Montar os dados do formulário em um objeto
-    const cartaoData = {
-      cardNumber: cardNumber,
-      cardHolderName: cardHolderName,
-      expirationDate: expirationDate,
-      cvv: cvv,
-    };
-
-    fetch('/cadastro-cartao', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(cartaoData),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Cartão cadastrado com sucesso
-          console.log('Cartão cadastrado com sucesso:', data.message);
-          // Recarrega a página após o cadastro bem-sucedido
-        } else {
-          // Erro no cadastro
-          console.error('Erro ao cadastrar cartão:', data.error);
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao cadastrar cartão:', error);
-      });
-  });
-});
-
-
-const conteudo = document.getElementById('conteudo')
-const conteudo2 = document.getElementById('conteudo2')
-const conteudo3 = document.getElementById('conteudo3')
-
-let isDisplayBlock = false; // Variável para rastrear o estado atual
-
-conteudo.addEventListener('click', () => {
-  // Inverte o estado atual
-  isDisplayBlock = !isDisplayBlock;
-
-  // Define o estilo de acordo com o estado atual
-  if (isDisplayBlock) {
-    conteudo2.style.display = 'block';
-  } else {
-    conteudo2.style.display = 'none';
-  }
-});
-
-
-const openPopupBtn = document.getElementById('openPopupBtn');
-const popup = document.getElementById('popup');
-const closePopupBtn = document.getElementById('closePopupBtn');
-
-// Função para abrir a popup
-openPopupBtn.addEventListener('click', () => {
-    popup.style.display = 'block';
-});
-
-// Função para fechar a popup
-closePopupBtn.addEventListener('click', () => {
-    popup.style.display = 'none';
-});
-
-// Fechar a popup se o usuário clicar fora dela
-window.addEventListener('click', (event) => {
-    if (event.target === popup) {
-        popup.style.display = 'none';
-    }
-});
-    </script>
+    <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+    <nav>
+        <ul class='menu2'>
+            <a href="#">Meus Pedidos</a>
+            <a href="#">Central de Ajuda</a>
+        </ul>
+        <div class="icons-header">
+            <img class="icons" src="../images/facebook-icon.png" alt="...">
+            <img class="icons" src="../images/youtube-icon.png" alt="...">
+            <img class="icons" src="../images/instagram-icon.png" alt="...">
+        </div>
+    </nav>
+    <div class="elem1">
+       <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+        <!--<div class="input-pesq">
+            <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
+            <button id="btnPesq" class="search__button">
+        <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+            <g>
+                <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+            </g>
+        </svg>
+        </div>-->
+        <div id="logado"></div>
+        <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
+            <!--<span id="carrinho_compras" class="material-icons">shopping_cart</span>
+            <span id="totalItens">0</span>-->
+    </div>
+</header>
+<main>
+  <h1>Como você prefere pagar?</h1>
+  <div class="container-left">
+    <div class="metod-pag">
+      <div class="mtd-pix">
+        <input type="checkbox" name="pix-check" id="pix-check" checked>
+        <label for="pix">Pix</label>
+        <p>Aprovação em minutos. Ao finalizar sua compra disponibilizaremos o QR Code para pagamento do PIX</p>
+        <a href="#">Finalizar a Compra</a>
+      </div>
+      <div class="mtd-boleto">
+        <input type="checkbox" name="boleto-check" id="boleto-check" checked>
+        <label for="pix">Boleto Bancário</label>
+        <p>O número do boleto será gerado no final da compra</p>
+        <a href="#">Finalizar a Compra</a>    
+      </div>
+      <div class="mtd-dep">
+        <input type="checkbox" name="deposito-check" id="deposito-check" checked>
+        <label for="pix">Depósito e Transferência</label>
+        <p>Pague via transferência ou depósito</p>
+        <a href="#">Finalizar a Compra</a> 
+      </div>
+      <div class="mtd-credito">
+        <input type="checkbox" name="credito-check" id="credito-check" checked>
+        <label for="pix">Cartão de Crédito</label>
+        <p>Escolha entre seus cartões de crédito ou cadastre um novo</p>
+        <a href="#">Finalizar a Compra</a> 
+      </div>
+    </div>
+  </div>
+  <div class="container-right">
+    <div class="resumo-compra">
+      <h2>Resumo da Compra</h2>
+      <p>Produto</p>
+      <p>Frete</p>
+      <p>Total</p>
+    </div>
+  </div>
+</main>
 </body>
 </html>
