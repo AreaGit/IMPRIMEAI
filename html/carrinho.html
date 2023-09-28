@@ -327,8 +327,9 @@ label {
     padding: 20px;
     text-align: center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    position: relative;
-    top: -846px;
+    position: fixed;
+    top: -93px;
+    left: 20%;
 }
 
 .close {
@@ -362,17 +363,40 @@ label {
 }
 .exp {
     position: fixed;
-    top: 416px;
+    top: 369px;
     left: 58%;
 }
 .cvv {
     position: fixed;
     left: 64%;
-    top: 417px;
+    top: 370px;
 }
 .number-vl {
     position: relative;
     left: -5%;
+}
+.lbl-ch {
+    position: fixed;
+    left: 58%;
+    top: 33%;
+}
+.name-vl {
+    position: fixed;
+    left: 58%;
+    top: 35%;
+}
+#cartoes-cad {
+    border: 1px solid red;
+}
+#nameCard {
+    color: #222529;
+    position: relative;
+    left: 63px;
+    top: 10px;
+    width: fit-content;
+}
+li {
+    list-style: none;
 }
 </style>
 <body>
@@ -427,7 +451,10 @@ label {
         <div id="conteudo">
             <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
             <h2>Cartão de crédito</h2>
-            <p>Escolha entre seus cartões de crédito ou cadastre um novo</p>
+            <p id="cardEsc">Escolha entre seus cartões de crédito ou cadastre um novo</p>
+            <ul id="cartoes-list">
+                <!-- Cartões serão adicionados aqui com JavaScript -->
+            </ul>
         </div>
         <div id="conteudo2">
           <span>+</span>
@@ -477,7 +504,7 @@ label {
                                 <div class="number-vl">1234 5678 9101 1121</div>
                             </div>
                             <div class="card-holder">
-                                <label>Nome Completo</label>
+                                <label class="lbl-ch">Nome Completo</label>
                                 <div class="name-vl">NOME DO TITULAR</div>
                             </div>
                             <div class="card-infos">
@@ -522,6 +549,7 @@ document.addEventListener('DOMContentLoaded', function() {
       carrinhoProdutos.innerHTML = '';
       resumoCompra.setAttribute('style', 'display:none')
       conteudo.setAttribute('style', 'display:none;')
+      
 
 
       // Verifique se há produtos no carrinho
@@ -549,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="qnt">Quantidade: ${produto.quantidade}</p>
             <p class="vlr">Valor Unitário: R$ ${produto.valorUnitario.toFixed(2)}</p>
             <p class="sub">Subtotal: R$ ${produto.subtotal.toFixed(2)}</p>
-            <button class="remover-produto" data-produto-id="${produto.produtoId}">&#9747;  Remover</button>
+            <button class="remover-produto" data-produto-id="${produto.produtoId}">&#9747;  Remover Produto do Carrinho</button>
           `;
 
           carrinhoProdutos.appendChild(produtoElement);
@@ -809,6 +837,27 @@ cardCVV.addEventListener("keyup", (e) => {
         cardCVVText.innerHTML = e.target.value;
     }
 })
+
+const cardEsc = document.getElementById('cardEsc')
+
+fetch('/cartoes-cadastrados')
+            .then(response => response.json())
+            .then(data => {
+                const cartoesList = document.getElementById('cartoes-list');
+                data.cartoes.forEach(cartao => {
+                    cardEsc.setAttribute('style', 'display:none;')
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <!--<p>Número do Cartão: ${cartao.cardNumber}</p>-->
+                        <p id="nameCard">Cartão de ${cartao.cardHolderName}</p>
+                        <!--<p>Data de Expiração: ${cartao.expirationDate}</p>-->
+                        <!-- Adicione outras informações do cartão aqui -->
+                    `;
+                    cartoesList.appendChild(li);
+
+                });
+            })
+            .catch(error => console.error('Erro ao buscar cartões:', error));
 
 
     </script>

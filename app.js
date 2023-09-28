@@ -75,6 +75,20 @@ app.post('/cadastro-cartao', async (req, res) => {
   }
 });
 
+app.get('/cartoes-cadastrados', async (req, res) => {
+  try {
+    // Consulte o banco de dados para buscar os cartões cadastrados
+    const cartoesCadastrados = await Cartoes.findAll();
+
+    // Envie os cartões como resposta em JSON
+    res.json({ cartoes: cartoesCadastrados });
+  } catch (error) {
+    console.error('Erro ao buscar cartões cadastrados:', error);
+    res.status(500).json({ error: 'Erro ao buscar cartões cadastrados', message: error.message });
+  }
+});
+
+
 app.post("/cadastrar", async (req, res) => {
 
     try {
