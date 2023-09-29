@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/style.css" media="all">
+<link rel="stylesheet" href="../styles/pag-prods.css">
+<link rel="stylesheet" href="styles/medias.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<style>
+  main > h1 {
+    font-size: 30px;
+    font-weight: normal;
+    width: fit-content;
+    position: relative;
+    top: -20px;
+    left: 50px;
+  }
+   p {
+    font-size: 14px;
+    font-weight: lighter;
+    width: fit-content;
+  }
+  .container-left {
+    position: relative;
+    top: 30px;
+    left: 10%;
+    width: fit-content;
+  }
+  h2 {
+    width: fit-content ;
+  }
+  .mtd-pix {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+    width: 150%;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .mtd-pix:hover {
+   box-shadow: 1px 1px 6px #ef412693; 
+  }
+  .mtd-pix > a {
+    text-decoration: none;
+    color: white;
+    background-color: #EF4126;
+    padding: 8px 18px 8px 18px;
+    position: relative;
+    left: 80%;
+    top: -50px;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .mtd-pix > p {
+    font-size: 14px;
+    font-weight: normal;
+    position: relative;
+    left: 10%;
+    top: -10px;
+  }
+  .mtd-pix > h2 {
+    position: relative;
+    left: 10%;
+    top: -20px;
+  }
+  .mtd-pix > img {
+    position: relative;
+    top: 34px;
+    left: 20px;
+  }
+  .mtd-boleto {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+    width: 150%;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .mtd-boleto:hover {
+   box-shadow: 1px 1px 6px #ef412693; 
+  }
+  .mtd-boleto > a {
+    text-decoration: none;
+    color: white;
+    background-color: #EF4126;
+    padding: 8px 18px 8px 18px;
+    position: relative;
+    left: 80%;
+    top: -50px;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .mtd-boleto > p {
+    font-size: 14px;
+    font-weight: normal;
+    position: relative;
+    left: 10%;
+    top: -10px;
+  }
+  .mtd-boleto > h2 {
+    position: relative;
+    left: 10%;
+    top: -20px;
+  }
+  .mtd-boleto > img {
+    position: relative;
+    top: 34px;
+    left: 20px;
+  }
+  .mtd-credito {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+    width: 150%;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .mtd-credito:hover {
+   box-shadow: 1px 1px 6px #ef412693; 
+  }
+  .mtd-credito > a {
+    text-decoration: none;
+    color: white;
+    background-color: #EF4126;
+    padding: 8px 18px 8px 18px;
+    position: relative;
+    left: 80%;
+    top: -50px;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .mtd-credito > p {
+    font-size: 14px;
+    font-weight: normal;
+    position: relative;
+    left: 10%;
+    top: -10px;
+  }
+  .mtd-credito > h2 {
+    position: relative;
+    left: 10%;
+    top: -20px;
+  }
+  .mtd-credito > img {
+    position: relative;
+    top: 34px;
+    left: 20px;
+  }
+  .container-right {
+    position: relative;
+    top: -50%;
+    left: 75%;
+    width: 25%;
+    height: 25%;
+  }
+  .resumo-compra > h2 {
+    font-weight: normal;
+    font-size: 25px;
+    border-bottom: 1px solid black;
+    margin-bottom: 1.3rem;
+  }
+  .resumo-compra > p {
+    font-weight: normal;
+    margin-bottom: 10px;
+  }
+  .tot {
+    border-top: 1px solid black;
+    font-size: 25px;
+  }
+</style>
+<body>
+  <header>
+    <div class="mini-banner">
+        <!-- IMAGEM <img src="image.jpg" alt="...">-->
+    </div>
+    <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+    <nav>
+        <ul class='menu2'>
+            <a href="#">Meus Pedidos</a>
+            <a href="#">Central de Ajuda</a>
+        </ul>
+        <div class="icons-header">
+            <img class="icons" src="../images/facebook-icon.png" alt="...">
+            <img class="icons" src="../images/youtube-icon.png" alt="...">
+            <img class="icons" src="../images/instagram-icon.png" alt="...">
+        </div>
+    </nav>
+    <div class="elem1">
+       <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+        <div id="logado"></div>
+        <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
+    </div>
+</header>
+<main>
+  <h1>Como você prefere pagar?</h1>
+  <div class="container-left">
+    <div class="metod-pag">
+      <div class="mtd-pix">
+        <img src="https://wbl.blob.core.windows.net/public/pix.png" alt="...">
+        <h2>Pix</h2>
+        <p>Aprovação em minutos. Ao finalizar sua compra disponibilizaremos o QR Code para pagamento do PIX</p>
+        <a href="#">Finalizar a Compra</a>
+      </div>
+      <div class="mtd-boleto">
+        <img src="https://wbl.blob.core.windows.net/public/boleto.svg" alt="...">
+        <h2>Boleto Bancário</h2>
+        <p>O número do boleto será gerado no final da compra</p>
+        <a href="#">Finalizar a Compra</a>    
+      </div>
+      <div class="mtd-credito">
+        <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
+        <h2>Cartão de Crédito</h2>
+        <p>Escolha entre seus cartões de crédito ou cadastre um novo</p>
+        <a href="#">Finalizar a Compra</a> 
+      </div>
+    </div>
+  </div>
+  <div class="container-right">
+    <div class="resumo-compra">
+      <h2>Resumo da Compra</h2>
+      <p>Produto</p>
+      <p>Frete</p>
+      <p class="tot">Total</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>
