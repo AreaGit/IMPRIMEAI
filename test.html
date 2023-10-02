@@ -13,10 +13,25 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
-  img {
-    position: absolute;
-    left: 45%;
-  }
+    #novos-pedidos {
+        border: 1px solid red;
+        height: 500px;
+    }
+    #pedido {
+        border: 1px solid black;
+        height: 250px;
+        width: 85%;
+    }
+    main > h2 {
+        text-align: left;
+        margin-left: 25px;
+    }
+    #pedido > button {
+        position: relative;
+        top: 200px;
+        left: 85%;
+        padding: 8px 18px 8px 18px;
+    }
 </style>
 <body>
   <header>
@@ -45,7 +60,8 @@
     <h2>Meus Pedidos</h2>
     <div id="novos-pedidos">
         <div id="pedido">
-            
+            <button>Recusar</button>
+            <button>Aceitar</button>
         </div>
     </div>
 </main>
