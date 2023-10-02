@@ -6,6 +6,7 @@ const axios = require('axios')
 const User = require('./models/User');
 const Produtos = require('./models/Produtos');
 const Cartoes = require('./models/Cartoes');
+const Graficas = require('./models/Graficas');
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
@@ -28,6 +29,7 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 const cookieParser = require('cookie-parser');
+
 const PORT = 8080;
 
 app.use(express.static('public'));
