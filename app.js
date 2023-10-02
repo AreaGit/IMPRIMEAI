@@ -63,6 +63,43 @@ app.get("/cartao", (req, res) => {
   res.sendFile(__dirname + "html" , "/cadastro-cartao.html"); // Verifique o caminho do arquivo
 });
 
+app.get("/cadastro-graficas", (req, res) => {
+  res.sendFile(__dirname + "html" , "/cadastro-graficas.html"); // Verifique o caminho do arquivo
+});
+
+
+app.post("/cadastro-graficas", async (req, res) => {
+
+
+  
+  try {
+      const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, emailCad, passCad } = req.body;
+      const hashedPassword = await bcrypt.hash(passCad, 10);
+
+      const newGrafica = await Graficas.create({
+          userCad: userCad,
+          cnpjCad: cnpjCad,
+          endereçoCad: endereçoCad,
+          cepCad: cepCad,
+          cidadeCad: cidadeCad,
+          estadoCad: estadoCad,
+          inscricaoEstadualCad: inscricaoEstadualCad,
+          telefoneCad: telefoneCad,
+          bancoCad: bancoCad,
+          agenciaCad: agenciaCad,
+          contaCorrenteCad: contaCorrenteCad,
+          emailCad: emailCad,
+          passCad: hashedPassword
+      });
+
+      res.json({ message: 'Gráfica cadastrada com sucesso!', Graficas: newGrafica });
+      
+  } catch (error) {
+      console.error('Erro ao cadastrar grafica:', error);
+      res.status(500).json({ message: 'Erro ao cadastrar grafica' });
+  }
+});
+
 app.post('/cadastro-cartao', async (req, res) => {
   const { cardNumber, cardHolderName, expirationDate, cvv } = req.body;
 

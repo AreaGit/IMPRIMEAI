@@ -12,7 +12,7 @@
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
     <form id="cadastroForm">
-        <h1>Crie sua Conta</h1>
+        <h1>Cadastre sua Gráfica</h1>
         <p id="msg">Novo por aqui? Cadastre-se já!</p>
 
         <input type="text" name="usuario" id="usuario" placeholder="Digite o nome de Usuário..." autocomplete="username" required minlength="5">
@@ -31,6 +31,12 @@
         <br>
         <input type="number" name="telefone" id="telefone" placeholder="Digite o seu Número de Celular..." autocomplete="cc-number" required minlength="11">
         <br>
+        <input type="text" name="banco" id="banco" placeholder="Digite o seu Banco" autocomplete="name" minlength="3" required>
+        <br>
+        <input type="text" name="conta" id="conta" placeholder="Digite a sua Conta Corrente..." autocomplete="name" minlength="3" required>
+        <br>
+        <input type="text" name="agencia" id="agencia" placeholder="Digite a sua Agencia..." autocomplete="name" minlength="3" required>
+        <br>
         <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required minlength="3">
         <br>
         <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" minlength="8" required>
@@ -43,6 +49,33 @@
         
         <script>
 
+const usuario = document.getElementById('usuario')
+let validUsuario = false
+const email = document.getElementById('email')
+let validEmail = false
+const pass = document.getElementById('pass')
+let validPass = false
+const msg = document.getElementById('msg')
+const endereço = document.getElementById('endereço')
+let validEndereco = false
+const cep = document.getElementById('cep')
+let validCep = false
+const cidade = document.getElementById('cidade')
+let validCidade = false
+const estado = document.getElementById('estado')
+let validEstado = false
+const telefone = document.getElementById('telefone')
+let validTelefone = false
+const cnpj = document.getElementById('cnpj')
+let validCnpj = false
+const inscricaoEstadual = document.getElementById('inscricaoEstadual')
+let validInscricao = false
+const banco = document.getElementById('banco')
+let validBanco = false
+const agencia = document.getElementById('agencia')
+let validAgencia = false
+const conta = document.getElementById('conta')
+let validConta = false
             usuario.addEventListener('keyup', () => {
     const usuarioValue = usuario.value.trim(); // Remove espaços em branco do início e do fim
     if (usuarioValue.length <= 5 || usuarioValue.includes(' ')) {
@@ -94,10 +127,10 @@ estado.addEventListener('keyup', () => {
 cnpj.addEventListener('keyup', () => {
     if(cnpj.value.length <= 11) {
         cnpj.setAttribute('style', 'color: red; border-color: red;')
-        validCPF = false
+        validCnpj = false
     } else {
         cnpj.setAttribute('style', 'color: black; border-color: green;')
-        validCPF = true
+        validCnpj = true
     }
 })
 telefone.addEventListener('keyup', () => {
@@ -107,6 +140,33 @@ telefone.addEventListener('keyup', () => {
     } else {
         telefone.setAttribute('style', 'color: black; border-color: green;')
         validTelefone = true
+    }
+})
+banco.addEventListener('keyup', () => {
+    if(banco.value.length <= 3) {
+        banco.setAttribute('style', 'color: red; border-color: red;')
+        validBanco = false
+    } else {
+        banco.setAttribute('style', 'color: black; border-color: green;')
+        validBanco = true
+    }
+})
+agencia.addEventListener('keyup', () => {
+    if(agencia.value.length <= 3) {
+        agencia.setAttribute('style', 'color: red; border-color: red;')
+        validAgencia = false
+    } else {
+        agencia.setAttribute('style', 'color: black; border-color: green;')
+        validAgencia = true
+    }
+})
+conta.addEventListener('keyup', () => {
+    if(conta.value.length <= 3) {
+        conta.setAttribute('style', 'color: red; border-color: red;')
+        validConta = false
+    } else {
+        conta.setAttribute('style', 'color: black; border-color: green;')
+        validConta = true
     }
 })
 email.addEventListener('keyup', () => {
@@ -143,8 +203,58 @@ document.addEventListener('DOMContentLoaded', function () {
         const estado = document.getElementById('estado').value;
         const telefone = document.getElementById('telefone').value;
         const inscricaoEstadual = document.getElementById('inscricaoEstadual').value;
+        const conta = document.getElementById('conta').value
+        const banco = document.getElementById('banco').value
+        const agencia = document.getElementById('agencia').value
         const email = document.getElementById('email').value;
         const pass = document.getElementById('pass').value;
+
+        const graficaData = {
+            userCad: usuario,
+            endereçoCad: endereço,
+            cepCad: cep,
+            cidadeCad: cidade,
+            estadoCad: estado,
+            cnpjCad: cnpj,
+            telefoneCad: telefone,
+            inscricaoEstadualCad: inscricaoEstadual,
+            bancoCad: banco,
+            agenciaCad: agencia,
+            contaCorrenteCad: conta,
+            emailCad: email,
+            passCad: pass
+        };
+
+        fetch('/cadastro-graficas', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(graficaData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (validUsuario && validEmail && validPass) {
+            // Cartão cadastrado com sucesso
+            console.log('Grafica cadastrada com sucesso:', data.message);
+            msg.innerHTML = '<strong>Usuário Cadastrado com Sucesso</strong>'
+            msg.setAttribute('style', 'color: green;')
+            setTimeout(() => {
+                window.location.href = 'http://localhost:8080/html/form.html'
+            },3000)
+            // Recarrega a página após o cadastro bem-sucedido
+            } else {
+            // Erro no cadastro
+            console.error('Erro ao cadastrar grafica:', data.error);
+            msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
+            msg.setAttribute('style', 'color:red;')
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao cadastrar grafica:', error);
+            msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
+            msg.setAttribute('style', 'color:red;')
+        });
 
     })
 })
