@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/form.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
+    <form id="cadastroForm">
+        <h1>Crie sua Conta</h1>
+        <p id="msg">Novo por aqui? Cadastre-se já!</p>
+
+        <input type="text" name="usuario" id="usuario" placeholder="Digite o nome de Usuário..." autocomplete="username" required minlength="5">
+        <br>
+        <input type="text" name="endereço" id="endereço" placeholder="Digite o seu Endereço..." autocomplete="address-level1" required minlength="5">
+        <br>
+        <input type="text" name="cep" id="cep" placeholder="Digite o seu Cep..." autocomplete="address-level1" required minlength="8">
+        <br>
+        <input type="text" name="cidade" id="cidade" placeholder="Digite o sua Cidade..." autocomplete="address-level1" required minlength="3">
+        <br>
+        <input type="text" name="estado" id="estado" placeholder="Digite o sua Estado..." autocomplete="address-level1" required minlength="3">
+        <br>
+        <input type="text" name="cnpj" id="cnpj" placeholder="Digite o seu Cnpj..." autocomplete="cc-number" required minlength="11">
+        <br>
+        <input type="text" name="inscricaoEstadual" id="inscricaoEstadual" placeholder="Digite a Inscrição Estadual..." autocomplete="name" minlength="3" required>
+        <br>
+        <input type="number" name="telefone" id="telefone" placeholder="Digite o seu Número de Celular..." autocomplete="cc-number" required minlength="11">
+        <br>
+        <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required minlength="3">
+        <br>
+        <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" minlength="8" required>
+
+        <div class="btns">
+            <button id="btnCad" type="button">Cadastrar</button>
+            <br>
+            <a href="form.html">Faça o login</a>
+        </div>
+        
+        <script>
+
+            usuario.addEventListener('keyup', () => {
+    const usuarioValue = usuario.value.trim(); // Remove espaços em branco do início e do fim
+    if (usuarioValue.length <= 5 || usuarioValue.includes(' ')) {
+        usuario.style.color = 'red';
+        usuario.style.borderColor = 'red';
+        validUsuario = false;
+    } else {
+        usuario.style.color = 'black';
+        usuario.style.borderColor = 'green';
+        validUsuario = true;
+    }
+});
+endereço.addEventListener('keyup', () => {
+    if(endereço.value.length <= 5) {
+        endereço.setAttribute('style', 'color: red; border-color: red;')
+        validEndereco = false
+    } else {
+        endereço.setAttribute('style', 'color: black; border-color: green;')
+        validEndereco = true
+    }
+})
+cep.addEventListener('keyup', () => {
+    if(cep.value.length <= 8) {
+        cep.setAttribute('style', 'color: red; border-color: red;')
+        validCep = false
+    } else {
+        cep.setAttribute('style', 'color: black; border-color: green;')
+        validCep = true
+    }
+})
+cidade.addEventListener('keyup', () => {
+    if(cidade.value.length <= 3) {
+        cidade.setAttribute('style', 'color: red; border-color: red;')
+        validCidade = false
+    } else {
+        cidade.setAttribute('style', 'color: black; border-color: green;')
+        validCidade = true
+    }
+})
+estado.addEventListener('keyup', () => {
+    if(estado.value.length <= 3) {
+        estado.setAttribute('style', 'color: red; border-color: red;')
+        validEstado = false
+    } else {
+        estado.setAttribute('style', 'color: black; border-color: green;')
+        validEstado = true
+    }
+})
+cnpj.addEventListener('keyup', () => {
+    if(cnpj.value.length <= 11) {
+        cnpj.setAttribute('style', 'color: red; border-color: red;')
+        validCPF = false
+    } else {
+        cnpj.setAttribute('style', 'color: black; border-color: green;')
+        validCPF = true
+    }
+})
+telefone.addEventListener('keyup', () => {
+    if(telefone.value.length <= 8) {
+        telefone.setAttribute('style', 'color: red; border-color: red;')
+        validTelefone = false
+    } else {
+        telefone.setAttribute('style', 'color: black; border-color: green;')
+        validTelefone = true
+    }
+})
+email.addEventListener('keyup', () => {
+    if(email.value.length <= 3) {
+        email.setAttribute('style', 'color: red; border-color: red;')
+        validEmail = false
+    } else {
+        email.setAttribute('style', 'color: black; border-color: green;')
+        validEmail = true
+    }
+})
+pass.addEventListener('keyup', () => {
+    if(pass.value.length <= 8) {
+        pass.setAttribute('style', 'color: red; border-color: red;')
+        validPass = false
+    } else {
+        pass.setAttribute('style', 'color: black; border-color: green;')
+        validPass = true
+    }
+})
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const btnCad = document.getElementById('btnCad');
+
+    btnCad.addEventListener('click', function () {
+
+        const usuario = document.getElementById('usuario').value;
+        const cnpj = document.getElementById('cnpj').value;
+        const endereço = document.getElementById('endereço').value;
+        const cep = document.getElementById('cep').value;
+        const cidade = document.getElementById('cidade').value;
+        const estado = document.getElementById('estado').value;
+        const telefone = document.getElementById('telefone').value;
+        const inscricaoEstadual = document.getElementById('inscricaoEstadual').value;
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+
+    })
+})
+
+        </script>
+    </form>
+</body>
+</html>

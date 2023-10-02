@@ -40,6 +40,18 @@ const Graficas = db.define('graficas', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
+    bancoCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    agenciaCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
+    contaCorrenteCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
     emailCad: {
         type: Sequelize.STRING(255),
         allowNull: true
