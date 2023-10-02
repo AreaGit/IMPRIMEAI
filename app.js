@@ -67,6 +67,10 @@ app.get("/cadastro-graficas", (req, res) => {
   res.sendFile(__dirname + "html" , "/cadastro-graficas.html"); // Verifique o caminho do arquivo
 });
 
+app.get("/login-graficas", (req, res) => {
+  res.sendFile(__dirname + "html" , "/login-graficas.html"); // Verifique o caminho do arquivo
+});
+
 
 app.post("/cadastro-graficas", async (req, res) => {
 
@@ -97,6 +101,37 @@ app.post("/cadastro-graficas", async (req, res) => {
   } catch (error) {
       console.error('Erro ao cadastrar grafica:', error);
       res.status(500).json({ message: 'Erro ao cadastrar grafica' });
+  }
+});
+
+
+app.post("/login-graficas", async (req, res) => {
+  try {
+    const { emailCad, passCad } = req.body;
+
+    // Verifique se o usuário existe no banco de dados
+    const grafica = await Graficas.findOne({ where: { emailCad: emailCad} });
+
+    if (!grafica) {
+      return res.status(401).json({ message: "Grafica não encontrada" });
+    }
+
+    const passwordMatch = await bcrypt.compare(passCad, grafica.passCad);
+
+    // Verifique se a senha está correta
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Senha incorreta" });
+    }
+
+    res.cookie('userCad', grafica.userCad);
+
+    // Gere um token de autenticação (exemplo simples)
+    const token = Math.random().toString(16).substring(2);
+
+    res.json({ message: "Login bem-sucedido", token: token });
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
   }
 });
 

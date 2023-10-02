@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/form.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
+    <form>
+        <h1>Faça login na Sua Gráfica</h1>
+        <p id="msg">Se já possui uma conta, preencha os dados para entrar.</p>
+
+        <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required>
+        <br>
+        <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" required>
+
+        <div class="btns">
+            <button id="btn" type="button" onclick="entrar()">Entrar</button>
+            <br>
+            <a href="http://localhost:8080/html/cadastro-graficas.html">Cadastre-se</a>
+        </div>
+    </form>
+    <script>
+        function entrar() {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('pass').value;
+    const msg = document.getElementById('msg');
+  
+    // Dados do usuário para enviar ao servidor
+    const graficaData = {
+      emailCad: email,
+      passCad: pass
+    };
+  
+    fetch('/login-graficas', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(graficaData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Erro de rede - ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.message === 'Login bem-sucedido') {
+        msg.innerHTML = '<strong>Seja Bem-Vindo!</strong>'
+        msg.setAttribute('style', 'color:green;')
+        setTimeout(() => {
+          window.location.href = '../index.html';
+        }, 3000);
+      } else {
+        // Exibir mensagem de erro
+        msg.setAttribute('style', 'color: red');
+        msg.innerHTML = '<strong>' + data.message + '</strong>';
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao fazer login:', error);
+      msg.setAttribute('style', 'color: red');
+      msg.innerHTML = '<strong>Erro ao fazer login</strong>';
+    });
+  }
+  
+    </script>
+</body>
+</html>
