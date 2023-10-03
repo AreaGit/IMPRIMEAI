@@ -24,7 +24,7 @@ const Pedidos = db.define('pedidos', {
 
 
 
-//Pedidos.sync({force:true})
-Pedidos.sync()
+Pedidos.sync({force:true})
+//Pedidos.sync()
 
 module.exports = Pedidos

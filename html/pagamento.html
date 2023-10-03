@@ -327,6 +327,9 @@ document.getElementById('finalizarCompraBtn').addEventListener('click', function
       const response = JSON.parse(xhr.responseText);
       alert(response.message);
 
+      // Exiba a mensagem de confirmação
+      document.getElementById('confirmacaoCompra').style.display = 'block';
+
       // Limpe o carrinho (se desejar)
       // ...
 
@@ -340,15 +343,22 @@ document.getElementById('finalizarCompraBtn').addEventListener('click', function
   };
 
   // Trate erros de rede
-  /*xhr.onerror = function () {
+  xhr.onerror = function () {
     console.error('Erro de rede ao finalizar a compra');
     alert('Erro de rede ao finalizar a compra');
-  };*/
+  };
+
+  // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+  const pedidoData = {
+    totalItens,
+    valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+  };
 
   // Envie os dados como JSON
-  const requestData = JSON.stringify({ totalItens, totalAPagar });
+  const requestData = JSON.stringify(pedidoData);
   xhr.send(requestData);
 });
+
 
 
 </script>

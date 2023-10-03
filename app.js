@@ -73,6 +73,7 @@ app.get("/login-graficas", (req, res) => {
 });
 
 
+
 app.post("/cadastro-graficas", async (req, res) => {
 
 
@@ -684,6 +685,16 @@ app.post('/criar-pedidos', async (req, res) => {
     // Obtenha o carrinho da sessão (supondo que você o tenha configurado na sessão)
     const carrinho = req.session.carrinho || [];
 
+    // Calcule o valor total do carrinho
+    let totalAPagar = 0;
+    for (const produtoNoCarrinho of carrinho) {
+      // Encontre o produto no banco de dados com base no ID do produto no carrinho
+      const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+
+      // Calcule o valor total do produto no carrinho e some ao total
+      totalAPagar += produto.valorProd * produtoNoCarrinho.quantidade;
+    }
+
     // Crie um pedido para cada produto no carrinho
     const pedidosCriados = await Promise.all(
       carrinho.map(async (produtoNoCarrinho) => {
@@ -694,7 +705,7 @@ app.post('/criar-pedidos', async (req, res) => {
         const pedido = await Pedidos.create({
           nomePed: produto.nomeProd,
           quantPed: produtoNoCarrinho.quantidade,
-          valorPed: produto.valorProd,
+          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
           // Você também pode adicionar outros campos do pedido aqui, se necessário
         });
 
@@ -711,6 +722,7 @@ app.post('/criar-pedidos', async (req, res) => {
     res.status(500).json({ error: 'Erro ao criar pedidos' });
   }
 });
+
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
