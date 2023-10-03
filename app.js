@@ -7,6 +7,7 @@ const User = require('./models/User');
 const Produtos = require('./models/Produtos');
 const Cartoes = require('./models/Cartoes');
 const Graficas = require('./models/Graficas');
+const Pedidos = require('./models/Pedidos');
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
@@ -654,7 +655,7 @@ app.delete('/remover-do-carrinho/:produtoId', (req, res) => {
   }
 });
 
-app.post('/finalizar-compra', async (req, res) => {
+/*app.post('/finalizar-compra', async (req, res) => {
   try {
     // Obtenha os detalhes da compra do corpo da solicitação
     const { totalItens, totalAPagar } = req.body;
@@ -670,6 +671,44 @@ app.post('/finalizar-compra', async (req, res) => {
   } catch (error) {
     console.error('Erro ao finalizar a compra:', error);
     res.status(500).json({ message: 'Erro ao finalizar a compra' });
+  }
+});*/
+
+app.get('/pagamento', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'pagamento.html');
+  res.sendFile(filePath);
+});
+
+app.post('/criar-pedidos', async (req, res) => {
+  try {
+    // Obtenha o carrinho da sessão (supondo que você o tenha configurado na sessão)
+    const carrinho = req.session.carrinho || [];
+
+    // Crie um pedido para cada produto no carrinho
+    const pedidosCriados = await Promise.all(
+      carrinho.map(async (produtoNoCarrinho) => {
+        // Encontre o produto no banco de dados com base no ID do produto no carrinho
+        const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+
+        // Crie um pedido com as informações do produto e quantidade do carrinho
+        const pedido = await Pedidos.create({
+          nomePed: produto.nomeProd,
+          quantPed: produtoNoCarrinho.quantidade,
+          valorPed: produto.valorProd,
+          // Você também pode adicionar outros campos do pedido aqui, se necessário
+        });
+
+        return pedido;
+      })
+    );
+
+    // Limpe o carrinho após a criação dos pedidos (se desejado)
+    // Isso depende de como você gerencia o carrinho na sua aplicação
+
+    res.json({ message: 'Pedidos criados com sucesso', pedidos: pedidosCriados });
+  } catch (error) {
+    console.error('Erro ao criar pedidos:', error);
+    res.status(500).json({ error: 'Erro ao criar pedidos' });
   }
 });
 
