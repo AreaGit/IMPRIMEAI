@@ -218,13 +218,94 @@
     </div>
   </div>
   <div class="container-right">
-    <div class="resumo-compra">
+    <div id="resumo-compra" class="resumo-compra">
       <h2>Resumo da Compra</h2>
-      <p>Produto</p>
+      <p>Produtos <span id="totalItensCarrinho">0</span></p>
       <p>Frete</p>
-      <p class="tot">Total</p>
+      <p class="tot">Total <span id="totalAPagar">0.00</span></p>
     </div>
   </div>
 </main>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  // Função para finalizar a compra
+  function finalizarCompra() {
+    // Obtenha o total de itens e o total a pagar do resumo da compra
+    const totalItens = document.getElementById('totalItensCarrinho').textContent;
+    const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+
+    // Faça uma solicitação POST para finalizar a compra
+    fetch('/finalizar-compra', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ totalItens, totalAPagar }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Exiba uma mensagem de sucesso ou redirecione o usuário, se necessário
+        alert(data.message);
+        // Por exemplo, redirecione o usuário para a página de confirmação de compra
+        window.location.href = '/confirmacao-compra.html';
+      })
+      .catch(error => {
+        console.error('Erro ao finalizar a compra:', error);
+        // Trate qualquer erro de finalização da compra
+        alert('Erro ao finalizar a compra');
+      });
+  }
+
+  // Seletor do botão "Finalizar Compra"
+  const finalizarCompraBtn = document.getElementById('finalizarCompraBtn');
+
+  // Lida com o clique no botão "Finalizar Compra"
+  finalizarCompraBtn.addEventListener('click', finalizarCompra);
+});
+
+function atualizarTotalItens() {
+  const totalItensElement = document.getElementById('totalItensCarrinho');
+  
+  // Faça uma solicitação AJAX para obter os produtos do carrinho
+  fetch('/api/carrinho')
+    .then(response => response.json())
+    .then(produtos => {
+      // Calcule o número total de itens somando as quantidades de todos os produtos
+      const numeroTotalItens = produtos.reduce((total, produto) => total + produto.quantidade, 0);
+      
+      // Atualize o elemento HTML com o número total de itens
+      totalItensElement.textContent = numeroTotalItens;
+    })
+    .catch(error => {
+      console.error('Erro ao atualizar o número total de itens:', error);
+    });
+}
+
+// Chame a função para atualizar o número total de itens quando necessário
+// Por exemplo, após adicionar ou remover um produto do carrinho
+atualizarTotalItens();
+
+function atualizarTotalAPagar() {
+  const totalAPagarElement = document.getElementById('totalAPagar');
+
+  // Faça uma solicitação AJAX para obter os produtos do carrinho
+  fetch('/api/carrinho')
+    .then(response => response.json())
+    .then(produtos => {
+      // Calcule a soma dos valores dos produtos no carrinho
+      const totalAPagar = produtos.reduce((total, produto) => total + (produto.quantidade * produto.valorUnitario), 0);
+
+      // Atualize o elemento HTML com o total a pagar formatado como moeda
+      totalAPagarElement.textContent = totalAPagar.toFixed(2);
+    })
+    .catch(error => {
+      console.error('Erro ao calcular o total a pagar:', error);
+    });
+}
+
+// Chame a função para calcular e atualizar o total a pagar quando necessário
+// Por exemplo, após adicionar ou remover um produto do carrinho
+atualizarTotalAPagar();
+</script>
 </body>
 </html>
