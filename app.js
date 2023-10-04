@@ -168,6 +168,19 @@ app.get('/cartoes-cadastrados', async (req, res) => {
   }
 });
 
+app.get('/pedidos-cadastrados', async (req, res) => {
+  try {
+    // Consulte o banco de dados para buscar os cartões cadastrados
+    const pedidosCadastrados = await Pedidos.findAll();
+
+    // Envie os cartões como resposta em JSON
+    res.json({ pedidos: pedidosCadastrados });
+  } catch (error) {
+    console.error('Erro ao buscar pedidos cadastrados:', error);
+    //res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
+  }
+});
+
 
 app.post("/cadastrar", async (req, res) => {
 

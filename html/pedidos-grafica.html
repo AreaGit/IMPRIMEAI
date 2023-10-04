@@ -20,6 +20,70 @@
         text-align: left;
         font-weight: normal;
     }
+    ul {
+        position: relative;
+        top: 75px;
+    }
+    li {
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+    button {
+        padding: 18px 28px 18px 28px;
+        text-transform: uppercase;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        position: relative;
+        left: 80%;
+    }
+    .ped-recusar {
+        border: 1px solid #EF4126;
+        color: #F37160;
+        text-decoration: none;
+        background-color: white;
+    }
+    .ped-aceitar {
+        background-color: #EF4126;
+        color: white;
+        text-decoration: none;
+        border: none;
+    }
+    h3 {
+        display: inline;
+        padding: 20px;
+        font-weight: normal;
+        position: relative;
+        left: 14%;
+        top: 30px;
+    }
+    .ped-id {
+        font-weight: normal;
+        position: relative;
+        left: 18%;
+        width: fit-content;
+    }
+    .ped-nome {
+        font-weight: normal;
+        position: relative;
+        left: 26%;
+        width: fit-content;
+        top: -20px;
+    }
+    .ped-valor {
+        font-weight: normal;
+        position: relative;
+        left: 36%;
+        width: fit-content;
+        top: -42px;
+    }
+    .ped-quant {
+        font-weight: normal;
+        position: relative;
+        left: 46%;
+        width: fit-content;
+        top: -64px;
+    }
 </style>
 <body>
     <header>
@@ -46,12 +110,51 @@
     </header>
     <main>
         <h2>Meus Pedidos</h2>
-        <div id="pedidos">
+        <h3>ID do Pedido</h3>
+        <h3>Nome do Produto</h3>
+        <h3>Valor do Pedido</h3>
+        <h3>Quantidade</h3>
+        <ul id="pedidos-list">
 
-        </div>
+        </ul>
     </main>
     <script>
-        
+        fetch('/pedidos-cadastrados')
+            .then(response => response.json())
+            .then(data => {
+                const pedidosList = document.getElementById('pedidos-list');
+                data.pedidos.forEach(pedidos => {
+                    //cardEsc.setAttribute('style', 'display:none;')
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <p class="ped-id">${pedidos.id}</p>
+                        <p class="ped-nome">${pedidos.nomePed}</p>
+                        <p class="ped-valor">${pedidos.valorPed}</p>
+                        <p class="ped-quant">${pedidos.quantPed}</p>
+                        <button class="ped-recusar">Recusar</button>
+                        <button class="ped-aceitar">Aceitar</button>
+                    `;
+                    pedidosList.appendChild(li);
+
+                });
+            })
+            .catch(error => console.error('Erro ao buscar pedidos:', error));
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+        const pedidosList = document.getElementById('pedidos-list');
+
+        // Adicione um evento de clique aos botões "Recusar"
+        pedidosList.addEventListener('click', function (event) {
+            if (event.target.classList.contains('ped-recusar')) {
+                // Remova o elemento <li> pai do botão "Recusar"
+                const li = event.target.parentElement;
+                pedidosList.removeChild(li);
+            }
+        });
+    });
+
+
     </script>
 </body>
 </html>
