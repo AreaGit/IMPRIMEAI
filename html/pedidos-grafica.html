@@ -27,6 +27,7 @@
     li {
         margin-top: 10px;
         border-radius: 5px;
+        display: none;
     }
     button {
         padding: 18px 28px 18px 28px;
@@ -126,6 +127,7 @@
                 data.pedidos.forEach(pedidos => {
                     //cardEsc.setAttribute('style', 'display:none;')
                     const li = document.createElement('li');
+                    li.style.display = 'block';
                     li.innerHTML = `
                         <p class="ped-id">${pedidos.id}</p>
                         <p class="ped-nome">${pedidos.nomePed}</p>
@@ -149,11 +151,23 @@
             if (event.target.classList.contains('ped-recusar')) {
                 // Remova o elemento <li> pai do botão "Recusar"
                 const li = event.target.parentElement;
-                pedidosList.removeChild(li);
+                li.style.display = 'none';
             }
         });
     });
 
+
+    document.addEventListener('DOMContentLoaded', function (event) {
+        const pedidosList = document.getElementById('pedidos-list');
+        // Adicione um evento de clique nos botões "Aceitar".
+        pedidosList.addEventListener('click', function (event) {
+            if (event.target.classList.contains('ped-aceitar')) {
+                alert("O pedido foi aceito!");
+                const li = event.target.parentElement;
+                li.style.display = 'none';
+            }
+        })
+    })
 
     </script>
 </body>
