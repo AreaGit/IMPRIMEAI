@@ -77,7 +77,7 @@
             <label for="inp-num" class="lb-num">Quantidade</label>
             <input type="number" name="inp-num" id="inp-num" min="1" max="99" value="1">
             <button id="adicionarCarrinho" class="addCart">Adicionar ao Carrinho</button>
-            <a href="#" class="lnk-comp">Comprar</a>
+            <a href="#" class="lnk-comp" id="avancar">Comprar</a>
 
             <h2 class="descProd">Descrição do Produto</h2>
         </section>
@@ -151,6 +151,7 @@
 
   // Seletor do botão "Adicionar ao Carrinho"
   const adicionarAoCarrinhoBtn = document.getElementById('adicionarCarrinho');
+  const avancar = document.getElementById('avancar')
 
   // Lida com o clique no botão "Adicionar ao Carrinho"
   adicionarAoCarrinhoBtn.addEventListener('click', async () => {
@@ -188,6 +189,7 @@
     }
   });
 });
+
 
     </script>
 </body>

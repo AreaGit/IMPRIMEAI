@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (validUsuario && validEmail && validPass) {
             // Cartão cadastrado com sucesso
             console.log('Grafica cadastrada com sucesso:', data.message);
-            msg.innerHTML = '<strong>Usuário Cadastrado com Sucesso</strong>'
+            msg.innerHTML = '<strong>Gráfica Cadastrada com Sucesso</strong>'
             msg.setAttribute('style', 'color: green;')
             setTimeout(() => {
                 window.location.href = 'http://localhost:8080/html/login-graficas.html'
@@ -246,13 +246,13 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
             // Erro no cadastro
             console.error('Erro ao cadastrar grafica:', data.error);
-            msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
+            msg.innerHTML = '<strong>Não foi possível Cadastrar a Gráfica <br> Verifique os Campos</strong>'
             msg.setAttribute('style', 'color:red;')
             }
         })
         .catch(error => {
             console.error('Erro ao cadastrar grafica:', error);
-            msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
+            msg.innerHTML = '<strong>Não foi possível Cadastrar a Gráfica <br> Verifique os Campos</strong>'
             msg.setAttribute('style', 'color:red;')
         });
 
