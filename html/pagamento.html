@@ -201,19 +201,19 @@
         <img src="https://wbl.blob.core.windows.net/public/pix.png" alt="...">
         <h2>Pix</h2>
         <p>Aprovação em minutos. Ao finalizar sua compra disponibilizaremos o QR Code para pagamento do PIX</p>
-        <a href="#" id="finalizarCompraBtn">Finalizar a Compra</a>
+        <a href="#" id="finalizarCompraBtn" class="finalizarCompraBtn">Finalizar a Compra</a>
       </div>
       <div class="mtd-boleto">
         <img src="https://wbl.blob.core.windows.net/public/boleto.svg" alt="...">
         <h2>Boleto Bancário</h2>
         <p>O número do boleto será gerado no final da compra</p>
-        <a href="#" id="finalizarCompraBtn">Finalizar a Compra</a>    
+        <a href="#" id="finalizarCompraBtn2" class="finalizarCompraBtn">Finalizar a Compra</a>    
       </div>
       <div class="mtd-credito">
         <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
         <h2>Cartão de Crédito</h2>
         <p>Escolha entre seus cartões de crédito ou cadastre um novo</p>
-        <a href="#" id="finalizarCompraBtn">Finalizar a Compra</a> 
+        <a href="#" id="finalizarCompraBtn3" class="finalizarCompraBtn">Finalizar a Compra</a> 
       </div>
     </div>
   </div>
@@ -247,7 +247,6 @@
         // Exiba uma mensagem de sucesso ou redirecione o usuário, se necessário
         alert(data.message);
         // Por exemplo, redirecione o usuário para a página de confirmação de compra
-        window.location.href = '/confirmacao-compra.html';
       })
       .catch(error => {
         //console.error('Erro ao finalizar a compra:', error);
@@ -256,11 +255,6 @@
       });
   }
 
-  // Seletor do botão "Finalizar Compra"
-  const finalizarCompraBtn = document.getElemenid('finalizarCompraBtn');
-
-  // Lida com o clique no botão "Finalizar Compra"
-  finalizarCompraBtn.addEventListener('click', finalizarCompra);
 });
 
 function atualizarTotalItens() {
@@ -359,6 +353,108 @@ document.getElementById('finalizarCompraBtn').addEventListener('click', function
   xhr.send(requestData);
 });
 
+
+document.getElementById('finalizarCompraBtn2').addEventListener('click', function () {
+  // Obtenha o total de itens e o total a pagar do resumo da compra
+  const totalItens = document.getElementById('totalItensCarrinho').textContent;
+  const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+
+  // Crie um objeto XMLHttpRequest
+  const xhr = new XMLHttpRequest();
+
+  // Configure a solicitação POST
+  xhr.open('POST', '/criar-pedidos', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+
+  // Defina o manipulador de eventos para a resposta da solicitação
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // A solicitação foi bem-sucedida, você pode processar a resposta aqui
+      const response = JSON.parse(xhr.responseText);
+      alert(response.message);
+
+      // Exiba a mensagem de confirmação
+      document.getElementById('confirmacaoCompra').style.display = 'block';
+
+      // Limpe o carrinho (se desejar)
+      // ...
+
+      // Atualize o resumo da compra (se desejar)
+      // ...
+    } else {
+      // A solicitação não foi bem-sucedida, trate o erro aqui
+      console.error('Erro ao finalizar a compra:', xhr.statusText);
+      alert('Erro ao finalizar a compra');
+    }
+  };
+
+  // Trate erros de rede
+  xhr.onerror = function () {
+    console.error('Erro de rede ao finalizar a compra');
+    alert('Erro de rede ao finalizar a compra');
+  };
+
+  // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+  const pedidoData = {
+    totalItens,
+    valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+  };
+
+  // Envie os dados como JSON
+  const requestData = JSON.stringify(pedidoData);
+  xhr.send(requestData);
+});
+
+document.getElementById('finalizarCompraBtn3').addEventListener('click', function () {
+  // Obtenha o total de itens e o total a pagar do resumo da compra
+  const totalItens = document.getElementById('totalItensCarrinho').textContent;
+  const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+
+  // Crie um objeto XMLHttpRequest
+  const xhr = new XMLHttpRequest();
+
+  // Configure a solicitação POST
+  xhr.open('POST', '/criar-pedidos', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+
+  // Defina o manipulador de eventos para a resposta da solicitação
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // A solicitação foi bem-sucedida, você pode processar a resposta aqui
+      const response = JSON.parse(xhr.responseText);
+      alert(response.message);
+
+      // Exiba a mensagem de confirmação
+      document.getElementById('confirmacaoCompra').style.display = 'block';
+
+      // Limpe o carrinho (se desejar)
+      // ...
+
+      // Atualize o resumo da compra (se desejar)
+      // ...
+    } else {
+      // A solicitação não foi bem-sucedida, trate o erro aqui
+      console.error('Erro ao finalizar a compra:', xhr.statusText);
+      alert('Erro ao finalizar a compra');
+    }
+  };
+
+  // Trate erros de rede
+  xhr.onerror = function () {
+    console.error('Erro de rede ao finalizar a compra');
+    alert('Erro de rede ao finalizar a compra');
+  };
+
+  // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+  const pedidoData = {
+    totalItens,
+    valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+  };
+
+  // Envie os dados como JSON
+  const requestData = JSON.stringify(pedidoData);
+  xhr.send(requestData);
+});
 
 
 </script>
