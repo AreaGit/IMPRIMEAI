@@ -88,6 +88,8 @@
     <script src="scripts/script.js"></script>
 
     <script>
+
+
         // JavaScript para carregar detalhes do produto com base no ID do produto
     
         // Função para carregar os detalhes do produto
@@ -133,24 +135,49 @@
   const params = new URLSearchParams(window.location.search);
   const produtoId = params.get('id');
 
+  // Seletor do campo de entrada de número
+  const inputQuantidade = document.getElementById('inp-num');
+
+  // Lida com a mudança na quantidade (se o usuário alterar o valor)
+  inputQuantidade.addEventListener('change', function() {
+    const quantidade = parseInt(inputQuantidade.value);
+    
+    // Verifique se a quantidade é válida (maior que 0)
+    if (quantidade <= 0) {
+      alert('Por favor, escolha uma quantidade válida maior que 0.');
+      inputQuantidade.value = '1'; // Reverta para 1 se for inválido
+    }
+  });
+
   // Seletor do botão "Adicionar ao Carrinho"
   const adicionarAoCarrinhoBtn = document.getElementById('adicionarCarrinho');
 
   // Lida com o clique no botão "Adicionar ao Carrinho"
   adicionarAoCarrinhoBtn.addEventListener('click', async () => {
     try {
+      // Obtenha a quantidade escolhida pelo usuário
+      const quantidade = parseInt(inputQuantidade.value);
+
+      // Verifique se a quantidade é válida (maior que 0)
+      if (quantidade <= 0) {
+        alert('Por favor, escolha uma quantidade válida maior que 0.');
+        return;
+      }
+
       // Faça uma solicitação POST para adicionar o produto ao carrinho
       const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ quantidade: 1 }) // Você pode ajustar a quantidade conforme necessário
+        body: JSON.stringify({ quantidade })
       });
 
       if (response.ok) {
         // Produto adicionado com sucesso ao carrinho
-        console.log('Produto adicionado ao carrinho com sucesso! Com o ID ' + produtoId);
+        console.log(`Produto (ID ${produtoId}) adicionado ao carrinho com quantidade ${quantidade}.`);
+        // Limpe o campo de entrada de quantidade
+        inputQuantidade.value = '1';
       } else {
         // Trate qualquer erro de adição ao carrinho
         alert('Erro ao adicionar o produto ao carrinho');

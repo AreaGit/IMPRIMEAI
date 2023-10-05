@@ -217,15 +217,15 @@ span {
 }
 #inp-num {
     width: 60px;
-    padding: 5px;
+    padding: 11px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
     outline: none;
     margin-left: 5px;
     position: relative;
-    top: -92px;
-    left: 73%;
+    top: -85px;
+    left: 1395px;
 }
 .total>label {
     font-weight: lighter;
@@ -276,8 +276,8 @@ span {
     color: #F37160;
     font-size: 25px;
     position: relative;
-    left: 83%;
-    top: 44px;
+    left: 84%;
+    top: 69px;
 }
 .descProd {
     text-align: center;
@@ -289,4 +289,9 @@ span {
     top: 300px;
     left: 43%;
     width: fit-content;
+}
+#carrinho_compras {
+    position: absolute;
+    top: 178px;
+    left: 69%;
 }
