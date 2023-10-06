@@ -1,287 +1,94 @@
 /*DIVERSAS TELAS*/
-
-
-@media screen and (min-width: 320px) and (max-width: 425px) {
-  :root {
-      --branco:#ffff;
-      --coral:#F37160;
-      --flamingo:#F69896;
-      --concreto:#A7A9AC;
-      --preto:#000000;
-      --vermelho:#EF4126;
-      --font-padrao:'Open Sans';
-  }
-  * {
-      margin: 0px;
-      padding: 0px;
-      box-sizing: border-box;
-  }
-  body {
-      font-family: var(--font-padrao);
-  }
-  header {
-      height: 300px;
-  }
-  header > p {
-      position: relative;
-      top: 30px;
-      left: 5%;
-      font-size: 14px;
-      letter-spacing: 0.4px;
-      width: fit-content;
-  }
-  .menu2 {
-      display: none;
-      list-style: none;
-      width: max-content;
-      position: relative;
-      top: 40px;
-      left: -5%;
-  }
-  .icons-header {
-      position: relative;
-      top: 20px;
-      left: 35%;
-      cursor: pointer;
-      width: fit-content;
-      padding-left: 5px;
-  }
-  .logo-imprimeai {
-      position: relative;
-      top: -5px;
-      left: 0%;
-  }
-  #logado {
-    width: fit-content;
-    font-weight: lighter;
-    position: relative;
-    left: 30%;
-    top: -40%;
-    font-size: 14px;
-  }
-  .input-pesq {
-      position: relative;
-      top: 10px;
-      left: 0%;
-  }
-  .search__input {
-      font-family: inherit;
-      font-size: inherit;
-      background-color: #f4f2f2;
-      border: none;
-      color: #646464;
-      padding: 1rem 2rem;
-      border-radius: 30px;
-      width: 350px;
-      transition: all ease-in-out .5s;
-      margin-right: -2rem;
-    }
-    #carrinho_compras {
+@media screen and (min-width:320px) and (max-width:480px) {
+    .slider-container {display: none;}
+    footer {
       position: absolute;
-      top: 13%;
-      left: 50%;
-    }
-    #totalItens {
-      position: absolute;
-      top: 11%;
-      left: 55%;
-    }
-    #sairBtn {
-      position: relative;
-      left: 85%;
-      top: -100px;
-      padding: 3px 1px 3px 1px;
-    }
-    .par {
-      display: block;
-      font-size: 10px;
-      position: relative;
-      top: -90px;
-    }
-    .menu  {
-      font-size: 13px;
-    }
-    .images-sec {
-      margin-top: 100px;
-      height: 700px;
-    }
-    .images-sec > h2 {
-      width: fit-content;
-      position: relative;
-      top: 50px;
-      left: 19%;
-      
+      top: 330%;
+      height: 550px;
+      width: 142%;
     }
     .content {
       position: relative;
-      top: 80px;
-      left: -1%;
-      height: 650px;
-      
-    }
-    .content > h2 {
-      width: fit-content;
+      top: 357px;
+      left: -30%;
     }
     .content > .image1 {
-      border: 1px solid black;
-      width: 300px;
-      height: 200px;
-      margin: auto;
+      width: 450px;
+      height: 240px;
+      position: relative;
+      top: 52%;
+      left: 97px;
     }
     .content > .image2 {
-      border: 1px solid black;
-      width: 300px;
-      height: 200px;
-      margin: auto;
-      position: relative;
-      top: 10px;
-      left: 0%;
+      width: 450px;
     }
     .content > .image3 {
-      border: 1px solid black;
-      width: 300px;
-      height: 200px;
-      margin: auto;
+      width: 450px;
+    }
+    .redes > img {
       position: relative;
-      top: 25px;
-      left: 0%;
+      left: 50px;
     }
-    #voltar_ao_topo {
-      position: fixed;
-      bottom: 50px;
-      right: 10px;
-      cursor: pointer;
-      background-color: #F37160;
-      border-radius: 5px;
-      color: white;
-    }
-  .slider-container {display: none;}
-}
-@media screen and (max-width: 480px) {
-    header>p {
+    header > p {
       font-size: 12px;
       position: relative;
       top: -3px;
       left: -1px;
     }
-    .menu2 {
-      width: 37%;
+    .icons-header {
+      width: fit-content;
+      position: relative;
+      left: 80px;
+      top: -25px;
+    }
+    .icons-header > .icons {
+      width: 25%;
     }
     .menu2 > a {
       font-size: 12px;
-      padding: 5px;
-      position: relative;
-      top: -35px;
-      left: -10px;
-    }
-    .icons-header {
-      position: relative;
-      left: 55px;
-      width: max-content;
     }
     .logo-imprimeai {
-      position: relative;
-      top: -50px;
-      left: -2px;
+      width: 25%;
+      position:relative;
+      top: 22px;
+      left: 9px;
     }
-    .input-pesq {
+    #formPesquisa {
       position: relative;
-      top: 10px;
-      left: 0%;
-  }
-  .search__input {
-      font-family: inherit;
-      font-size: inherit;
-      background-color: #f4f2f2;
-      border: none;
-      color: #646464;
-      padding: 1rem 2rem;
-      border-radius: 30px;
-      width: 318px;
-      transition: all ease-in-out .5s;
-      margin-right: -2rem;
+      left: 0px;
     }
-    #conviteCad {
+    .search__input {
+      width: 290px;
+    }
+    .menu2 {
       position: relative;
-      top: -10px;
-      left: -50%;
+      left: -10px;
+    }
+    #carrinho_compras {
+      position: absolute;
+      top: 76px;
+      left: 74%;
     }
     #logado {
       position: relative;
-      top: -70px;
-      left: -0%;
+      top: -58px;
+      left: 90px;
     }
     #sairBtn {
       position: relative;
-      top: -93px;
-      left: 23%;
+      top: -77px;
+      left: 77%;
     }
-    .menu > ul > li > a {
-      padding: 0px;
+    .menu ul >  li > a {
       font-size: 12px;
     }
-    .slider-container {
-      display: none;
-    }
-    .images-sec {
-      margin-top: 100px;
-      height: 700px;
-    }
-    .images-sec > h2 {
-      width: fit-content;
-      position: relative;
-      top: 50px;
-      left: 19%;
-      
-    }
-    .content {
-      position: relative;
-      top: 80px;
-      left: -1%;
-      height: 650px;
-      
-    }
-    .content > h2 {
-      width: fit-content;
-    }
-    .content > .image1 {
-      border: 1px solid black;
-      width: 300px;
-      height: 200px;
-      margin: auto;
-    }
-    .content > .image2 {
-      border: 1px solid black;
-      width: 300px;
-      height: 200px;
-      margin: auto;
-      position: relative;
-      top: 10px;
-      left: 0%;
-    }
-    .content > .image3 {
-      border: 1px solid black;
-      width: 300px;
-      height: 200px;
-      margin: auto;
-      position: relative;
-      top: 25px;
-      left: 0%;
-    }
-    #voltar_ao_topo {
-      position: fixed;
-      bottom: 50px;
-      right: 40px;
-      cursor: pointer;
-      background-color: #F37160;
-      border-radius: 5px;
-      color: white;
-    }
-    /*.produtos {
+    .produtos {
       position: relative;
       left: -50px;
-    }*/
+    }
 }
+
+
 @media screen and (min-width:481px) and (max-width:767px) {
   header>p {
     font-size: 12px;
