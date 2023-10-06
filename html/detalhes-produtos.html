@@ -12,6 +12,85 @@
     <link rel="stylesheet" href="styles/medias.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+  .container {
+  height: 300px;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 30px rgba(0, 0, 0, .2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 5px;
+  background-color: rgba(0, 110, 255, 0.041);
+  position: relative;
+  left: 22%;
+  top: -91px;
+}
+
+.header {
+  flex: 1;
+  width: 100%;
+  border: 2px dashed royalblue;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.header svg {
+  height: 100px;
+}
+
+.header p {
+  text-align: center;
+  color: black;
+}
+
+.footer {
+  background-color: rgba(0, 110, 255, 0.075);
+  width: 100%;
+  height: 40px;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: black;
+  border: none;
+}
+
+.footer svg {
+  height: 130%;
+  fill: royalblue;
+  background-color: rgba(70, 66, 66, 0.103);
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  box-shadow: 0 2px 30px rgba(0, 0, 0, 0.205);
+}
+
+.footer p {
+  flex: 1;
+  text-align: center;
+}
+
+#file {
+  display: none;
+}
+#imagemPreview {
+  position: relative;
+    top: -378px;
+    left: 433px;
+    width: 276px;
+    height: 226px;
+    border-radius: 5px;
+}
+</style>
 <body>
     <header>
         <div class="mini-banner">
@@ -71,8 +150,23 @@
             <div id="produtos">
                 
             </div>
-            <input type="file" class="custom-file-input" name="custom-file-input" id="arquivo" accept="application/pdf">
-            <label for="custom-file-input">Envie seu Arquivo PDF</label>
+            <!--<input type="file" class="custom-file-input" name="custom-file-input" id="arquivo" accept="application/pdf">
+            <label for="custom-file-input">Envie seu Arquivo PDF</label>-->
+            <div class="container"> 
+              <div class="header"> 
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
+                  <path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> <p>Envie sua Arte!</p>
+              </div> 
+              <label for="file" class="footer"> 
+                <svg id="enviar" fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path><path d="M18.153 6h-.009v5.342H23.5v-.002z"></path></g></svg> 
+                <p>Nenhum arquivo Selecionado</p> 
+                <svg id="limparSelecao" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path> <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path> <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path> </g></svg>
+              </label> 
+              <input id="file" type="file"> 
+              <!-- Adicione a imagem de visualização -->
+              
+            </div>
+            <img id="imagemPreview" src="" alt="" />
 
             <label for="inp-num" class="lb-num">Quantidade</label>
             <input type="number" name="inp-num" id="inp-num" min="1" max="99" value="1">
@@ -188,6 +282,69 @@
       alert('Erro ao adicionar o produto ao carrinho');
     }
   });
+});
+
+
+// Seletor do elemento de entrada de arquivo
+const inputArquivo = document.getElementById('file');
+// Seletor do rótulo que exibe o nome do arquivo selecionado
+const arquivoLabel = document.querySelector('.footer p');
+
+// Lida com a mudança no elemento de entrada de arquivo
+inputArquivo.addEventListener('change', function() {
+    // Verifique se um arquivo foi selecionado
+    if (inputArquivo.files.length > 0) {
+        // Exiba o nome do arquivo selecionado no rótulo
+        arquivoLabel.textContent = inputArquivo.files[0].name;
+    } else {
+        // Se nenhum arquivo for selecionado, redefina o rótulo
+        arquivoLabel.textContent = 'Nenhum arquivo Selecionado';
+    }
+});
+
+
+// Seletor do botão "Limpar seleção"
+// Seletor do botão "Limpar seleção"
+const limparSelecaoBtn = document.getElementById('limparSelecao');
+
+// Lida com o clique no botão "Limpar seleção"
+limparSelecaoBtn.addEventListener('click', function() {
+    // Limpa a seleção de arquivo definindo o valor do input para vazio
+    inputArquivo.value = '';
+    
+    // Limpa a visualização da imagem definindo o atributo src como vazio
+    imagemPreview.style.display = 'none';
+    
+    // Redefine o rótulo
+    arquivoLabel.textContent = 'Nenhum arquivo Selecionado';
+});
+
+
+
+// Seletor da imagem de visualização
+const imagemPreview = document.getElementById('imagemPreview');
+
+// Lida com a mudança no elemento de entrada de arquivo
+inputArquivo.addEventListener('change', function() {
+    // Verifique se um arquivo foi selecionado
+    if (inputArquivo.files.length > 0) {
+        const arquivo = inputArquivo.files[0];
+        // Verifica se o arquivo é uma imagem
+        if (/\.(jpe?g|png|gif|bmp|webp)$/i.test(arquivo.name)) {
+            // Cria uma URL temporária para a imagem e a exibe na visualização
+            const imageURL = URL.createObjectURL(arquivo);
+            imagemPreview.src = imageURL;
+        } else {
+            // Se não for uma imagem, limpa a visualização
+            imagemPreview.src = '';
+        }
+        // Exibe o nome do arquivo selecionado no rótulo
+        arquivoLabel.textContent = arquivo.name;
+    } else {
+        // Se nenhum arquivo for selecionado, redefina a visualização e o rótulo
+        imagemPreview.src = '';
+        arquivoLabel.textContent = 'Nenhum arquivo Selecionado';
+    }
 });
 
 

@@ -393,8 +393,8 @@ main > h2 {
 }
 #sairBtn {
   position: relative;
-  top: -17px;
-  left: 72%;
+  top: 16px;
+  left: 70%;
   font-size: 16px;
   letter-spacing: 2px;
   text-transform: uppercase;

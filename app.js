@@ -573,8 +573,6 @@ app.get('/perfil', (req, res) => {
 });
 
 
-
-
 app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   try {
     const produtoId = req.params.produtoId;
@@ -668,25 +666,6 @@ app.delete('/remover-do-carrinho/:produtoId', (req, res) => {
     res.status(500).json({ message: 'Erro ao remover o produto do carrinho' });
   }
 });
-
-/*app.post('/finalizar-compra', async (req, res) => {
-  try {
-    // Obtenha os detalhes da compra do corpo da solicitação
-    const { totalItens, totalAPagar } = req.body;
-
-    // Aqui você pode adicionar a lógica para finalizar a compra,
-    // como registrar a compra no banco de dados e gerar um recibo, por exemplo.
-
-    // Após a finalização bem-sucedida, você pode limpar o carrinho, pois os itens foram comprados
-    req.session.carrinho = [];
-
-    // Responda com uma mensagem de sucesso ou redirecione o usuário para uma página de confirmação
-    res.json({ message: 'Compra finalizada com sucesso!' });
-  } catch (error) {
-    console.error('Erro ao finalizar a compra:', error);
-    res.status(500).json({ message: 'Erro ao finalizar a compra' });
-  }
-});*/
 
 app.get('/pagamento', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'pagamento.html');
