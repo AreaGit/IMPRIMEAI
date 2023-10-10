@@ -85,6 +85,12 @@
         width: fit-content;
         top: -64px;
     }
+    .ped-status {
+        width: fit-content;
+        position: relative;
+        left: 51%;
+        top: -84px;
+    }
 </style>
 <body>
     <header>
@@ -104,7 +110,7 @@
             </div>
         </nav>
         <div class="elem1">
-           <a href="http://localhost:8080/html/pedidos-grafica.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+           <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
             <div id="logado"></div>
             <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
         </div>
@@ -115,8 +121,9 @@
         <h3>Nome do Produto</h3>
         <h3>Valor do Pedido</h3>
         <h3>Quantidade</h3>
+        <h3>Status</h3>
         <ul id="pedidos-list">
-
+            
         </ul>
     </main>
     <script>
@@ -133,29 +140,13 @@
                         <p class="ped-nome">${pedidos.nomePed}</p>
                         <p class="ped-valor">${pedidos.valorPed}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
-                        <button class="ped-recusar">Recusar</button>
-                        <button class="ped-aceitar">Aceitar</button>
+                        <p class="ped-status">${pedidos.statusPed}</p>
                     `;
                     pedidosList.appendChild(li);
 
                 });
             })
             .catch(error => console.error('Erro ao buscar pedidos:', error));
-
-
-            document.addEventListener('DOMContentLoaded', function () {
-        const pedidosList = document.getElementById('pedidos-list');
-
-        // Adicione um evento de clique aos botões "Recusar"
-        pedidosList.addEventListener('click', function (event) {
-            if (event.target.classList.contains('ped-recusar')) {
-                // Remova o elemento <li> pai do botão "Recusar"
-                const li = event.target.parentElement;
-                li.style.display = 'none';
-            }
-        });
-    });
-
     </script>
 </body>
 </html>

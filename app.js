@@ -31,6 +31,7 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 const cookieParser = require('cookie-parser');
 
+
 const PORT = 8080;
 
 app.use(express.static('public'));
@@ -697,8 +698,8 @@ app.post('/criar-pedidos', async (req, res) => {
         const pedido = await Pedidos.create({
           nomePed: produto.nomeProd,
           quantPed: produtoNoCarrinho.quantidade,
-          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-          // Você também pode adicionar outros campos do pedido aqui, se necessário
+          valorPed: totalAPagar,
+          statusPed: 'Aguardando'
         });
 
         return pedido;
@@ -714,7 +715,6 @@ app.post('/criar-pedidos', async (req, res) => {
     res.status(500).json({ error: 'Erro ao criar pedidos' });
   }
 });
-
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);

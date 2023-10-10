@@ -19,6 +19,10 @@ const Pedidos = db.define('pedidos', {
     valorPed: {
         type: Sequelize.FLOAT, // Use FLOAT para valores decimais
         allowNull: false,
+    },
+    statusPed: {
+        type: Sequelize.STRING(255),
+        allowNull: true
     }
 })
 
