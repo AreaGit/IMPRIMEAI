@@ -716,6 +716,28 @@ app.post('/criar-pedidos', async (req, res) => {
   }
 });
 
+
+// Exemplo de rota no servidor Node.js
+app.post('/atualizar-status-pedido', async (req, res) => {
+  try {
+      const { pedidoId, novoStatus } = req.body;
+
+      // Atualize o status do pedido no banco de dados
+      const pedido = await Pedidos.findByPk(pedidoId);
+      if (!pedido) {
+          return res.json({ success: false, message: 'Pedido não encontrado.' });
+      }
+
+      pedido.statusPed = novoStatus;
+      await pedido.save();
+
+      return res.json({ success: true });
+  } catch (error) {
+      console.error('Erro ao atualizar o status do pedido:', error);
+      return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });
+  }
+});
+
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
 });

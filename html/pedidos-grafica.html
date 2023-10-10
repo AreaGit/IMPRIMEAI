@@ -151,10 +151,64 @@
             if (event.target.classList.contains('ped-recusar')) {
                 // Remova o elemento <li> pai do botão "Recusar"
                 const li = event.target.parentElement;
-                li.style.display = 'none';
+                const pedidoId = li.querySelector('.ped-id').textContent;
+
+            // Envia uma solicitação AJAX para atualizar o status
+            fetch('/atualizar-status-pedido', {
+                method: 'POST', // Use o método POST ou outro apropriado
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ pedidoId, novoStatus: 'Recusado' }), // Envia o ID do pedido e o novo status
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Verifique se a atualização foi bem-sucedida (pode variar com base na sua implementação)
+                    if (data.success) {
+                        // Atualize o texto do status na página
+                        li.querySelector('.ped-status').textContent = 'Recusado';
+                    } else {
+                        console.error('Erro ao atualizar o status do pedido.');
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar a solicitação AJAX:', error));
             }
         });
     });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const pedidosList = document.getElementById('pedidos-list');
+
+    // Adicione um evento de clique aos botões "Aceitar"
+    pedidosList.addEventListener('click', function (event) {
+        if (event.target.classList.contains('ped-aceitar')) {
+            // Obtém o ID do pedido do elemento pai
+            const li = event.target.parentElement;
+            const pedidoId = li.querySelector('.ped-id').textContent;
+
+            // Envia uma solicitação AJAX para atualizar o status
+            fetch('/atualizar-status-pedido', {
+                method: 'POST', // Use o método POST ou outro apropriado
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ pedidoId, novoStatus: 'Aceito' }), // Envia o ID do pedido e o novo status
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Verifique se a atualização foi bem-sucedida (pode variar com base na sua implementação)
+                    if (data.success) {
+                        // Atualize o texto do status na página
+                        li.querySelector('.ped-status').textContent = 'Aceito';
+                    } else {
+                        console.error('Erro ao atualizar o status do pedido.');
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar a solicitação AJAX:', error));
+        }
+    });
+});
 
     </script>
 </body>

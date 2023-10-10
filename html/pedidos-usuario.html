@@ -88,7 +88,7 @@
     .ped-status {
         width: fit-content;
         position: relative;
-        left: 51%;
+        left: 52%;
         top: -84px;
     }
 </style>
@@ -140,13 +140,27 @@
                         <p class="ped-nome">${pedidos.nomePed}</p>
                         <p class="ped-valor">${pedidos.valorPed}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
-                        <p class="ped-status">${pedidos.statusPed}</p>
+                        <p class="ped-status" id="ped-status">${pedidos.statusPed}</p>
                     `;
+
+                    if (pedidos.statusPed === "Aceito") {
+                        li.querySelector('.ped-status').style.color = 'green'
+                    } else if(pedidos.statusPed === "Aguardando") {
+                        li.querySelector('.ped-status').style.color = 'yellow'
+                    } else if(pedidos.statusPed === "Recusado") {
+                        li.querySelector('.ped-status').style.color = 'red'
+                    } else {
+                        li.querySelector('.ped-status').style.color = 'black'
+                    }
+
+
                     pedidosList.appendChild(li);
 
                 });
             })
             .catch(error => console.error('Erro ao buscar pedidos:', error));
+
+
     </script>
 </body>
 </html>
