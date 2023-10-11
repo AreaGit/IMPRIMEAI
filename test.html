@@ -13,47 +13,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
-    main > h2 {
-        text-align: left;
-        position: relative;
-        left: 17%;
-        width: fit-content;
-        color: #EF4126;
-        font-weight: normal;
-    }
-    #enderecoCad {
-        border: 1px solid rgba(0, 0, 0, 0.356);
-        height: 112px;
-        width: 60%;
-        position: relative;
-        left: 17%;
-        top: 60px;
-        border-radius: 3px;
-    }
-    #enderecoCad > img {
-        position: relative;
-        top: 37px;
-        left: 46px;
-    }
-    #enderecoCad > h3 {
-        font-size: 18px;
-        font-weight: bold;
-        position: relative;
-        left: 10%;
-    }
-    #enderecoCad > p {
-        font-weight: normal;
-        font-size: 12px;
-        position: relative;
-        left: 10%;
-        top: 10px;
-    }
-    #enderecoCad > a {
-        position: relative;
-        left: 80%;
-        top: -25px;
-        text-decoration: none;
-    }
+
 </style>
 <body>
   <header>
@@ -79,13 +39,11 @@
     </div>
 </header>
 <main>
-    <h2>Como você quer receber ou retirar sua compra?</h2>
-    <div id="enderecoCad">
-        <img src="https://wbl.blob.core.windows.net/public/local-icon.svg" alt="...">
-        <h3>Casa</h3>
-        <p>Rua Conselheiro Justino, 336 - apto81 - Campestre - Santo André - SP, CEP 09070-580</p>
-        <a href="#">Alterar Endereço</a>
-    </div>
+    <form method="post">
+        <h1>Digite seu Email</h1>
+        <input type="email" name="emailEsq" id="emailEsq" placeholder="Digite seu Email..." required>
+        <button type="submit">Enviar</button>
+    </form>
 </main>
 </body>
 </html>

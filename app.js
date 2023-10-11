@@ -16,6 +16,7 @@ const geolib = require('geolib');
 const fetch = require('node-fetch');
 const bcrypt = require('bcrypt')
 const session = require('express-session');
+const nodemailer = require('nodemailer');
 
 
 
@@ -30,6 +31,8 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 const cookieParser = require('cookie-parser');
+const { text } = require('body-parser');
+const { error } = require('console');
 
 
 const PORT = 8080;
@@ -737,6 +740,27 @@ app.post('/atualizar-status-pedido', async (req, res) => {
       return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });
   }
 });
+
+
+const transport = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: "gabrieldiastrin63@gmail.com",
+    pass: "wjfa eeyv cwss mwzi"
+  }
+})
+
+transport.sendMail({
+  from: "gabrieldiastrin63@gmail.com",
+  to: "thiagofranchidinardi@gmail.com",
+  subject: "Enviando e-mails com Node",
+  html: '<h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail via NodeJS</p>',
+  text: "Olá Usuário, você recebeu um e-mail com o NodeJS"
+})
+.then(() => console.log("E-mail envaido com Sucesso!"))
+.catch((err) => console.log('Não foi possível enviar!', err))
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
