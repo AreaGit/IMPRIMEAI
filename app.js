@@ -752,15 +752,6 @@ const transport = nodemailer.createTransport({
   }
 })
 
-/*transport.sendMail({
-  from: "gabrieldiastrin63@gmail.com",
-  to: "areagit5@gmail.com",
-  subject: "Enviando e-mails com Node",
-  html: '<h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail via NodeJS</p>',
-  text: "Olá Usuário, você recebeu um e-mail com o NodeJS"
-})
-.then(() => console.log("E-mail envaido com Sucesso!"))
-.catch((err) => console.log('Não foi possível enviar!', err))*/
 app.post('/enviar-email', (req, res) => {
   const { emailEsq } = req.body;
 
@@ -768,7 +759,7 @@ app.post('/enviar-email', (req, res) => {
     from: 'gabrieldiastrin63@gmail.com',
     to: emailEsq,
     subject: 'Assunto do E-mail',
-    html: '<h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail para Redefinir sua Senha</p>',
+    html: '<img class="logo-imprimeai" src="http://localhost:8080/images/logo-imprimeai2.png" alt="..."><br><h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail para Redefinir sua Senha</p><br> <p>Clique neste link para redefini-lá</p><br><a href="http://localhost:8080/html/redefinicaosenha.html">Redefinir Senha</a>',
     text: "Olá Usuário, Você acabou de receber um e-mail para Redefinir sua Senha"
   };
 
@@ -786,6 +777,11 @@ app.post('/enviar-email', (req, res) => {
 
 app.get('/email', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'email.html');
+  res.sendFile(filePath);
+});
+
+app.get('/redefinicaosenha', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'redefinicaosenha.html');
   res.sendFile(filePath);
 });
 

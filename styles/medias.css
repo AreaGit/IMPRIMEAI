@@ -5,25 +5,29 @@
       position: absolute;
       top: 330%;
       height: 550px;
-      width: 142%;
-    }
+      width: 100%;
+  }
+  .atend > h2, p {
+    font-size: 9px;
+    font-weight: bold;
+}
     .content {
       position: relative;
       top: 357px;
       left: -30%;
     }
     .content > .image1 {
-      width: 450px;
+      width: 400px;
       height: 240px;
       position: relative;
       top: 52%;
-      left: 97px;
-    }
+      left: 124px;
+  }
     .content > .image2 {
-      width: 450px;
+      width: 400px;
     }
     .content > .image3 {
-      width: 450px;
+      width: 400px;
     }
     .redes > img {
       position: relative;
@@ -86,6 +90,11 @@
       position: relative;
       left: -50px;
     }
+    .par {
+      position: relative;
+      top: -72px;
+      left: 52%;
+  }
 }
 
 
