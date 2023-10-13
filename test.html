@@ -39,11 +39,36 @@
     </div>
 </header>
 <main>
-    <form method="post">
+    <form id="emailForm">
         <h1>Digite seu Email</h1>
         <input type="email" name="emailEsq" id="emailEsq" placeholder="Digite seu Email..." required>
         <button type="submit">Enviar</button>
     </form>
+    <script>
+ document.getElementById('emailForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Evita o envio padrão do formulário
+
+    const emailEsq = document.getElementById('emailEsq').value;
+
+    // Faça uma chamada Fetch para o servidor
+    fetch('/enviar-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ emailEsq }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        alert(data.message); // Exibe uma mensagem no resultado do e-mail
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Ocorreu um erro ao enviar o e-mail.');
+    });
+});
+    </script>
 </main>
 </body>
 </html>

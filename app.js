@@ -752,15 +752,42 @@ const transport = nodemailer.createTransport({
   }
 })
 
-transport.sendMail({
+/*transport.sendMail({
   from: "gabrieldiastrin63@gmail.com",
-  to: "thiagofranchidinardi@gmail.com",
+  to: "areagit5@gmail.com",
   subject: "Enviando e-mails com Node",
   html: '<h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail via NodeJS</p>',
   text: "Olá Usuário, você recebeu um e-mail com o NodeJS"
 })
 .then(() => console.log("E-mail envaido com Sucesso!"))
-.catch((err) => console.log('Não foi possível enviar!', err))
+.catch((err) => console.log('Não foi possível enviar!', err))*/
+app.post('/enviar-email', (req, res) => {
+  const { emailEsq } = req.body;
+
+  const mensagemEmail = {
+    from: 'gabrieldiastrin63@gmail.com',
+    to: emailEsq,
+    subject: 'Assunto do E-mail',
+    html: '<h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail para Redefinir sua Senha</p>',
+    text: "Olá Usuário, Você acabou de receber um e-mail para Redefinir sua Senha"
+  };
+
+  transport.sendMail(mensagemEmail)
+    .then(() => {
+      console.log('E-mail enviado com sucesso!');
+      res.json({ message: 'E-mail enviado com sucesso!' });
+    })
+    .catch((err) => {
+      console.log('Não foi possível enviar o e-mail!', err);
+      res.status(500).json({ error: 'Erro ao enviar o e-mail.' });
+    });
+});
+
+
+app.get('/email', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'email.html');
+  res.sendFile(filePath);
+});
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
