@@ -787,6 +787,7 @@ app.post('/enviar-email', (req, res) => {
 app.post('/redefinir-senha', async (req, res) => {
   const { email, newPass } = req.body;
 
+
   const user = await User.findOne({ where: { emailCad: email } });
 
   if (!user) {

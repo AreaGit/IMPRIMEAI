@@ -10,11 +10,67 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <style>
+    * {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: 0px;
+    font-family: 'Open Sans';
+}
+.logo-imprimeai {
+    position: absolute;
+    top: 20%;
+    left: 45%;
+}
+#form {
+    position: absolute;
+    top: 30%;
+    left: 34%;
+}
+#form > h1 {
+    text-align: center;
+    font-size: 40px;
+}
+#form > p {
+    text-align: center;
+    padding: 20px 0px 20px 0px;
+}
+#form > input {
+    width: 580px;
+    height: 60px;
+    text-indent: 20px;
+    margin: 10px;
+}
+button {
+    width: 580px;
+    height: 40px;
+    margin: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #EF4126;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    transform: translateY(-5px);
+    transition: 1s;
+}
+.btns > a {
+    text-decoration: none;
+    width: 580px;
+    height: 40px;
+    margin: 10px;
+    padding: 10px 245px 10px 245px;
+    text-align: center;
+    position: relative;
+    top: 10px;
+    color: #EF4126;
+}
 
 </style>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
-    <form id="redefinicaoForm">
+    <form>
         <h1>Redefinir Senha</h1>
         <p id="msg">Insira a sua nova Senha</p>
         <input type="email" name="email" id="email" placeholder="Digite seu Email Cadastrado..." required>
@@ -28,34 +84,64 @@
     </form>
     <script>
         const email = document.getElementById('email')
-    const newPass = document.getElementById('newPass');
-    const btn = document.getElementById('btn');
+        const newPass = document.getElementById('newPass');
+        let validNewPass = false
+        const btn = document.getElementById('btn');
+        const msg = document.getElementById('msg')
+        const redefinicaoForm = document.getElementById('redefinicaoForm')
 
-    btn.addEventListener('click', () => {
-        const newPassword = newPass.value;
-        const email = document.getElementById('email').value
 
-        // Construct the request to send the email and new password to the server.
-        fetch('/redefinir-senha', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: email, newPass: newPassword }),
-            // Replace 'email@example.com' with the actual email
+        newPass.addEventListener('keyup', () => {
+            if(newPass.value.length <= 8) {
+                newPass.setAttribute('style', 'color: red; border-color: red;')
+                validNewPass = false
+            } else {
+                newPass.setAttribute('style', 'color: black; border-color: green;')
+            validNewPass = true
+            }
         })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response from the server, e.g., show a success message.
-            console.log(data);
+
+        btn.addEventListener('click', () => {
+            const newPassword = newPass.value;
+            const email = document.getElementById('email').value
+
+            // Construct the request to send the email and new password to the server.
+            fetch('/redefinir-senha', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email, newPass: newPassword }),
+                // Replace 'email@example.com' with the actual email
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(validNewPass) {
+                    console.log(data);
+                    msg.innerHTML = '<strong>Senha Redefinida Com Sucesso!</strong>'
+                    msg.setAttribute('style', 'color:green;')
+                    setTimeout(() => {
+                        window.location.href = 'http://localhost:8080/html/form.html'
+                    }, 3000);
+                }else {
+                    console.error('Error:', error);
+                    msg.innerHTML = '<strong>Não foi possível Redefinir a Senha!</strong>'
+                    msg.setAttribute('style', 'color:red;')
+                }
+                // Handle the response from the server, e.g., show a success message.
+
+
+
             // You can display a success message or handle any other UI updates here.
-        })
-        .catch(error => {
-            // Handle errors, e.g., display an error message.
-            console.error('Error:', error);
-            // You can display an error message or handle any other UI updates here.
+             })
+            .catch(error => {
+                // Handle errors, e.g., display an error message.
+                console.error('Error:', error);
+                msg.innerHTML = '<strong>Não foi possível Redefinir a Senha!</strong>'
+                msg.setAttribute('style', 'color:red;')
+                // You can display an error message or handle any other UI updates here.
+            });
         });
-    });
     </script>
 </body>
 </html>
