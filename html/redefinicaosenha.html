@@ -14,15 +14,48 @@
 </style>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
-    <form>
+    <form id="redefinicaoForm">
         <h1>Redefinir Senha</h1>
         <p id="msg">Insira a sua nova Senha</p>
+        <input type="email" name="email" id="email" placeholder="Digite seu Email Cadastrado..." required>
+        <br>
         <input type="password" name="newPass" id="newPass" placeholder="Digite sua Nova Senha..." required>
         <br>
         <div class="btns">
-            <button id="btn" type="submit" onclick="entrar()">Entrar</button>
+            <button id="btn" type="submit">Redefinir Senha</button>
             <br>
         </div>
     </form>
+    <script>
+        const email = document.getElementById('email')
+    const newPass = document.getElementById('newPass');
+    const btn = document.getElementById('btn');
+
+    btn.addEventListener('click', () => {
+        const newPassword = newPass.value;
+        const email = document.getElementById('email').value
+
+        // Construct the request to send the email and new password to the server.
+        fetch('/redefinir-senha', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email, newPass: newPassword }),
+            // Replace 'email@example.com' with the actual email
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the server, e.g., show a success message.
+            console.log(data);
+            // You can display a success message or handle any other UI updates here.
+        })
+        .catch(error => {
+            // Handle errors, e.g., display an error message.
+            console.error('Error:', error);
+            // You can display an error message or handle any other UI updates here.
+        });
+    });
+    </script>
 </body>
 </html>

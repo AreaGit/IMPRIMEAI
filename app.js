@@ -17,6 +17,7 @@ const fetch = require('node-fetch');
 const bcrypt = require('bcrypt')
 const session = require('express-session');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -741,6 +742,11 @@ app.post('/atualizar-status-pedido', async (req, res) => {
   }
 });
 
+app.get('/email', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'email.html');
+  res.sendFile(filePath);
+});
+
 
 const transport = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -765,25 +771,39 @@ app.post('/enviar-email', (req, res) => {
 
   transport.sendMail(mensagemEmail)
     .then(() => {
-      console.log('E-mail enviado com sucesso!');
-      res.json({ message: 'E-mail enviado com sucesso!' });
+      const token = jwt.sign({email: emailEsq}, 'seuSegredo')
+      console.log('E-mail enviado com sucesso!', emailEsq, token);
+      res.json({ message: 'E-mail enviado com sucesso!', emailEsq, token });
     })
     .catch((err) => {
       console.log('Não foi possível enviar o e-mail!', err);
       res.status(500).json({ error: 'Erro ao enviar o e-mail.' });
     });
+
+
+    
+});
+
+app.post('/redefinir-senha', async (req, res) => {
+  const { email, newPass } = req.body;
+
+  const user = await User.findOne({ where: { emailCad: email } });
+
+  if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+  }
+
+  // Hash the new password and save it to the user's record
+  const hashedPassword = bcrypt.hashSync(newPass, 10);
+  user.passCad = hashedPassword; // Assuming the password field in the model is named passCad
+  await user.save();
+
+  return res.status(200).json({ message: 'Password reset successful' });
 });
 
 
-app.get('/email', (req, res) => {
-  const filePath = path.join(__dirname, 'html', 'email.html');
-  res.sendFile(filePath);
-});
 
-app.get('/redefinicaosenha', (req, res) => {
-  const filePath = path.join(__dirname, 'html', 'redefinicaosenha.html');
-  res.sendFile(filePath);
-});
+
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
