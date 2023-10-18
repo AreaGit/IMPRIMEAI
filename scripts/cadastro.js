@@ -115,66 +115,80 @@ pass.addEventListener('keyup', () => {
     }
 })
 
-
 document.addEventListener('DOMContentLoaded', function () {
     const btnCad = document.getElementById('btnCad');
     const cadastroForm = document.getElementById('cadastroForm');
-
+    const msg = document.getElementById('msg');
+  
     btnCad.addEventListener('click', function () {
-        const usuario = document.getElementById('usuario').value;
-        const cpf = document.getElementById('cpf').value;
-        const endereço = document.getElementById('endereço').value;
-        const cep = document.getElementById('cep').value;
-        const cidade = document.getElementById('cidade').value;
-        const estado = document.getElementById('estado').value;
-        const telefone = document.getElementById('telefone').value;
-        const inscricaoEstadual = document.getElementById('inscricaoEstadual').value;
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-
+      const usuario = document.getElementById('usuario').value;
+      const cpf = document.getElementById('cpf').value;
+      const endereço = document.getElementById('endereço').value;
+      const cep = document.getElementById('cep').value;
+      const cidade = document.getElementById('cidade').value;
+      const estado = document.getElementById('estado').value;
+      const telefone = document.getElementById('telefone').value;
+      const inscricaoEstadual = document.getElementById('inscricaoEstadual').value;
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('pass').value;
+  
+      // Verifique cada campo individualmente e exiba mensagens de erro, se necessário.
+      if (usuario.length <= 5 || usuario.includes(' ')) {
+        msg.innerHTML = '<strong>O campo "Usuário" deve conter mais de 5 caracteres e não pode conter espaços.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else if (email.length <= 3) {
+        msg.innerHTML = '<strong>O campo "E-mail" deve conter mais de 3 caracteres.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else if (pass.length <= 8) {
+        msg.innerHTML = '<strong>O campo "Senha" deve conter mais de 8 caracteres.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else {
         // Montar os dados do formulário em um objeto
-        // Dados para enviar no corpo da solicitação
-    const userData = {
-    userCad: usuario,
-    endereçoCad: endereço,
-    cepCad: cep,
-    cidadeCad: cidade,
-    estadoCad: estado,
-    cpfCad: cpf,
-    telefoneCad: telefone,
-    inscricaoEstadualCad: inscricaoEstadual,
-    emailCad: email,
-    passCad: pass
-};
-
-    fetch('/cadastrar', {
-    method: 'POST', // Usar o método POST
-    headers: {
-        'Content-Type': 'application/json' // Definir o cabeçalho para JSON
-    },
-    body: JSON.stringify(userData) // Converter os dados para JSON
-})
-    .then(response => response.json())
-    .then(data => {
-        if(validUsuario && validEmail && validPass) {
-            console.log(data.message); 
-    msg.innerHTML = '<strong>Usuário Cadastrado com Sucesso</strong>'
-    msg.setAttribute('style', 'color: green;')
-    setTimeout(() => {
-        window.location.href = 'http://localhost:8080/html/form.html'
-    },3000)
-        } else {
-            msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
-            msg.setAttribute('style', 'color:red;')
-            console.error('Erro ao cadastrar usuário:', error);
-        }
-    
-})
-    .catch(error => {
-        msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>'
-        msg.setAttribute('style', 'color:red;')
-        console.error('Erro ao cadastrar usuário:', error);
-});
-
+        const userData = {
+          userCad: usuario,
+          endereçoCad: endereço,
+          cepCad: cep,
+          cidadeCad: cidade,
+          estadoCad: estado,
+          cpfCad: cpf,
+          telefoneCad: telefone,
+          inscricaoEstadualCad: inscricaoEstadual,
+          emailCad: email,
+          passCad: pass
+        };
+  
+        fetch('/cadastrar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message === 'Usuário cadastrado com sucesso!') {
+            msg.innerHTML = '<strong>Usuário Cadastrado com Sucesso</strong>';
+            msg.setAttribute('style', 'color: green;');
+            setTimeout(() => {
+              window.location.href = 'http://localhost:8080/html/form.html';
+            }, 3000);
+          } else {
+            msg.innerHTML = `<strong>${data.message}</strong>`;
+            msg.setAttribute('style', 'color: red;');
+            setTimeout(() => {
+                window.location.reload()
+            }, 3000)
+          }
+        })
+        .catch(error => {
+          msg.innerHTML = '<strong>Não foi possível Cadastrar o Usuário <br> Verifique os Campos</strong>';
+          msg.setAttribute('style', 'color:red;');
+          console.error('Erro ao cadastrar usuário:', error);
+          setTimeout(() => {
+            window.location.reload()
+          }, 3000)
+          
+        });
+      }
     });
-});
+  });

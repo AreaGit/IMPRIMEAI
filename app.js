@@ -193,6 +193,21 @@ app.post("/cadastrar", async (req, res) => {
         const { userCad, cpfCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;
         const hashedPassword = await bcrypt.hash(passCad, 10);
 
+            // Verifique se já existe um usuário com o mesmo CPF, email ou senha
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [
+          { emailCad: emailCad },
+        ],
+      },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Já existe um usuário com este e-mail cadastrado",
+      });
+    }
+
         const newUser = await User.create({
             userCad: userCad,
             cpfCad: cpfCad,
@@ -720,7 +735,6 @@ app.post('/criar-pedidos', async (req, res) => {
   }
 });
 
-
 // Exemplo de rota no servidor Node.js
 app.post('/atualizar-status-pedido', async (req, res) => {
   try {
@@ -746,7 +760,6 @@ app.get('/email', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'email.html');
   res.sendFile(filePath);
 });
-
 
 const transport = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -784,7 +797,6 @@ app.post('/enviar-email', (req, res) => {
     
 });
 
-
 app.get('/email-aprovado', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'email-aprovado.html');
   res.sendFile(filePath);
@@ -807,10 +819,6 @@ app.post('/redefinir-senha', async (req, res) => {
 
   return res.status(200).json({ message: 'Senha redefinida Com Sucesso!' });
 });
-
-
-
-
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
