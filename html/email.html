@@ -49,12 +49,14 @@
         msg.innerHTML = '<strong>E-mail de Redefinição de Senha enviado!</strong>'
         msg.setAttribute('style', 'color: green')
         setTimeout(() => {
-        window.location.href = 'http://localhost:8080/html/redefinicaosenha.html'
+        window.location.href = 'http://localhost:8080/html/email-aprovado.html'
         },3000)
     })
     .catch(error => {
         console.error('Erro:', error);
         alert('Ocorreu um erro ao enviar o e-mail.');
+        msg.innerHTML = '<strong>Erro ao enviar o E-mail</strong>'
+        msg.setAttribute('style', 'color: red')
     });
 });
     </script>

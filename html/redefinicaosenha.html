@@ -70,7 +70,7 @@ button:hover {
 </style>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
-    <form>
+    <div id="form">
         <h1>Redefinir Senha</h1>
         <p id="msg">Insira a sua nova Senha</p>
         <input type="email" name="email" id="email" placeholder="Digite seu Email Cadastrado..." required>
@@ -81,7 +81,7 @@ button:hover {
             <button id="btn" type="submit">Redefinir Senha</button>
             <br>
         </div>
-    </form>
+    </div>
     <script>
         const email = document.getElementById('email')
         const newPass = document.getElementById('newPass');
@@ -117,7 +117,7 @@ button:hover {
             .then(response => response.json())
             .then(data => {
                 if(validNewPass) {
-                    console.log(data);
+                    console.log(data.messsage);
                     msg.innerHTML = '<strong>Senha Redefinida Com Sucesso!</strong>'
                     msg.setAttribute('style', 'color:green;')
                     setTimeout(() => {

@@ -784,6 +784,12 @@ app.post('/enviar-email', (req, res) => {
     
 });
 
+
+app.get('/email-aprovado', (req, res) => {
+  const filePath = path.join(__dirname, 'html', 'email-aprovado.html');
+  res.sendFile(filePath);
+});
+
 app.post('/redefinir-senha', async (req, res) => {
   const { email, newPass } = req.body;
 
