@@ -42,9 +42,28 @@
             <button id="btn" type="button" onclick="entrar()">Entrar</button>
             <br>
             <a href="http://localhost:8080/html/cadastro.html">Cadastre-se</a>
-            <a href="http://localhost:8080/html/email.html" id="lnk-esq">Esqueceu a Senha?</a>
+            <a href="http://localhost:8080/html/email.html" id="lnk-esq" onclick="disableResetPasswordLink(this)">Esqueceu a Senha?</a>
         </div>
     </form>
     <script src="../scripts/login.js"></script>
+    <script>
+        /*let isResetPasswordLinkEnabled = true;
+
+function disableResetPasswordLink(link) {
+    if (isResetPasswordLinkEnabled) {
+        isResetPasswordLinkEnabled = false;
+        link.style.pointerEvents = 'none'; // Disable the link
+        link.style.textDecoration = 'none'; // Remove the underline
+
+        setTimeout(() => {
+            isResetPasswordLinkEnabled = true;
+            link.style.pointerEvents = 'auto'; // Re-enable the link
+            link.style.textDecoration = 'underline'; // Add underline back
+        }, 60000);
+    } else {
+        alert('You can only request a password reset once every 1 minute.');
+    }
+}*/
+    </script>
 </body>
 </html>
