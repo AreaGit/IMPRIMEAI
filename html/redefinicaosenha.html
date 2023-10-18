@@ -105,18 +105,18 @@ button:hover {
             const newPassword = newPass.value;
             const email = document.getElementById('email').value
 
-            // Construct the request to send the email and new password to the server.
+            // Requisição para Redefinir a Senha
             fetch('/redefinir-senha', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email: email, newPass: newPassword }),
-                // Replace 'email@example.com' with the actual email
             })
             .then(response => response.json())
             .then(data => {
                 if(validNewPass) {
+                    //Mensagem de Sucesso se os campos estiverem Certos
                     console.log(data.messsage);
                     msg.innerHTML = '<strong>Senha Redefinida Com Sucesso!</strong>'
                     msg.setAttribute('style', 'color:green;')
@@ -124,22 +124,17 @@ button:hover {
                         window.location.href = 'http://localhost:8080/html/form.html'
                     }, 3000);
                 }else {
+                    //Mensagem de Erro
                     console.error('Error:', error);
                     msg.innerHTML = '<strong>Não foi possível Redefinir a Senha!</strong>'
                     msg.setAttribute('style', 'color:red;')
                 }
-                // Handle the response from the server, e.g., show a success message.
-
-
-
-            // You can display a success message or handle any other UI updates here.
              })
             .catch(error => {
-                // Handle errors, e.g., display an error message.
+                //Mensagem de Erro
                 console.error('Error:', error);
                 msg.innerHTML = '<strong>Não foi possível Redefinir a Senha!</strong>'
                 msg.setAttribute('style', 'color:red;')
-                // You can display an error message or handle any other UI updates here.
             });
         });
     </script>

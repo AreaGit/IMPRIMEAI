@@ -757,7 +757,7 @@ const transport = nodemailer.createTransport({
     pass: "wjfa eeyv cwss mwzi"
   }
 })
-
+//Enviando E-mail
 app.post('/enviar-email', (req, res) => {
   const { emailEsq } = req.body;
 
@@ -797,15 +797,15 @@ app.post('/redefinir-senha', async (req, res) => {
   const user = await User.findOne({ where: { emailCad: email } });
 
   if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'Usuário não existe!' });
   }
 
-  // Hash the new password and save it to the user's record
+  // Criptografando a nova Senha
   const hashedPassword = bcrypt.hashSync(newPass, 10);
-  user.passCad = hashedPassword; // Assuming the password field in the model is named passCad
+  user.passCad = hashedPassword; // passCad irá ser igual a hashedPassword
   await user.save();
 
-  return res.status(200).json({ message: 'Password reset successful' });
+  return res.status(200).json({ message: 'Senha redefinida Com Sucesso!' });
 });
 
 
