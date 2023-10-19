@@ -60,18 +60,44 @@ button:hover {
 @media screen and (min-width: 300px) and (max-width: 320px) {
     .logo-imprimeai {
         position: relative;
-        left: 30%;
+        left: 17%;
     }
     form {
         position: relative;
         top: 10px;
         left: 0%;
     }
+    form > h1 {
+        position: relative;
+        left: 0%;
+    }
+    form > p {
+        position: relative;
+        left: 0%;
+    }
     form > input {
-        width: 240px;
+        width: 270px;
     }
     button {
-        width: 240px;
+        width: 270px;
+    }                   
+    #lnk-log {
+        font-size: 12px;
+        position: relative;
+        left: 14px;
+    }
+    #lnk-gr {
+        position: relative;
+        font-size: 12px;
+        padding: 17px;
+        left: -3px;
+        top: 10px;
+    }
+    #lnk-lggr {
+        position: relative;
+        font-size: 12px;
+        left: 35px;
+        top: 8px;
     }
     .btns > a {
         text-decoration: none;
@@ -132,18 +158,40 @@ button:hover {
 @media screen and (min-width: 768px) and (max-width: 1440px) {
     .logo-imprimeai {
         position: relative;
-        left: 30%;
+        left: 38%;
     }
     form {
         position: relative;
         top: 10px;
         left: 0%;
     }
+    form > h1 {
+        position: relative;
+        left: -4%;
+    }
+    form > p {
+        position: relative;
+        left: -4%;
+    }
     form > input {
         width: 95vw;
     }
     button {
         width: 95vw;
+    }
+    #lnk-gr {
+        position: relative;
+        font-size: 16px;
+        padding: -29px;
+        left: -104px;
+        top: 20px;
+    }
+    #lnk-lggr {
+        position: relative;
+        font-size: 16px;
+        padding: -29px;
+        left: -104px;
+        top: 20px;
     }
     .btns > a {
         text-decoration: none;

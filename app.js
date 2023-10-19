@@ -258,6 +258,7 @@ app.post("/login", async (req, res) => {
       const token = Math.random().toString(16).substring(2);
   
       res.json({ message: "Login bem-sucedido", token: token });
+      console.log(token)
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
@@ -778,13 +779,13 @@ app.post('/enviar-email', (req, res) => {
     from: 'gabrieldiastrin63@gmail.com',
     to: emailEsq,
     subject: 'Assunto do E-mail',
-    html: '<img class="logo-imprimeai" src="http://localhost:8080/images/logo-imprimeai2.png" alt="..."><br><h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail para Redefinir sua Senha</p><br> <p>Clique neste link para redefini-lá</p><br><a href="http://localhost:8080/html/redefinicaosenha.html">Redefinir Senha</a>',
+    html: '<img class="logo-imprimeai" src="https://d1muf25xaso8hp.cloudfront.net/https%3A%2F%2F9b0187d5429aadeb33d266a8f3913fff.cdn.bubble.io%2Ff1630964515068x903204082016482200%2Flogo1.2.png?w=256&h=60&auto=compress&fit=crop&dpr=1" alt="..."><br><h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail para Redefinir sua Senha</p><br> <p>Clique neste link para redefini-lá</p><br><a href="http://localhost:8080/html/redefinicaosenha.html">Redefinir Senha</a>',
     text: "Olá Usuário, Você acabou de receber um e-mail para Redefinir sua Senha"
   };
 
   transport.sendMail(mensagemEmail)
     .then(() => {
-      const token = jwt.sign({email: emailEsq}, 'seuSegredo')
+      const token = Math.random().toString(16).substring(2) //jwt.sign({email: emailEsq}, 'seuSegredo')
       console.log('E-mail enviado com sucesso!', emailEsq, token);
       res.json({ message: 'E-mail enviado com sucesso!', emailEsq, token });
     })
@@ -792,9 +793,6 @@ app.post('/enviar-email', (req, res) => {
       console.log('Não foi possível enviar o e-mail!', err);
       res.status(500).json({ error: 'Erro ao enviar o e-mail.' });
     });
-
-
-    
 });
 
 app.get('/email-aprovado', (req, res) => {
