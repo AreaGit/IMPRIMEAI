@@ -81,7 +81,7 @@
         <p>Tá com pressa? <strong>ImprimeAí</strong></p>
         <nav>
             <ul class='menu2'>
-                <a href="#">Meus Pedidos</a>
+                <a href="pedidos-usuario.html">Meus Pedidos</a>
                 <a href="#">Central de Ajuda</a>
             </ul>
             <div class="icons-header">
@@ -143,6 +143,11 @@
         <div id="estado"></div>
         <div id="endereco"></div>
         <div id="telefone"></div>
+        <!--<div id="user-profile">
+          <h1>Perfil do Usuário</h1>
+          <p>Email: <span id="user-email"></span></p>
+          <p>Outras informações do usuário aqui...</p>
+        </div> -->       
     </main>
     <script>
         const logado = document.getElementById('logado')
@@ -185,6 +190,20 @@ const nomeUser = document.getElementById('nomeUser')
 nomeUser.innerHTML = `
     <h1>Olá, ${userCad}!</h1>
 `
+document.addEventListener('DOMContentLoaded', () => {
+  // Fazer uma solicitação fetch para obter os dados do usuário
+  fetch('/api/user')
+    .then((response) => response.json())
+    .then((user) => {
+      // Atualizar os elementos HTML com os dados do usuário
+      document.getElementById('user-email').textContent = user.emailCad;
+      // Atualize outras informações do usuário conforme necessário
+    })
+    .catch((error) => {
+      console.error('Erro ao buscar os dados do usuário:', error);
+    });
+});
+
     </script>
     <script src="scripts/slider.js"></script>
     <script src="scripts/script.js"></script>

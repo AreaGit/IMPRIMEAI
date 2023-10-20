@@ -818,6 +818,25 @@ app.post('/redefinir-senha', async (req, res) => {
   return res.status(200).json({ message: 'Senha redefinida Com Sucesso!' });
 });
 
+// Rota para exibir o perfil do usuário logado
+app.get('/perfil', (req, res) => {
+  const userId = req.user.id; // Isso depende da sua estratégia de autenticação
+  const query = 'SELECT emailCad *  WHERE id = ?';
+  
+  connection.query(query, [userId], (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).send('Erro interno');
+    }
+    
+    const user = results[0];
+    
+    // Renderize uma página HTML com os dados do usuário
+    res.render('perfil', { user });
+  });
+});
+
+
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
 });

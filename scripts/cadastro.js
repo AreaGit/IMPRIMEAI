@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
             msg.innerHTML = '<strong>Usuário Cadastrado com Sucesso</strong>';
             msg.setAttribute('style', 'color: green;');
             setTimeout(() => {
-              window.location.href = 'http://localhost:8080/html/form.html';
+              window.location.href = 'form.html';
             }, 3000);
           } else {
             msg.innerHTML = `<strong>${data.message}</strong>`;
