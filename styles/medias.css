@@ -886,6 +886,21 @@
     }
 }*/
 @media screen and (min-width: 1160px) and (max-width: 1439px) {
+    p {
+      width: fit-content;
+    }
+    ::-webkit-scrollbar {
+      width: 0%;
+      display: none;
+    }
+    #formPesquisa {
+      position: relative;
+      top: -17px;
+    }
+    .par {
+      position: relative;
+      top: -66px;
+    }
     .icons-header {
       position: relative;
       left: 5%;
