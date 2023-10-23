@@ -17,17 +17,17 @@
       left: -30%;
     }
     .content > .image1 {
-      width: 400px;
+      width: 240px;
       height: 240px;
       position: relative;
       top: 52%;
-      left: 124px;
+      left: 97px;
   }
     .content > .image2 {
-      width: 400px;
+      width: 240px;
     }
     .content > .image3 {
-      width: 400px;
+      width: 240px;
     }
     .redes > img {
       position: relative;
@@ -95,6 +95,10 @@
       top: -72px;
       left: 52%;
   }
+  footer > p {
+    position: relative;
+    left: 80px;
+  }
 }
 
 
@@ -105,6 +109,28 @@
     top: -3px;
     left: -1px;
   }
+  footer {
+    position: absolute;
+    top: 330%;
+    height: 550px;
+    width: 100%;
+}
+#formPesquisa {
+  position: absolute;
+  top: 44%;
+  left: 1%;
+}
+#carrinho_compras {
+  position: absolute;
+  top: 52px;
+  left: 91%;
+}
+.icons-header {
+  position: relative;
+  left: -98px;
+  top: -31px;
+  width: fit-content; 
+}
   .menu2 {
     width: 37%;
   }
@@ -122,8 +148,8 @@
   }
   .logo-imprimeai {
     position: relative;
-    top: -50px;
-    left: -2px;
+    top: 8px;
+    left: 0px;
   }
   .input-pesq {
     position: relative;
@@ -144,18 +170,18 @@
   }
   #conviteCad {
     position: relative;
-    top: -10px;
-    left: -50%;
+    top: 32px;
+    left: 0%;
   }
   #logado {
     position: relative;
-    top: -30px;
+    top: 38px;
     left: 70%;
   }
   #sairBtn {
     position: relative;
-    top: -53px;
-    left: 86%;
+    top: -15px;
+    left: 78%;
   }
   .menu > ul > li > a {
     padding: 0px;
@@ -398,9 +424,12 @@
     }
 }
 @media screen and (min-width:768px) and (max-width:1023px) {
+  .logo-imprimeai {
+    left: 1px;
+  }
   #carrinho_compras {
     position: absolute;
-    top: 10%;
+    top: 16%;
     left: 73%;
   }
   #totalItens {
@@ -410,13 +439,18 @@
   }
   #logado {
     position: relative;
-    top: -30px;
-    left: 87%;
+    top: 12px;
+    left: 78%;
   }
+
   #sairBtn {
     position: relative;
-    top: -20px;
-    left: 90%;
+    top: 12px;
+    left: 84%;
+  }
+  #formPesquisa {
+    position: absolute;
+    top: 182px;
   }
 }
 @media screen and (min-width:870px) and (max-width:1023px) {

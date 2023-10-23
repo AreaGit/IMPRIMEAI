@@ -77,6 +77,14 @@ app.get("/login-graficas", (req, res) => {
   res.sendFile(__dirname + "html" , "/login-graficas.html"); // Verifique o caminho do arquivo
 });
 
+app.get("/cadastro", (req, res) => {
+  res.sendFile(__dirname + "html", "cadastro.html"); // Verifique o caminho do arquivo
+});
+
+app.get("/login", (req, res) => {
+  res.sendFile(__dirname + "html", "form.html"); // Verifique o caminho do arquivo
+});
+
 
 
 app.post("/cadastro-graficas", async (req, res) => {
@@ -270,14 +278,14 @@ app.post("/login", async (req, res) => {
     // Verifique se o usuário está autenticado (você pode usar middleware de autenticação aqui)
     if (!req.cookies.userCad) {
         // Se o usuário não estiver autenticado, redirecione para a página de login ou onde desejar
-        return res.redirect("/login");
+        return res.redirect("html/form.html");
     }
 
     // Excluir o cookie "userCad"
     res.clearCookie("userCad");
 
     // Redirecionar para a página de login ou para onde desejar
-    res.redirect("/login");
+    res.redirect("html/form.html");
 });
 
 
