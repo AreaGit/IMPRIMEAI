@@ -51,6 +51,19 @@ endereço.addEventListener('keyup', () => {
         validEndereco = true
     }
 })
+cep.addEventListener('input', () => {
+    const cepValue = cep.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cepValue.length === 8) {
+        cep.value = cepValue.replace(/(\d{5})(\d{3})/, '$1-$2'); // Formata o CEP (12345678 -> 12345-678)
+        cep.style.color = 'black';
+        cep.style.borderColor = 'green';
+        validCep = true;
+    } else {
+        cep.style.color = 'red';
+        cep.style.borderColor = 'red';
+        validCep = false;
+    }
+});
 cep.addEventListener('keyup', () => {
     if(cep.value.length <= 8) {
         cep.setAttribute('style', 'color: red; border-color: red;')
@@ -78,17 +91,43 @@ estado.addEventListener('keyup', () => {
         validEstado = true
     }
 })
+cpf.addEventListener('input', () => {
+    let cpfValue = cpf.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cpfValue.length > 11) {
+        cpfValue = cpfValue.slice(0, 11); // Limite o comprimento a 11 caracteres
+    }
+
+    // Formata o CPF com pontos e traço
+    cpfValue = cpfValue.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+
+    cpf.value = cpfValue; // Define o valor formatado de volta no campo
+});
 cpf.addEventListener('keyup', () => {
-    if(cpf.value.length <= 11) {
-        cpf.setAttribute('style', 'color: red; border-color: red;')
-        validCPF = false
+    const cpfValue = cpf.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cpfValue.length !== 11) {
+        cpf.style.color = 'red';
+        cpf.style.borderColor = 'red';
+        validCPF = false;
     } else {
-        cpf.setAttribute('style', 'color: black; border-color: green;')
-        validCPF = true
+        cpf.style.color = 'black';
+        cpf.style.borderColor = 'green';
+        validCPF = true;
     }
 })
+telefone.addEventListener('input', () => {
+    let telefoneValue = telefone.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (telefoneValue.length > 11) {
+        telefoneValue = telefoneValue.slice(0, 11); // Limite o comprimento a 11 caracteres
+    }
+
+    // Formata o telefone com parênteses e traço (por exemplo, (99) 99999-9999)
+    telefoneValue = telefoneValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+
+    telefone.value = telefoneValue; // Define o valor formatado de volta no campo
+});
 telefone.addEventListener('keyup', () => {
-    if(telefone.value.length <= 8) {
+    const telefoneValue = telefone.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if(telefone.value.length <= 11) {
         telefone.setAttribute('style', 'color: red; border-color: red;')
         validTelefone = false
     } else {
@@ -97,23 +136,33 @@ telefone.addEventListener('keyup', () => {
     }
 })
 email.addEventListener('keyup', () => {
-    if(email.value.length <= 3) {
-        email.setAttribute('style', 'color: red; border-color: red;')
-        validEmail = false
+    const emailValue = email.value;
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    if (!emailPattern.test(emailValue)) {
+        email.setAttribute('style', 'color: red; border-color: red;');
+        validEmail = false;
     } else {
-        email.setAttribute('style', 'color: black; border-color: green;')
-        validEmail = true
+        email.setAttribute('style', 'color: black; border-color: green;');
+        validEmail = true;
     }
-})
+});
+
 pass.addEventListener('keyup', () => {
-    if(pass.value.length <= 8) {
-        pass.setAttribute('style', 'color: red; border-color: red;')
-        validPass = false
+    const passValue = pass.value;
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(passValue);
+    const hasLowerCase = /[a-z]/.test(passValue);
+    const hasNumber = /\d/.test(passValue);
+
+    if (passValue.length < minLength || !(hasUpperCase && hasLowerCase && hasNumber)) {
+        pass.setAttribute('style', 'color: red; border-color: red;');
+        validPass = false;
     } else {
-        pass.setAttribute('style', 'color: black; border-color: green;')
-        validPass = true
+        pass.setAttribute('style', 'color: black; border-color: green;');
+        validPass = true;
     }
-})
+});
 
 document.addEventListener('DOMContentLoaded', function () {
     const btnCad = document.getElementById('btnCad');
@@ -136,11 +185,14 @@ document.addEventListener('DOMContentLoaded', function () {
       if (usuario.length <= 5 || usuario.includes(' ')) {
         msg.innerHTML = '<strong>O campo "Usuário" deve conter mais de 5 caracteres e não pode conter espaços.</strong>';
         msg.setAttribute('style', 'color: red;');
-      } else if (email.length <= 3) {
-        msg.innerHTML = '<strong>O campo "E-mail" deve conter mais de 3 caracteres.</strong>';
+      } else if (email.length <= 3 || !validEmail) {
+        msg.innerHTML = '<strong>Verifique o campo "E-mail" se ele foi digitado Corretamente.</strong>';
         msg.setAttribute('style', 'color: red;');
-      } else if (pass.length <= 8) {
-        msg.innerHTML = '<strong>O campo "Senha" deve conter mais de 8 caracteres.</strong>';
+      } else if (pass.length <= 8 || !validPass) {
+        msg.innerHTML = '<strong>Verifique o campo "Senha" se ele foi digitado Corretamente.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else if (!validCPF || !validCep || !validTelefone) {
+        msg.innerHTML = '<strong>Verifique os Outros Campos e verifique se estão corretos!.</strong>';
         msg.setAttribute('style', 'color: red;');
       } else {
         // Montar os dados do formulário em um objeto
