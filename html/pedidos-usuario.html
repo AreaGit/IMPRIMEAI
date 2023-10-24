@@ -127,7 +127,7 @@
         </ul>
     </main>
     <script>
-        fetch('/pedidos-cadastrados')
+        /*fetch('/pedidos-cadastrados')
             .then(response => response.json())
             .then(data => {
                 const pedidosList = document.getElementById('pedidos-list');
@@ -159,8 +159,57 @@
                 });
             })
             .catch(error => console.error('Erro ao buscar pedidos:', error));
+*/
+
+ // Substitua 'USER_ID' pelo ID do usuário desejado
+ function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+          return cookie.substring(name.length + 1);
+      }
+  }
+  return null;
+}
+
+// Ler o valor do cookie 'userCad'
+const userId = getCookie('userId');
+console.log(userId)
+
+// Fazer uma solicitação Fetch para obter os pedidos do usuário
+fetch(`/pedidos-usuario/${userId}`)
+.then(response => response.json())
+            .then(data => {
+                const pedidosList = document.getElementById('pedidos-list');
+                data.pedidos.forEach(pedidos => {
+                    //cardEsc.setAttribute('style', 'display:none;')
+                    const li = document.createElement('li');
+                    li.style.display = 'block';
+                    li.innerHTML = `
+                        <p class="ped-id">${pedidos.id}</p>
+                        <p class="ped-nome">${pedidos.nomePed}</p>
+                        <p class="ped-valor">${pedidos.valorPed}</p>
+                        <p class="ped-quant">${pedidos.quantPed}</p>
+                        <p class="ped-status" id="ped-status">${pedidos.statusPed}</p>
+                    `;
+
+                    if (pedidos.statusPed === "Aceito") {
+                        li.querySelector('.ped-status').style.color = 'green'
+                    } else if(pedidos.statusPed === "Aguardando") {
+                        li.querySelector('.ped-status').style.color = '#e5e52aad'
+                    } else if(pedidos.statusPed === "Recusado") {
+                        li.querySelector('.ped-status').style.color = '#EF4126'
+                    } else {
+                        li.querySelector('.ped-status').style.color = 'black'
+                    }
 
 
+                    pedidosList.appendChild(li);
+
+                });
+            })
+            .catch(error => console.error('Erro ao buscar pedidos:', error));   
     </script>
 </body>
 </html>

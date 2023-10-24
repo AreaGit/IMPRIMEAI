@@ -77,6 +77,10 @@ app.get("/login-graficas", (req, res) => {
   res.sendFile(__dirname + "html" , "/login-graficas.html"); // Verifique o caminho do arquivo
 });
 
+app.get("/cadastrar", (req, res) => {
+  res.sendFile(__dirname + "html", "cadastro.html"); // Verifique o caminho do arquivo
+});
+
 
 
 app.post("/cadastro-graficas", async (req, res) => {
@@ -173,7 +177,7 @@ app.get('/cartoes-cadastrados', async (req, res) => {
   }
 });
 
-app.get('/pedidos-cadastrados', async (req, res) => {
+/*app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     // Consulte o banco de dados para buscar os cartões cadastrados
     const pedidosCadastrados = await Pedidos.findAll();
@@ -183,6 +187,25 @@ app.get('/pedidos-cadastrados', async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar pedidos cadastrados:', error);
     //res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
+  }
+});*/
+
+app.get('/pedidos-usuario/:userId', async (req, res) => {
+  const userId = req.cookies.userId;
+
+  try {
+    // Consulte o banco de dados para buscar os pedidos do usuário com base no userId
+    const pedidosDoUsuario = await Pedidos.findAll({
+      where: {
+        idUserPed: userId,
+      },
+    });
+
+    // Renderize a página HTML de pedidos-usuario e passe os pedidos como JSON
+    res.json({ pedidos: pedidosDoUsuario });
+  } catch (error) {
+    console.error('Erro ao buscar pedidos do usuário:', error);
+    res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
   }
 });
 
@@ -278,7 +301,7 @@ app.post("/login", async (req, res) => {
     res.clearCookie("userCad");
 
     // Redirecionar para a página de login ou para onde desejar
-    res.redirect("/login");
+    res.redirect("html/form.html");
 });
 
 
@@ -717,6 +740,7 @@ app.post('/criar-pedidos', async (req, res) => {
 
         // Crie um pedido com as informações do produto e quantidade do carrinho
         const pedido = await Pedidos.create({
+          idUserPed: req.cookies.userId,
           nomePed: produto.nomeProd,
           quantPed: produtoNoCarrinho.quantidade,
           valorPed: totalAPagar,

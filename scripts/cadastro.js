@@ -20,16 +20,6 @@ let validCPF = false
 const inscricaoEstadual = document.getElementById('inscricaoEstadual')
 
 
-//VALIDANDO CAMPOS
-/*usuario.addEventListener('keyup', () => {
-    if(usuario.value.length <= 5) {
-        usuario.setAttribute('style', 'color: red; border-color: red;')
-        validUsuario=false
-    } else {
-        usuario.setAttribute('style', 'color: black; border-color: green;')
-        validUsuario = true
-    }
-})*/
 usuario.addEventListener('keyup', () => {
     const usuarioValue = usuario.value.trim(); // Remove espaços em branco do início e do fim
     if (usuarioValue.length <= 5 || usuarioValue.includes(' ')) {
@@ -161,6 +151,16 @@ pass.addEventListener('keyup', () => {
     } else {
         pass.setAttribute('style', 'color: black; border-color: green;');
         validPass = true;
+    }
+});
+
+document.getElementById('cadastroForm').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Evita o envio padrão do formulário
+        // Chame a função de envio do formulário aqui
+        // Por exemplo, você pode chamar a função que você já tem para validação e envio
+        // Certifique-se de ajustar isso para se adequar ao seu código existente.
+        submitForm(); // Substitua "submitForm" pelo nome da sua função de envio.
     }
 });
 

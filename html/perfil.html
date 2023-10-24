@@ -25,7 +25,6 @@
     font-size: 20px;
   }
   #email{
-    border: 1px solid rgba(0, 0, 0, 0.486);
     border-radius: 5px;
     width: 20%;
     height: 30%;
@@ -45,7 +44,6 @@
     left: 18px;
   }
   #cep {
-    border: 1px solid rgba(0, 0, 0, 0.486);
     border-radius: 5px;
     width: 20%;
     height: 30%;
@@ -65,7 +63,6 @@
     left: 89px;
   }
   #cidade {
-    border: 1px solid rgba(0, 0, 0, 0.486);
     border-radius: 5px;
     width: 20%;
     height: 30%;
@@ -85,7 +82,6 @@
     left: 90px;
   }
   #estado {
-    border: 1px solid rgba(0, 0, 0, 0.486);
     border-radius: 5px;
     width: 20%;
     height: 30%;
@@ -105,7 +101,6 @@
     left: 90px;
   }
   #endereco {
-    border: 1px solid rgba(0, 0, 0, 0.486);
     border-radius: 5px;
     width: 20%;
     height: 30%;
@@ -125,7 +120,6 @@
     left: 18px;
   }
   #telefone {
-    border: 1px solid rgba(0, 0, 0, 0.486);
     border-radius: 5px;
     width: 20%;
     height: 30%;
@@ -235,7 +229,7 @@ const userCad = getCookie('userCad');
 // Exibir o valor do 'userCad' na página
 const userCadDisplay = document.getElementById("userCadDisplay");
 if (userCad) {
-  logado.innerHTML = `<a href="html/perfil.html?id=${userCad}" style="text-decoration:none;color:black;">Olá ${userCad}</a>`;
+  logado.innerHTML = `<a href="perfil.html" style="text-decoration:none;color:black;">Olá ${userCad}</a>`;
   conviteCad.setAttribute('style', 'display:none')
   sairBtn.setAttribute('style', 'display:block')
 } else {

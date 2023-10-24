@@ -8,6 +8,9 @@ const Pedidos = db.define('pedidos', {
         autoIncrement: true,
         primaryKey: true
     },
+    idUserPed: {
+        type: Sequelize.INTEGER,
+    },
     nomePed: {
         type : Sequelize.STRING(255),
         allowNull:true
