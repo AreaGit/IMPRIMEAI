@@ -429,7 +429,7 @@
   }
   #carrinho_compras {
     position: absolute;
-    top: 16%;
+    top: 9%;
     left: 73%;
   }
   #totalItens {
@@ -613,8 +613,8 @@
 }
 #carrinho_compras {
   position: absolute;
-  top: 10%;
-  left: 73%;
+  top: 18%;
+  left: 80%;
 }
 #totalItens {
   position: absolute;
@@ -623,13 +623,13 @@
 }
 #logado {
   position: relative;
-  top: -30px;
-  left: 87%;
+  top: -15px;
+  left: 65%;
 }
 #sairBtn {
   position: relative;
-  top: -20px;
-  left: 90%;
+  top: -10px;
+  left: 69%;
 }
 .menu2 {
     list-style: none;
@@ -666,11 +666,6 @@
     width: 390px;
     transition: all ease-in-out .5s;
     margin-right: -2rem;
-  }
-  #carrinho_compras {
-    position: absolute;
-    top: 23%;
-    left: 80%;
   }
   #totalItens {
     position: absolute;
@@ -1016,8 +1011,8 @@
   }
   #carrinho_compras {
     position: absolute;
-    top: 18%;
-    left: 85%;
+    top: 19%;
+    left: 79%;
   }
   #totalItens {
     position: absolute;
@@ -1060,6 +1055,14 @@
     position: fixed;
     right: 81px;
   }
+  #logado {
+    position: relative;
+    top: -8px;
+  }
+  #sairBtn {
+    position: relative;
+    top: -5px;
+  }
 }
 @media screen and (min-width: 1280px) and (max-width: 1360px) {
   * {
@@ -1078,11 +1081,79 @@
   }
   #carrinho_compras {
     position: relative;
-    top: -100px;
+    top: -95px;
+    left: 80%;
   }
   #totalItens {
     position: relative;
     left: 84%;
     top: -125px;
   }
+  #logado {
+    position: relative;
+    top: -50px;
+    left: 62%;
+  }
+  #sairBtn {
+    position: relative;
+    top: -40px;
+    left: 65%;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+@media screen and (min-width: 2560px) {
+    header > p {
+      font-size: 18px;
+    }
+    .menu2 > a {
+      font-size: 18px;
+    }
+    .icons-header {
+      position: relative;
+      top: -5px;
+    }
+    #formPesquisa {
+      position: relative;
+      top: -15px;
+    }
+    #logado {
+      font-size: 18px;
+      position: relative;
+      top: -50px;
+      left: 58%;
+    }
+    #sairBtn {
+      position: relative;
+      top: -40px;
+      left: 60%;
+    }
+    #carrinho_compras {
+      position: relative;
+      left: 68%;
+      top: -100px;
+    }
+    .menu {
+      position: relative;
+      left: -170px;
+    }
+    main > h2 {
+      position: relative;
+      left: -193px;
+    }
+    .content > .image2 {
+      position: relative;
+      left: 22%;
+    }
+    .content > .image3 {
+      position: relative;
+      left: 22%;
+    }
+    footer > p {
+      font-size: 18px;
+    }
+    footer > h2 {
+      font-size: 18px;
+    }
 }

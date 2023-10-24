@@ -77,14 +77,6 @@ app.get("/login-graficas", (req, res) => {
   res.sendFile(__dirname + "html" , "/login-graficas.html"); // Verifique o caminho do arquivo
 });
 
-app.get("/cadastro", (req, res) => {
-  res.sendFile(__dirname + "html", "cadastro.html"); // Verifique o caminho do arquivo
-});
-
-app.get("/login", (req, res) => {
-  res.sendFile(__dirname + "html", "form.html"); // Verifique o caminho do arquivo
-});
-
 
 
 app.post("/cadastro-graficas", async (req, res) => {
@@ -261,6 +253,7 @@ app.post("/login", async (req, res) => {
       }
 
       res.cookie('userCad', user.userCad);
+      res.cookie("userId", user.id);
   
       // Gere um token de autenticação (exemplo simples)
       const token = Math.random().toString(16).substring(2);
@@ -278,14 +271,14 @@ app.post("/login", async (req, res) => {
     // Verifique se o usuário está autenticado (você pode usar middleware de autenticação aqui)
     if (!req.cookies.userCad) {
         // Se o usuário não estiver autenticado, redirecione para a página de login ou onde desejar
-        return res.redirect("html/form.html");
+        return res.redirect("/login");
     }
 
     // Excluir o cookie "userCad"
     res.clearCookie("userCad");
 
     // Redirecionar para a página de login ou para onde desejar
-    res.redirect("html/form.html");
+    res.redirect("/login");
 });
 
 
@@ -826,24 +819,36 @@ app.post('/redefinir-senha', async (req, res) => {
   return res.status(200).json({ message: 'Senha redefinida Com Sucesso!' });
 });
 
-// Rota para exibir o perfil do usuário logado
-app.get('/perfil', (req, res) => {
-  const userId = req.user.id; // Isso depende da sua estratégia de autenticação
-  const query = 'SELECT emailCad *  WHERE id = ?';
-  
-  connection.query(query, [userId], (error, results) => {
-    if (error) {
-      console.error(error);
-      return res.status(500).send('Erro interno');
-    }
-    
-    const user = results[0];
-    
-    // Renderize uma página HTML com os dados do usuário
-    res.render('perfil', { user });
-  });
-});
+app.get("/perfil/dados", async (req, res) => {
+  try {
+    // Verifique se o cookie "userId" está definido
+    const userId = req.cookies.userId;
 
+    if (!userId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    // Use o modelo User para buscar o usuário no banco de dados pelo ID
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    // Retorna os dados do usuário como JSON
+    res.json({
+      emailCad: user.emailCad,
+      cepCad: user.cepCad,
+      cidadeCad: user.cidadeCad,
+      estadoCad: user.estadoCad,
+      endereçoCad: user.endereçoCad,
+      telefoneCad: user.telefoneCad,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar os dados do usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
 
 app.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);

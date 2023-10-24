@@ -25,52 +25,124 @@
     font-size: 20px;
   }
   #email{
-    border: 1px solid red;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+    border-radius: 5px;
     width: 20%;
     height: 30%;
     position: absolute;
     top: 200px;
     left: 20%;
   }
+  #email > img {
+    width: 30%;
+    position: relative;
+    left: 90px;
+    top: 10px;
+  }
+  #email > p {
+    position: relative;
+    top: 15px;
+    left: 18px;
+  }
   #cep {
-    border: 1px solid red;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+    border-radius: 5px;
     width: 20%;
     height: 30%;
     position: absolute;
     top: 200px;
     left: 41%; 
   }
+  #cep > img {
+    width: 30%;
+    position: relative;
+    left: 90px;
+    top: 10px;
+  }
+  #cep > p {
+    position: relative;
+    top: 15px;
+    left: 89px;
+  }
   #cidade {
-    border: 1px solid red;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+    border-radius: 5px;
     width: 20%;
     height: 30%;
     position: absolute;
     top: 200px;
     left: 62%;
   }
+  #cidade > img {
+    width: 30%;
+    position: relative;
+    left: 90px;
+    top: 10px;
+  }
+  #cidade > p {
+    position: relative;
+    top: 15px;
+    left: 90px;
+  }
   #estado {
-    border: 1px solid red;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+    border-radius: 5px;
     width: 20%;
     height: 30%;
     position: absolute;
     top: 500px;
     left: 20%;
   }
+  #estado > img {
+    width: 30%;
+    position: relative;
+    left: 90px;
+    top: 10px;
+  }
+  #estado > p {
+    position: relative;
+    top: 15px;
+    left: 90px;
+  }
   #endereco {
-    border: 1px solid red;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+    border-radius: 5px;
     width: 20%;
     height: 30%;
     position: absolute;
     top: 500px;
     left: 41%;
   }
+  #endereco > img {
+    width: 30%;
+    position: relative;
+    left: 90px;
+    top: 10px;
+  }
+  #endereco > p {
+    position: relative;
+    top: 15px;
+    left: 18px;
+  }
   #telefone {
-    border: 1px solid red;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+    border-radius: 5px;
     width: 20%;
     height: 30%;
     position: absolute;
     top: 500px;
     left: 62%;
+  }
+  #telefone > img {
+    width: 30%;
+    position: relative;
+    left: 90px;
+    top: 10px;
+  }
+  #telefone > p {
+    position: relative;
+    top: 15px;
+    left: 60px;
   }
 </style>
 <body>
@@ -91,7 +163,7 @@
             </div>
         </nav>
         <div class="elem1">
-           <a href="index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+           <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
            <form id="formPesquisa">
             <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
             <button type="submit" id="btnPesq" class="search__button">
@@ -136,18 +208,10 @@
           </div>
     </header>
     <main>
-        <div id="nomeUser"></div>
-        <div id="email"></div>
-        <div id="cep"></div>
-        <div id="cidade"></div>
-        <div id="estado"></div>
-        <div id="endereco"></div>
-        <div id="telefone"></div>
-        <!--<div id="user-profile">
-          <h1>Perfil do Usuário</h1>
-          <p>Email: <span id="user-email"></span></p>
-          <p>Outras informações do usuário aqui...</p>
-        </div> -->       
+      <div id="nomeUser"></div>
+        <div id="userInfo">
+          <!-- Os dados do usuário serão exibidos aqui -->
+        </div>
     </main>
     <script>
         const logado = document.getElementById('logado')
@@ -190,20 +254,30 @@ const nomeUser = document.getElementById('nomeUser')
 nomeUser.innerHTML = `
     <h1>Olá, ${userCad}!</h1>
 `
-document.addEventListener('DOMContentLoaded', () => {
-  // Fazer uma solicitação fetch para obter os dados do usuário
-  fetch('/api/user')
-    .then((response) => response.json())
-    .then((user) => {
-      // Atualizar os elementos HTML com os dados do usuário
-      document.getElementById('user-email').textContent = user.emailCad;
-      // Atualize outras informações do usuário conforme necessário
+fetch('/perfil/dados') // Substitua pela URL correta da sua rota do servidor
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro ao buscar os dados do usuário');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Manipule os dados do usuário aqui
+      const userInfo = document.getElementById('userInfo');
+      userInfo.innerHTML = `
+      <div id="email"><img src="../images/icone-email.png"><p>${data.emailCad}</p></div>
+      <div id="cep"><img src="../images/icone-cep.png"><p>${data.cepCad}</p></div>
+      <div id="cidade"><img src="../images/icone-cidade.png"><p>${data.cidadeCad}</p></div>  
+      <div id="estado"><img src="../images/icone-estado.png"><p>${data.estadoCad}</p></div>
+      <div id="endereco"><img src="../images/icone-endereco.png"><p>${data.endereçoCad}</p></div>
+      <div id="telefone"><img src="../images/icone-telefone.png"><p>${data.telefoneCad}</p></div> 
+      `;
     })
     .catch((error) => {
-      console.error('Erro ao buscar os dados do usuário:', error);
+      console.error(error);
+      const userInfo = document.getElementById('userInfo');
+      userInfo.innerHTML = '<p>Erro ao buscar os dados do usuário.</p>';
     });
-});
-
     </script>
     <script src="scripts/slider.js"></script>
     <script src="scripts/script.js"></script>
