@@ -860,6 +860,39 @@ fetch('/cartoes-cadastrados')
             .catch(error => console.error('Erro ao buscar cartões:', error));
 
 
+
+
+            function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+          return cookie.substring(name.length + 1);
+      }
+  }
+  return null;
+}
+
+// Ler o valor do cookie 'userCad'
+const userId = getCookie('userId');
+console.log(userId)
+
+
+
+fetch(`/atualizar-carrinho/${userId}`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ carrinho: novoCarrinho }),
+})
+  .then((response) => response.json())
+  .then((data) => {
+    // Lide com a resposta do servidor, por exemplo, exibindo uma mensagem de sucesso ou tratando erros.
+  })
+  .catch((error) => {
+    console.error('Erro ao atualizar o carrinho:', error);
+  });
     </script>
 </body>
 </html>

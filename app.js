@@ -685,6 +685,22 @@ app.get('/api/carrinho', (req, res) => {
   }
 });
 
+app.post('/atualizar-carrinho/:userId', async (req, res) => {
+  const { userId } = req.cookies.userId;
+  const { carrinho: novoCarrinho } = req.body;
+
+  try {
+    // Faça o processamento necessário para atualizar o carrinho com o novoCarrinho
+    // Aqui, você pode atualizar o carrinho no banco de dados, se aplicável
+
+    // Após atualizar o carrinho, você pode enviar uma resposta de sucesso
+    res.json({ message: 'Carrinho atualizado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao atualizar o carrinho:', error);
+    res.status(500).json({ error: 'Erro ao atualizar o carrinho', message: error.message });
+  }
+});
+
 app.delete('/remover-do-carrinho/:produtoId', (req, res) => {
   try {
     const produtoId = req.params.produtoId;
