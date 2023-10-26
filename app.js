@@ -180,7 +180,7 @@ app.get('/cartoes-cadastrados', async (req, res) => {
 /*app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     // Consulte o banco de dados para buscar os cartões cadastrados
-    const pedidosCadastrados = await Pedidos.findAll();
+    const pedidosCadastrados = await Pedidos.findAll(); 
 
     // Envie os cartões como resposta em JSON
     res.json({ pedidos: pedidosCadastrados });

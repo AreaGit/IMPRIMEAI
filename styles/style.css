@@ -46,8 +46,6 @@ header > p {
     font-size: 14px;
 }
 .menu2 > a:hover {
-    transform: translateY(-10px);
-    transition: 1s;
     text-decoration: underline;
 }
 .icons {

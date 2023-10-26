@@ -90,6 +90,112 @@
     height: 226px;
     border-radius: 5px;
 }
+@media screen and (min-width:320px) and (max-width:425px) {
+        header > p{
+            position: relative;
+            left: 0px;
+            top: 0px;
+            font-size: 12px;
+        }
+    .icons-header {
+      width: fit-content;
+      position: relative;
+      left: 80px;
+      top: -25px;
+    }
+    .icons-header > .icons {
+      width: 25%;
+    }
+    .menu2 > a {
+      font-size: 12px;
+    }
+    .logo-imprimeai {
+      width: 25%;
+      position:relative;
+      top: 22px;
+      left: 9px;
+    }
+    #formPesquisa {
+      position: relative;
+      left: 0px;
+    }
+    .search__input {
+        width: 290px;
+    }
+    .menu2 {
+      position: relative;
+      left: -10px;
+    }
+    #carrinho_compras {
+      position: absolute;
+      top: 76px;
+      left: 74%;
+    }
+    #logado {
+      position: relative;
+      top: -58px;
+      left: 90px;
+    }
+    #sairBtn {
+      position: relative;
+      top: -77px;
+      left: 77%;
+    }
+    .menu ul >  li > a {
+      font-size: 12px;
+    }
+    .product-card {
+        padding: 9px;
+    }
+    .produtoCard > img {
+      width: 320px;
+      height: 270px;
+      position: relative;
+      left: 2px;
+    }
+    .produtoCard > h2 {
+      position: relative;
+      top: 30px;
+      left: 30%;
+    }
+    .container {
+      position: relative;
+      top: 10px;
+      left: 15px;
+    }
+    .lb-num {
+      position: relative;
+      left: 0px;
+    }
+    #inp-num {
+      position: relative;
+      left: 0px;
+    }
+    #valor {
+      position: relative;
+      left: 80px;
+    }
+    .addCart {
+      position: relative;
+      left: -60px;
+    }
+    .lnk-comp {
+      position: relative;
+      top: -58px;
+      left: 66%;
+      padding: 14px 20px 14px 20px;
+    }
+    #desc {
+      position: relative;
+      left: 14%;
+      top: 760px;
+    }
+    #imagemPreview {
+      position: relative;
+      left: 25px;
+      top: -280px;
+    }
+    }
 </style>
 <body>
     <header>
@@ -109,16 +215,24 @@
             </div>
         </nav>
         <div class="elem1">
-           <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
-            <div class="input-pesq">
-                <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
-                <button id="btnPesq" class="search__button">
-            <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
-                <g>
-                    <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
-                </g>
-            </svg>
-            </div>
+          <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+          <!--<form id="formPesquisa">
+           <input type="text" id="caixaPesq" class="search__input" placeholder="O que você está procurando?">
+           <button type="submit" id="btnPesq" class="search__button">
+             <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+               <g>
+                 <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+               </g>
+             </svg>
+           </button>
+           <span id="limparPesq" class="material-icons">close</span>
+           <button id="limparPesq" class="search__button">
+               &#x2613;
+         </button>
+         </form>-->
+         
+         <!-- Adicione um contêiner para os resultados da pesquisa -->
+         <div id="resultadosPesquisa" class="product-cards"></div>
             <div id="logado"></div>
             <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
             <a class="lnk-cart" href="carrinho.html"><span id="carrinho_compras" class="material-icons">shopping_cart</span></a>
@@ -179,7 +293,7 @@
     </main>
     <span id="voltar_ao_topo" class="material-icons">expand_less</span>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.4/fetch.min.js"></script>
-    <script src="scripts/script.js"></script>
+    <script src="../scripts/script.js"></script>
 
     <script>
 
@@ -345,6 +459,65 @@ inputArquivo.addEventListener('change', function() {
         imagemPreview.src = '';
         arquivoLabel.textContent = 'Nenhum arquivo Selecionado';
     }
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const formPesquisa = document.getElementById('formPesquisa');
+  const caixaPesq = document.getElementById('caixaPesq');
+  const resultadosPesquisa = document.getElementById('resultadosPesquisa');
+  const limparPesq = document.getElementById('limparPesq');
+  // Variável para armazenar o ID do timer de pesquisa
+  let searchTimer;
+
+  formPesquisa.addEventListener('input', async () => {
+    const query = caixaPesq.value.trim();
+
+    if (query === '') {
+      resultadosPesquisa.style.display = 'none';
+      resultadosPesquisa.innerHTML = '';
+      return;
+    }
+
+    // Cancelar pesquisas anteriores (se houver alguma)
+    if (searchTimer) {
+      clearTimeout(searchTimer);
+    }
+
+    // Agendar uma nova pesquisa após um pequeno atraso (por exemplo, 300ms)
+    searchTimer = setTimeout(async () => {
+      try {
+        const response = await fetch(`/pesquisar-produtos?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        resultadosPesquisa.innerHTML = '';
+
+        if (data.produtos && data.produtos.length === 0) {
+          resultadosPesquisa.innerHTML = '<p>Nenhum produto encontrado.</p>';
+        } else if (data.produtos) {
+          data.produtos.forEach((produto) => {
+            const cardProduto = document.createElement('a');
+            cardProduto.setAttribute('style', 'text-decoration:none; color:black;')
+            cardProduto.href = `html/detalhes-produtos.html?id=${produto.id}`;
+            cardProduto.classList.add('product-card');
+  
+            cardProduto.innerHTML = `
+              <img src="/imagens/${produto.id}" alt="${produto.nomeProd}">
+              <h2>${produto.nomeProd}</h2>
+              <!--<p>${produto.descProd}</p>
+              <p>Valor: R$ ${parseFloat(produto.valorProd).toFixed(2)}</p>-->
+            `;
+  
+            resultadosPesquisa.appendChild(cardProduto);
+          });
+          resultadosPesquisa.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Erro na pesquisa de produtos:', error);
+        resultadosPesquisa.innerHTML = '<p>Erro na pesquisa de produtos.</p>';
+      }
+    }, 300); // Defina o tempo de atraso desejado (em milissegundos)
+  });
 });
 
 
