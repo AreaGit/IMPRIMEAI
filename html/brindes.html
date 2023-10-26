@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
-        @media screen and (min-width:320px) and (max-width:425px) {
+    @media screen and (min-width:320px) and (max-width:425px) {
         header > p{
             position: relative;
             left: 0px;
@@ -70,6 +70,86 @@
     .product-card {
         padding: 9px;
     }
+    }
+    @media screen and (min-width:768px) and (max-width:1000px) {
+      .search__input {
+          width: 450px;
+        }
+        #formPesquisa {
+          position: relative;
+          top: -16px;
+          left: 20%;
+        }
+        .logo-imprimeai {
+          position: relative;
+          left: 0px;
+        }
+        #carrinho_compras {
+          position: absolute;
+          left: 80%;
+        }
+
+        header > p {
+          position: relative;
+          top: 4px;
+          left: 1%;
+        }
+        .menu2 {
+          position: relative;
+          left: 30%;
+          top: -12px;
+        }
+
+    }
+
+    @media screen and (min-width: 1000px) and (max-width:1440px) {
+        .search__input {
+          width: 500px;
+        }
+        #formPesquisa {
+          position: relative;
+          top: -16px;
+          left: 30%;
+        }
+        .logo-imprimeai {
+          position: relative;
+          left: 10%;
+        }
+        header > p {
+          position: relative;
+          left: 9%;
+        }
+        #carrinho_compras {
+          position: absolute;
+          left: 78%;
+        }
+    }
+    @media screen and (min-width:2560px) {
+        #formPesquisa {
+          position: relative;
+          top: -15px;
+        }
+        .menu {
+          position: relative;
+          left: -7%;
+        }
+        main > h2 {
+          position: relative;
+          left: -7%;
+          margin-bottom: 10px;
+        }
+        .product-card {
+          border: 1px solid #ccc;
+          padding: 20px;
+          text-align: center;
+          width: 64%;
+        }
+        .product-cards {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 22px;
+        }
+
     }
 </style>
 <body>
