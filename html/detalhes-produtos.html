@@ -180,8 +180,8 @@
       left: -60px;
     }
     .lnk-comp {
-      position: relative;
-      top: -58px;
+      position: absolute;
+      top: 101.3%;
       left: 66%;
       padding: 14px 20px 14px 20px;
     }
@@ -195,6 +195,72 @@
       left: 25px;
       top: -280px;
     }
+    }
+    @media screen and (min-width:768px) and (max-width:1024px) {
+      .produtoCard > h2  {
+        position: relative;
+        left: 72%;
+        top: -375px;
+      }
+      .menu2 {
+        position: relative;
+        top: 13px;
+        left: 45%;
+      }
+      .header > p {
+        position: relative;
+        left: 0px;
+      }
+      #imagemPreview {
+        position: relative;
+        top: -378px;
+        left: 181px;
+      }
+      .lb-num {
+        position: relative;
+        left: 60%;
+        top: -78px;
+        width: fit-content;
+      }
+      #inp-num {
+        width: 60px;
+        padding: 11px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        outline: none;
+        margin-left: 5px;
+        position: relative;
+        top: -85px;
+        left: 61%;
+      }
+      #valor {
+        color: #F37160;
+        font-size: 25px;
+        position: relative;
+        left: 75%;
+        top: 517px;
+      }
+      .addCart {
+        padding: 18px 28px 18px 28px;
+        background-color: white;
+        border: 1px solid #F37160;
+        color: #F37160;
+        font-weight: bold;
+        position: relative;
+        top: -20px;
+        left: 48%;
+        cursor: pointer;
+      }
+      .lnk-comp {
+        text-decoration: none;
+        background-color: #8EC8AA;
+        color: green;
+        padding: 14px 28px 14px 28px;
+        position: relative;
+        top: -20px;
+        left: 48%;
+      }
     }
 </style>
 <body>
@@ -285,7 +351,7 @@
             <label for="inp-num" class="lb-num">Quantidade</label>
             <input type="number" name="inp-num" id="inp-num" min="1" max="99" value="1">
             <button id="adicionarCarrinho" class="addCart">Adicionar ao Carrinho</button>
-            <a href="#" class="lnk-comp" id="avancar">Comprar</a>
+            <a href="#" class="lnk-comp" id="avancarBtn">Comprar</a>
 
             <h2 class="descProd">Descrição do Produto</h2>
         </section>
@@ -359,7 +425,7 @@
 
   // Seletor do botão "Adicionar ao Carrinho"
   const adicionarAoCarrinhoBtn = document.getElementById('adicionarCarrinho');
-  const avancar = document.getElementById('avancar')
+
 
   // Lida com o clique no botão "Adicionar ao Carrinho"
   adicionarAoCarrinhoBtn.addEventListener('click', async () => {
@@ -518,6 +584,57 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, 300); // Defina o tempo de atraso desejado (em milissegundos)
   });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
+    const params = new URLSearchParams(window.location.search);
+    const produtoId = params.get('id');
+
+    // Seletor do campo de entrada de número
+    const inputQuantidade = document.getElementById('inp-num');
+    
+    // ...
+
+    // Seletor do botão "Avançar"
+    const avancarBtn = document.getElementById('avancarBtn');
+    
+    // Lida com o clique no botão "Avançar"
+    avancarBtn.addEventListener('click', async () => {
+        try {
+            // Obtenha a quantidade escolhida pelo usuário
+            const quantidade = parseInt(inputQuantidade.value);
+    
+            // Verifique se a quantidade é válida (maior que 0)
+            if (quantidade <= 0) {
+                alert('Por favor, escolha uma quantidade válida maior que 0.');
+                return;
+            }
+    
+            // Faça uma solicitação POST para adicionar o produto ao carrinho
+            const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantidade })
+            });
+    
+            if (response.ok) {
+                // Produto adicionado com sucesso ao carrinho
+                console.log(`Produto (ID ${produtoId}) adicionado ao carrinho com quantidade ${quantidade}.`);
+                // Limpe o campo de entrada de quantidade
+                inputQuantidade.value = '1';
+                window.location.href = 'carrinho.html'
+            } else {
+                // Trate qualquer erro de adição ao carrinho
+                alert('Erro ao adicionar o produto ao carrinho');
+            }
+        } catch (error) {
+            console.error('Erro ao adicionar o produto ao carrinho:', error);
+            alert('Erro ao adicionar o produto ao carrinho');
+        }
+    });
 });
 
 
