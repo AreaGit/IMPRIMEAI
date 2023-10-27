@@ -84,12 +84,24 @@ app.get("/cadastrar", (req, res) => {
 
 
 app.post("/cadastro-graficas", async (req, res) => {
-
-
-  
+ 
   try {
       const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, emailCad, passCad } = req.body;
       const hashedPassword = await bcrypt.hash(passCad, 10);
+
+      const existingGrafica = await Graficas.findOne({
+        where: {
+          [Op.or]: [
+            { emailCad: emailCad },
+          ],
+        },
+      });
+  
+      if (existingGrafica) {
+        return res.status(400).json({
+          message: "Já existe uma Gráfica com este e-mail cadastrado",
+        });
+      }
 
       const newGrafica = await Graficas.create({
           userCad: userCad,
@@ -177,7 +189,7 @@ app.get('/cartoes-cadastrados', async (req, res) => {
   }
 });
 
-/*app.get('/pedidos-cadastrados', async (req, res) => {
+app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     // Consulte o banco de dados para buscar os cartões cadastrados
     const pedidosCadastrados = await Pedidos.findAll(); 
@@ -188,7 +200,7 @@ app.get('/cartoes-cadastrados', async (req, res) => {
     console.error('Erro ao buscar pedidos cadastrados:', error);
     //res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
   }
-});*/
+}); 
 
 app.get('/pedidos-usuario/:userId', async (req, res) => {
   const userId = req.cookies.userId;
@@ -210,7 +222,7 @@ app.get('/pedidos-usuario/:userId', async (req, res) => {
 });
 
 
-app.post("/cadastrar", async (req, res) => {
+app.post("/cadastrar", async (req, res) => { 
 
     try {
         const { userCad, cpfCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;

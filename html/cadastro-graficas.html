@@ -9,6 +9,174 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
+<style>
+    @media screen and (min-width: 320px) and (max-width: 380px) {
+    .logo-imprimeai {
+        position: relative;
+        left: 30%;
+    }
+    form {
+        position: relative;
+        top: 10px;
+        left: 0%;
+    }
+    form > h1 {
+        position: relative;
+        left: 6%;
+    }
+    form > p {
+        position: relative;
+        left: 6%;
+    }
+    form > input {
+        width: 350px;
+    }
+    button {
+        width: 350px;
+    }
+    .btns > a {
+        text-decoration: none;
+        width: 580px;
+        height: 40px;
+        margin: 10px;
+        padding: 0%;
+        position: relative;
+        left: 42%;
+    }   
+    #lnk-esq {
+        padding: 0%;
+        position: relative;
+        left: 32%;
+        top: 12px;
+    } 
+    #cad {
+        position: relative;
+        left: 37px;
+    }
+}
+@media screen and (min-width: 381px) and (max-width: 425px) {
+    .logo-imprimeai {
+        position: relative;
+        left: 29%;
+    }
+    form {
+        position: relative;
+        top: 10px;
+        left: 0%;
+    }
+    form > h1 {
+        position: relative;
+        left: -1px;
+    }
+    form > p {
+        font-size: 16px;
+        position: relative;
+        left: 1%;
+    }
+    form > input {
+        width: 380px;
+    }
+    button {
+        width: 380px;
+    }
+    .btns > a {
+        text-decoration: none;
+        width: 580px;
+        height: 40px;
+        margin: 10px;
+        padding: 10px 123px 10px 148px;
+    }    
+    #lnk-esq {
+        padding: 0%;
+        position: relative;
+        left: 29%;
+        top: 12px;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1440px) {
+    .logo-imprimeai {
+        position: relative;
+        left: 41%;
+    }
+    form {
+        position: relative;
+        top: 10px;
+        left: 0%;
+    }
+    form > h1 {
+        position: relative;
+        left: -4%;
+    }
+    form > p {
+        position: relative;
+        left: -4%;
+    }
+    form > input {
+        width: 95vw;
+    }
+    button {
+        width: 95vw;
+    }
+    #lnk-gr {
+        position: relative;
+        font-size: 16px;
+        padding: -29px;
+        left: -33%;
+        top: 32px;
+    }
+    #lnk-lggr {
+        position: relative;
+        font-size: 16px;
+        padding: 0%;
+        left: 524px;
+        top: 31px;
+    }
+    .btns > a {
+        text-decoration: none;
+        width: 580px;
+        height: 40px;
+        margin: 10px;
+        
+    }
+    #cad {
+        position: relative;
+        left: 5px;
+    }
+    #lnk-esq {
+        position: relative;
+        left: -1%;
+        top: 12px;
+    }
+}
+@media screen and (min-width: 2560px) {
+    .logo-imprimeai {
+        position: absolute;
+        left: 48%;
+    }
+    form {
+        position: absolute;
+        left: 40%;
+    }
+    form > h1 {
+        position: relative;
+        left: 0%;
+    }
+    form > p {
+        position: relative;
+        left: 0%;
+    }
+    #lnk-gr {
+        position: relative;
+        top: 33px;
+    }
+    #lnk-lggr {
+        padding: 0%;
+        position: relative;
+        left: -64%;
+        top: 53px;
+    }
+}
+</style>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
     <form id="cadastroForm">
@@ -29,7 +197,7 @@
         <br>
         <input type="text" name="inscricaoEstadual" id="inscricaoEstadual" placeholder="Digite a Inscrição Estadual..." autocomplete="name" minlength="3" required>
         <br>
-        <input type="number" name="telefone" id="telefone" placeholder="Digite o seu Número de Celular..." autocomplete="cc-number" required minlength="11">
+        <input type="text" name="telefone" id="telefone" placeholder="Digite o seu Número de Celular..." autocomplete="cc-number" required minlength="11">
         <br>
         <input type="text" name="banco" id="banco" placeholder="Digite o seu Banco" autocomplete="name" minlength="3" required>
         <br>
@@ -97,6 +265,19 @@ endereço.addEventListener('keyup', () => {
         validEndereco = true
     }
 })
+cep.addEventListener('input', () => {
+    const cepValue = cep.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cepValue.length === 8) {
+        cep.value = cepValue.replace(/(\d{5})(\d{3})/, '$1-$2'); // Formata o CEP (12345678 -> 12345-678)
+        cep.style.color = 'black';
+        cep.style.borderColor = 'green';
+        validCep = true;
+    } else {
+        cep.style.color = 'red';
+        cep.style.borderColor = 'red';
+        validCep = false;
+    }
+});
 cep.addEventListener('keyup', () => {
     if(cep.value.length <= 8) {
         cep.setAttribute('style', 'color: red; border-color: red;')
@@ -124,17 +305,45 @@ estado.addEventListener('keyup', () => {
         validEstado = true
     }
 })
-cnpj.addEventListener('keyup', () => {
-    if(cnpj.value.length <= 11) {
-        cnpj.setAttribute('style', 'color: red; border-color: red;')
-        validCnpj = false
-    } else {
-        cnpj.setAttribute('style', 'color: black; border-color: green;')
-        validCnpj = true
+cnpj.addEventListener('input', () => {
+    let cnpjValue = cnpj.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cnpjValue.length > 14) {
+        cnpjValue = cnpjValue.slice(0, 14); // Limite o comprimento a 14 caracteres
     }
-})
+
+    // Formata o CNPJ com pontos, barras e traço
+    cnpjValue = cnpjValue.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+
+    cnpj.value = cnpjValue; // Define o valor formatado de volta no campo
+});
+
+// Remova o evento "input" da validação, pois o evento "keyup" deve ser suficiente
+cnpj.addEventListener('keyup', () => {
+    const cnpjValue = cnpj.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cnpjValue.length === 14 /*&& validateCNPJ(cnpjValue)*/) {
+        cnpj.style.color = 'black';
+        cnpj.style.borderColor = 'green';
+        validCnpj = true;
+    } else {
+        cnpj.style.color = 'red';
+        cnpj.style.borderColor = 'red';
+        validCnpj = false;
+    }
+});
+telefone.addEventListener('input', () => {
+    let telefoneValue = telefone.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (telefoneValue.length > 11) {
+        telefoneValue = telefoneValue.slice(0, 11); // Limite o comprimento a 11 caracteres
+    }
+
+    // Formata o telefone com parênteses e traço (por exemplo, (99) 99999-9999)
+    telefoneValue = telefoneValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+
+    telefone.value = telefoneValue; // Define o valor formatado de volta no campo
+});
 telefone.addEventListener('keyup', () => {
-    if(telefone.value.length <= 8) {
+    const telefoneValue = telefone.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if(telefone.value.length <= 11) {
         telefone.setAttribute('style', 'color: red; border-color: red;')
         validTelefone = false
     } else {
@@ -170,23 +379,32 @@ conta.addEventListener('keyup', () => {
     }
 })
 email.addEventListener('keyup', () => {
-    if(email.value.length <= 3) {
-        email.setAttribute('style', 'color: red; border-color: red;')
-        validEmail = false
+    const emailValue = email.value;
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    if (!emailPattern.test(emailValue)) {
+        email.setAttribute('style', 'color: red; border-color: red;');
+        validEmail = false;
     } else {
-        email.setAttribute('style', 'color: black; border-color: green;')
-        validEmail = true
+        email.setAttribute('style', 'color: black; border-color: green;');
+        validEmail = true;
     }
-})
+});
 pass.addEventListener('keyup', () => {
-    if(pass.value.length <= 8) {
-        pass.setAttribute('style', 'color: red; border-color: red;')
-        validPass = false
+    const passValue = pass.value;
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(passValue);
+    const hasLowerCase = /[a-z]/.test(passValue);
+    const hasNumber = /\d/.test(passValue);
+
+    if (passValue.length < minLength || !(hasUpperCase && hasLowerCase && hasNumber)) {
+        pass.setAttribute('style', 'color: red; border-color: red;');
+        validPass = false;
     } else {
-        pass.setAttribute('style', 'color: black; border-color: green;')
-        validPass = true
+        pass.setAttribute('style', 'color: black; border-color: green;');
+        validPass = true;
     }
-})
+});
 
 
 
@@ -208,6 +426,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const agencia = document.getElementById('agencia').value
         const email = document.getElementById('email').value;
         const pass = document.getElementById('pass').value;
+
+        if (usuario.length <= 5 || usuario.includes(' ')) {
+        msg.innerHTML = '<strong>O campo "Usuário" deve conter mais de 5 caracteres e não pode conter espaços.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else if (email.length <= 3 || !validEmail) {
+        msg.innerHTML = '<strong>Verifique o campo "E-mail" se ele foi digitado Corretamente.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else if (pass.length <= 8 || !validPass) {
+        msg.innerHTML = '<strong>Verifique o campo "Senha" se ele foi digitado Corretamente.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else if (!validCnpj || !validCep || !validTelefone) {
+        msg.innerHTML = '<strong>Verifique os Outros Campos e verifique se estão corretos!.</strong>';
+        msg.setAttribute('style', 'color: red;');
+      } else {
 
         const graficaData = {
             userCad: usuario,
@@ -234,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            if (validUsuario && validEmail && validPass) {
+            if (data.message === 'Gráfica cadastrada com sucesso!') {
             // Cartão cadastrado com sucesso
             console.log('Grafica cadastrada com sucesso:', data.message);
             msg.innerHTML = '<strong>Gráfica Cadastrada com Sucesso</strong>'
@@ -243,18 +475,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = 'login-graficas.html'
             },3000)
             // Recarrega a página após o cadastro bem-sucedido
+            }else if (data.message === 'Já existe uma Gráfica com este e-mail cadastrado') {
+                msg.innerHTML = '<strong>Já existe uma Gráfica com este E-mail</strong>'
+                msg.setAttribute('style', 'color:red;')
             } else {
             // Erro no cadastro
             console.error('Erro ao cadastrar grafica:', data.error);
             msg.innerHTML = '<strong>Não foi possível Cadastrar a Gráfica <br> Verifique os Campos</strong>'
             msg.setAttribute('style', 'color:red;')
+            setTimeout(() => {
+            window.location.reload()
+          }, 3000)
             }
         })
         .catch(error => {
             console.error('Erro ao cadastrar grafica:', error);
             msg.innerHTML = '<strong>Não foi possível Cadastrar a Gráfica <br> Verifique os Campos</strong>'
             msg.setAttribute('style', 'color:red;')
+            setTimeout(() => {
+            window.location.reload()
+          }, 3000)
         });
+    }
 
     })
 })

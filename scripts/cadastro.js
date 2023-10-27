@@ -224,6 +224,9 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
               window.location.href = 'form.html';
             }, 3000);
+         }else if (data.message === 'Já existe um usuário com este e-mail cadastrado'){
+            msg.innerHTML = `<strong>${data.message}</strong>`;
+            msg.setAttribute('style', 'color: red;');
           } else {
             msg.innerHTML = `<strong>${data.message}</strong>`;
             msg.setAttribute('style', 'color: red;');
