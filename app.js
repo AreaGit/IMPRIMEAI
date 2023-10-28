@@ -821,7 +821,7 @@ const transport = nodemailer.createTransport({
   secure: true,
   auth: {
     user: "gabrieldiastrin63@gmail.com",
-    pass: "wjfa eeyv cwss mwzi"
+    pass: "qkxj xflg htyl wxro"
   }
 })
 //Enviando E-mail
@@ -840,11 +840,14 @@ app.post('/enviar-email', (req, res) => {
     .then(() => {
       const token = Math.random().toString(16).substring(2) //jwt.sign({email: emailEsq}, 'seuSegredo')
       console.log('E-mail enviado com sucesso!', emailEsq, token);
-      res.json({ message: 'E-mail enviado com sucesso!', emailEsq, token });
+      return res.json({ message: 'E-mail enviado com sucesso!', emailEsq, token });
     })
     .catch((err) => {
       console.log('Não foi possível enviar o e-mail!', err);
       res.status(500).json({ error: 'Erro ao enviar o e-mail.' });
+      return res.status(400).json({
+          message: "Não foi possível enviar o e-mail!",
+        });
     });
 });
 
