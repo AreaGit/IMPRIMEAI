@@ -10,17 +10,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <style>
-    body {
-        font-family: 'Open Sans';
-    }
-    form > img {
+    #lnk-esq {
         position: relative;
-        left: 42%;
+        left: -50%;
+        top: 36px;
+    }
+    form > h1 {
+    text-align: center;
+    font-size: 40px;
+    position: relative;
+    left: -27%;
+    }
+    form > p {
+    text-align: center;
+    padding: 20px 0px 20px 0px;
+    position: relative;
+    left: -27%;
+    }
+    #aprovado {
+        width: 5%;
+        position: absolute;
+        left: 47%;
+        top: 30%;
+    }
+    #prg {
+        position: absolute;
+        left: 40%;
+        top: 40%;
+        color: #EF4126;
     }
 </style>
 <body>
-    <button id="get-location">Obter Minha Localização</button>
-    <div id="res"></div>
+    <a><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
+    <img id="aprovado" src="images/aprovar.png" alt="...">
+    <p id="prg"><strong>Verifique na sua Caixa de E-mail Para redefinir a Senha</strong></p>
 </body>
 <script>
     const res = document.getElementById('res')
