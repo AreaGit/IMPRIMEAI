@@ -821,7 +821,7 @@ const transport = nodemailer.createTransport({
   secure: true,
   auth: {
     user: "gabrieldiastrin63@gmail.com",
-    pass: "wjfa eeyv cwss mwzi"
+    pass: "zigx xacx viea ikfl"
   }
 })
 //Enviando E-mail
@@ -899,6 +899,18 @@ app.get("/perfil/dados", async (req, res) => {
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
     res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
+app.get('/graficas-cadastradas', async (req, res) => {
+  try {
+    // Consulte o banco de dados para buscar os cartões cadastrados
+    const graficasCadastradas = await Graficas.findAll();
+
+    // Envie os cartões como resposta em JSON
+    res.json({ graficas: graficasCadastradas });
+  } catch (error) {
+    console.error('Erro ao buscar graficas cadastradas:', error);
+    res.status(500).json({ error: 'Erro ao buscar graficas cadastradas', message: error.message });
   }
 });
 
