@@ -821,7 +821,7 @@ const transport = nodemailer.createTransport({
   secure: true,
   auth: {
     user: "gabrieldiastrin63@gmail.com",
-    pass: "wjfa eeyv cwss mwzi"
+    pass: "xjoe jajs urxb lapq"
   }
 })
 //Enviando E-mail
