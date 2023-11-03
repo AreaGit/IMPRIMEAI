@@ -81,6 +81,9 @@ app.get("/cadastrar", (req, res) => {
   res.sendFile(__dirname + "html", "cadastro.html"); // Verifique o caminho do arquivo
 });
 
+app.get("/local-entrega", (req, res) => {
+  res.sendFile(__dirname + "html", "local-entrega.html"); // Verifique o caminho do arquivo
+});
 
 
 app.post("/cadastro-graficas", async (req, res) => {
@@ -679,6 +682,36 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   }
 });
 
+app.post('/salvar-endereco-no-carrinho', (req, res) => {
+  const { endereco } = req.body;
+
+  // Crie um cookie com o endereço
+res.cookie('enderecoCadastrado', endereco);
+
+  console.log('Endereço Salvo nos Cookies:', endereco);
+
+  res.json({ success: true });
+});
+
+app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
+  const { rua, cep, cidade, estado } = req.body;
+
+  // Verificar se a sessão do carrinho já existe
+  /*const novoEndereco = {rua, cep, cidade, estado}
+
+  console.log(novoEndereco)
+
+  res.cookie('enderecoCadastrado', JSON.stringify(novoEndereco))*/
+  const enderecoFormatado = `${rua}, ${cep}, ${cidade}, ${estado}`;
+
+  // Salve a string formatada nos cookies
+  res.cookie('enderecoCadastrado', enderecoFormatado);
+
+  console.log(enderecoFormatado);
+
+  res.json({ success: true });
+});
+
 app.get('/carrinho', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'carrinho.html');
   res.sendFile(filePath);
@@ -750,28 +783,24 @@ app.post('/criar-pedidos', async (req, res) => {
     // Obtenha o carrinho da sessão (supondo que você o tenha configurado na sessão)
     const carrinho = req.session.carrinho || [];
 
-    // Calcule o valor total do carrinho
-    let totalAPagar = 0;
-    for (const produtoNoCarrinho of carrinho) {
-      // Encontre o produto no banco de dados com base no ID do produto no carrinho
-      const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-
-      // Calcule o valor total do produto no carrinho e some ao total
-      totalAPagar += produto.valorProd * produtoNoCarrinho.quantidade;
-    }
-
     // Crie um pedido para cada produto no carrinho
     const pedidosCriados = await Promise.all(
       carrinho.map(async (produtoNoCarrinho) => {
         // Encontre o produto no banco de dados com base no ID do produto no carrinho
         const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
 
-        // Crie um pedido com as informações do produto e quantidade do carrinho
+        // Calcule o valor total do produto no carrinho
+        const totalAPagar = produto.valorProd * produtoNoCarrinho.quantidade;
+
+        // Determine o endereço de entrega com base na escolha do usuário
+
+        // Crie um pedido com as informações do produto, quantidade do carrinho e endereço de entrega
         const pedido = await Pedidos.create({
           idUserPed: req.cookies.userId,
           nomePed: produto.nomeProd,
           quantPed: produtoNoCarrinho.quantidade,
           valorPed: totalAPagar,
+          enderecoEntrega: req.cookies.enderecoCadastrado, // Include the selected address in the order
           statusPed: 'Aguardando'
         });
 
@@ -781,15 +810,17 @@ app.post('/criar-pedidos', async (req, res) => {
 
     // Limpe o carrinho após a criação dos pedidos (se desejado)
     // Isso depende de como você gerencia o carrinho na sua aplicação
-
-    res.json({ message: 'Pedidos criados com sucesso', pedidos: pedidosCriados });
+    res.clearCookie('enderecoCadastrado');
+    res.json({ message: 'Pedidos criados com sucesso', pedidos: pedidosCriados })
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);
     res.status(500).json({ error: 'Erro ao criar pedidos' });
   }
 });
 
-// Exemplo de rota no servidor Node.js
+
+
+// Exemplo de rota no servidor Node.js    console.log('Sessão do Carrinho:', req.session.carrinho);
 app.post('/atualizar-status-pedido', async (req, res) => {
   try {
       const { pedidoId, novoStatus } = req.body;

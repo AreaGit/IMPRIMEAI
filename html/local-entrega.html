@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="styles/form.css">
+    <link rel="stylesheet" href="../styles/form.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles/style.css">
+<link rel="stylesheet" href="../styles/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
@@ -189,7 +189,7 @@
     }
 </style>
 <body>
-    <img src="images/logo-imprimeai2.PNG" alt="..." class="logo-imprimeai">
+    <img src="../images/logo-imprimeai2.PNG" alt="..." class="logo-imprimeai">
     <h1>Local de Entrega</h1>
     <div id="locEntr">
         <p id="msg">Escolha o seu local de Entrega</p>
@@ -202,7 +202,7 @@
                 <img src="https://wbl.blob.core.windows.net/public/local-icon.svg" alt="...">
                 <a id="mostrarEnd">Utilizar Endereço Cadastrado</a>
                 <div id="end">
-                    <img id="imgEnd" src="images/endereco-transp.png">
+                    <img id="imgEnd" src="../images/endereco-transp.png">
                     <p id="endP"></p>
                     <a id="confEndCad" href="pagamento.html">Confirmar</a>
                 </div>
@@ -237,6 +237,7 @@
         </div>
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 const unEnd = document.getElementById('unEnd');
 const endCad = document.getElementById('endCad');
@@ -411,16 +412,17 @@ formAdicionarEnd.addEventListener('submit', (event) => {
     })
     .then(response => response.json())
     .then(data => {
-        if (!validRua || !validCep || !validCidade || !validEstado || data.success) {
+        if (validCep || validCidade || validEstado || validRua == true) {
             //alert('Novo endereço salvo com sucesso no carrinho.');
-            msg.innerHTML = `<strong>Erro ao Salvar o Endereço</strong>`
-            msg.setAttribute('style', 'color:red');
-
-        } else {
-            //alert('Erro ao salvar o novo endereço no carrinho.');
             msg.innerHTML= `<strong>Endereço Salvo com Sucesso</strong>`;
             msg.setAttribute('style', 'color:green');
             window.location.href = 'pagamento.html'
+
+
+        } else {
+            //alert('Erro ao salvar o novo endereço no carrinho.');
+            msg.innerHTML = `<strong>Erro ao Salvar o Endereço</strong>`
+            msg.setAttribute('style', 'color:red');
         }
     })
     .catch(error => {
