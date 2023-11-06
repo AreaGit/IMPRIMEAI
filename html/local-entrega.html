@@ -787,36 +787,51 @@ const endP = document.getElementById('endP');
 const msg = document.getElementById('msg');
 const rua = document.getElementById('rua')
     const cep = document.getElementById('cep')
-    const cidade = document.getElementById('cidade')
-    const estado = document.getElementById('estado')
-    let validCidade = false
-    let validEstado = false
-    let validCep = false
-    let validRua = false
+    const cepInput = document.getElementById("cep");
+const cidadeInput = document.getElementById("cidade");
+const estadoInput = document.getElementById("estado");
+let validCep = false;
 
+cepInput.addEventListener("input", () => {
+    const cepValue = cepInput.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
 
-    rua.addEventListener('keyup', () => {
-    if(rua.value.length <= 5) {
-        rua.setAttribute('style', 'color: red; border-color: red;')
-        validRua = false
-    } else {
-        rua.setAttribute('style', 'color: black; border-color: green;')
-        validRua = true
-    }
-})
-cep.addEventListener('input', () => {
-    const cepValue = cep.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
     if (cepValue.length === 8) {
-        cep.value = cepValue.replace(/(\d{5})(\d{3})/, '$1-$2'); // Formata o CEP (12345678 -> 12345-678)
-        cep.style.color = 'black';
-        cep.style.borderColor = 'green';
+        cepInput.value = cepValue.replace(/(\d{5})(\d{3})/, '$1-$2'); // Formata o CEP (12345678 -> 12345-678)
+        cepInput.style.color = 'black';
+        cepInput.style.borderColor = 'green';
         validCep = true;
     } else {
-        cep.style.color = 'red';
-        cep.style.borderColor = 'red';
+        cepInput.style.color = 'red';
+        cepInput.style.borderColor = 'red';
         validCep = false;
     }
 });
+
+cepInput.addEventListener("blur", function () {
+    if (validCep) {
+        const cep = cepInput.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+        buscarEnderecoPorCEP(cep);
+    }
+});
+
+function buscarEnderecoPorCEP(cep) {
+    const url = `https://viacep.com.br/ws/${cep}/json/`;
+
+    fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data.erro) {
+                cidadeInput.value = data.localidade;
+                estadoInput.value = data.uf;
+            } else {
+                alert("CEP não encontrado.");
+            }
+        })
+        .catch((error) => {
+            console.error("Erro ao buscar o CEP:", error);
+        });
+}
+
 cep.addEventListener('keyup', () => {
     if(cep.value.length <= 8) {
         cep.setAttribute('style', 'color: red; border-color: red;')
@@ -835,8 +850,8 @@ cidade.addEventListener('keyup', () => {
         validCidade = true
     }
 })
-estado.addEventListener('keyup', () => {
-    if(estado.value.length <= 3) {
+estadoInput.addEventListener('keyup', () => {
+    if(estadoInput.value.length <= 1) {
         estado.setAttribute('style', 'color: red; border-color: red;')
         validEstado = false
     } else {
