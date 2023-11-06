@@ -36,7 +36,7 @@
         font-weight: bold;
         cursor: pointer;
         position: relative;
-        left: 80%;
+        left: 70%;
     }
     .ped-recusar {
         border: 1px solid #EF4126;
@@ -84,6 +84,12 @@
         left: 46%;
         width: fit-content;
         top: -64px;
+    }
+    a#verPed {
+        left: 52%;
+        top: -102px;
+        width: fit-content;
+        position: relative;
     }
 </style>
 <body>
@@ -133,6 +139,7 @@
                         <p class="ped-nome">${pedidos.nomePed}</p>
                         <p class="ped-valor">${pedidos.valorPed}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
+                        <a href="#" id="verPed">Detalhes do Pedido</a>
                         <button class="ped-recusar">Recusar</button>
                         <button class="ped-aceitar">Aceitar</button>
                     `;
