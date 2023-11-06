@@ -80,6 +80,54 @@
         left: 20px;
         top: 64px;
     }
+    #multEnd {
+        width: 40%;
+        height: 180px;
+        position: relative;
+        top: 210px;
+        left: 43%;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+    }
+    #multEnd:hover {
+        box-shadow: 1px 1px 6px #ef412693;
+    }
+    #multEnd > p{
+        font-size: 14px;
+        font-weight: normal;
+        position: relative;
+        left: 10%;
+        top: 20px;
+    }
+    #multEnd > a {
+        text-decoration: none;
+        background-color: #EF4126;
+        color: white;
+        position: relative;
+        padding: 8px 18px 8px 18px;
+        top: -10px;
+        font-size: 13px;
+        font-weight: bold;
+        left: 80%;
+    }
+    #multEnd > h2 {
+        position: relative;
+        top: 20px;
+        left: 10%;
+    }
+    #multEnd > img {
+        position: relative;
+        left: 20px;
+        top: 64px;
+    }
+    svg {
+        fill: #7d7d7d;
+        font-size: 35px;
+        position: relative;
+        top: 67px;
+        left: 15px;
+    }
     #endCad {
         display: none;
         width: 50%;
@@ -769,7 +817,10 @@
             </div>
         </div>
         <div id="multEnd">
-
+            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#7d7d7d}</style><path d="M288 109.3V352c0 17.7-14.3 32-32 32s-32-14.3-32-32V109.3l-73.4 73.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l128-128c12.5-12.5 32.8-12.5 45.3 0l128 128c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352H192c0 35.3 28.7 64 64 64s64-28.7 64-64H448c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V416c0-35.3 28.7-64 64-64zM432 456a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/></svg>
+            <h2>Múltiplos Endereços</h2>
+            <p>Utilize os Endereços Múltiplos para a Entrega dos Produtos</p>
+            <a id="btnUn">Confirmar</a>
         </div>
     </div>
 </body>
@@ -782,6 +833,7 @@ const btnUn = document.getElementById('btnUn');
 const outroEnd = document.getElementById('outroEnd');
 const formAdicionarEnd = document.getElementById('formAdicionarEnd');
 const mostrarEnd = document.getElementById('mostrarEnd');
+const multEnd = document.getElementById('multEnd');
 const end = document.getElementById('end');
 const endP = document.getElementById('endP');
 const msg = document.getElementById('msg');
@@ -873,6 +925,7 @@ btnUn.addEventListener('click', () => {
     } else {
         novoEnd.style.display = 'block';
         endCad.style.display = 'block';
+        multEnd.style.display = 'block';
     }
     mostrar = !mostrar;
 });
@@ -881,8 +934,10 @@ outroEnd.addEventListener('click', () => {
     if (mostrarForm) {
         end.style.display = 'none';
         formAdicionarEnd.style.display = 'block';
+        multEnd.style.display = 'none';
     } else {
         formAdicionarEnd.style.display = 'none';
+        multEnd.style.display = 'block';
     }
     mostrarForm = !mostrarForm;
 });
@@ -891,8 +946,10 @@ mostrarEnd.addEventListener('click', () => {
     if (mostrarEndCad) {
         formAdicionarEnd.style.display = 'none';
         end.style.display = 'block';
+        multEnd.style.display = 'none';
     } else {
         end.style.display = 'none';
+        multEnd.style.display = 'block';
     }
     mostrarEndCad = !mostrarEndCad;
 });
