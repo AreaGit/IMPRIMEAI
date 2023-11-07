@@ -942,9 +942,9 @@
       left: 10%;
     }
     #carrinho_compras {
-      position: absolute;
-      top: 20%;
-      left: 85%;
+      position: relative;
+      top: -60%;
+      left: 80%;
     }
     #totalItens {
       position: absolute;
@@ -954,7 +954,7 @@
     .slider-container {
       width: max-content;
       position: relative;
-      left: 1%;
+      left: 5%;
     }
     .produtos {
       position: relative;
@@ -999,6 +999,16 @@
       background-color: #F37160;
       border-radius: 5px;
       color: white;
+    }
+    #logado {
+      position: relative;
+      top: -33%;
+      left: 62%;
+    }
+    #sairBtn {
+      position: relative;
+      top: -17%;
+      left: 65%;
     }
 }
 @media screen and (min-width: 1440px) and (max-width: 1600px){
