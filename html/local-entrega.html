@@ -199,7 +199,7 @@
     }
     div#end {
         display: none;
-        width: 202%;
+        width: 225%;
         position: relative;
         left: 207%;
         top: -230px;
@@ -208,9 +208,10 @@
         border-radius: 5px;
     }
     p#endP {
-        left: 90px;
-        top: 73px;
+        font-size: 15px;
+        top: 28px;
         position: relative;
+        left: 98px;
     }
     img#imgEnd {
         position: relative;
@@ -232,7 +233,7 @@
         top: -10px;
         font-size: 13px;
         font-weight: bold;
-        left: 80%;
+        left: 86%;
         top: 2px;
     }
     #baixarPl {
@@ -1033,7 +1034,7 @@ fetch('/perfil/dados') // Substitua pela URL correta da sua rota do servidor
     .then((data) => {
       // Manipule os dados do usuário aqui
       const endP = document.getElementById('endP');
-      endP.innerText = `${data.endereçoCad}, ${data.cidadeCad}, ${data.estadoCad}, ${data.cepCad}`;
+      endP.innerText = `${data.endereçoCad} ${data.numCad}, ${data.compCad}, ${data.bairroCad}, ${data.cidadeCad}, ${data.estadoCad}, ${data.cepCad}`;
     })
     .catch((error) => {
       console.error(error);

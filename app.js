@@ -986,6 +986,9 @@ app.get("/perfil/dados", async (req, res) => {
       estadoCad: user.estadoCad,
       endereçoCad: user.endereçoCad,
       telefoneCad: user.telefoneCad,
+      numCad: user.numCad,
+      compCad: user.compCad,
+      bairroCad: user.bairroCad
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
