@@ -438,6 +438,38 @@ formAdicionarEnd.addEventListener('submit', (event) => {
     <title></title>
 </head>
 <body>
-    
+    <form id="formEnviarPlanilha" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="filePlanilha" id="filePlanilha" required>
+        <button type="submit">Enviar Planilha</button>
+    </form>
+    <script>
+        const form = document.getElementById('formEnviarPlanilha');
+        const fileInput = document.getElementById('filePlanilha');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('filePlanilha', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const result = await response.text();
+                    console.log(result);
+                    alert('Planilha enviada com sucesso!');
+                } else {
+                    alert('Erro ao enviar a planilha.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Ocorreu um erro ao enviar a planilha.');
+            }
+        });
+    </script>
 </body>
 </html>

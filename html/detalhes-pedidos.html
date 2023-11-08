@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/style.css" media="all">
+    <link rel="stylesheet" href="../styles/pag-prods.css">
+    <link rel="stylesheet" href="../styles/medias.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        #dados-entrega {
+            height: 350px;
+            width: 45%;
+            position: relative;
+            left: 2%;
+            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+            padding:10px;
+            border-radius: 5px;    
+        }
+        #produtos-pedido {
+            height: 350px;
+            width: 45%;
+            position: relative;
+            left: 50%;
+            top: -350px;
+            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+            padding:10px;
+            border-radius: 5px;    
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="mini-banner">
+            <!-- IMAGEM <img src="image.jpg" alt="...">-->
+        </div>
+        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <nav>
+            <ul class='menu2'>
+                <a href="#">Meus Pedidos</a>
+                <a href="#">Central de Ajuda</a>
+            </ul>
+            <div class="icons-header">
+                <img class="icons" src="../images/facebook-icon.png" alt="...">
+                <img class="icons" src="../images/youtube-icon.png" alt="...">
+                <img class="icons" src="../images/instagram-icon.png" alt="...">
+            </div>
+        </nav>
+        <div class="elem1">
+           <a href="pedidos-grafica.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+            <div id="logado"></div>
+            <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
+        </div>
+    </header>
+    <main>
+        <div id="dados-entrega">
+            <p>Nome do Destinatário:</p>
+            <p>Cep:</p>
+            <p>Rua:</p>
+            <p>Estado:</p>
+            <p>Cidade:</p>
+        </div>
+        <div id="produtos-pedido">
+            <p>Nome do Produto:</p>
+            <p>Quantidade:</p>
+            <p>Valor:</p>
+        </div>
+    </main>
+    <script>
+        
+    </script>
+</body>
+</html>
