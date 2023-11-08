@@ -90,55 +90,6 @@ app.get("/detalhes-pedidos", (req, res) => {
   res.sendFile(__dirname + "html", "detalhes-pedidos.html"); // Verifique o caminho do arquivo
 });
 
-app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
-  if (req.file) {
-    const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-    const Enderecos = require('./models/Enderecos'); // Importe o modelo de dados Enderecos
-
-    // Iterar sobre as linhas e criar instâncias do modelo para salvar no banco de dados
-    try {
-      for (const row of sheet) {
-        await Enderecos.create({
-          idPed: row.idPed,
-          rua: row.endereço,
-          cep: row.cep,
-          cidade: row.cidade,
-          estado: row.estado,
-          numero: row.numero,
-          complemento: row.complemento,
-          bairro: row.bairro,
-          cuidados: row.cuidados,
-          celular: row.celular,
-          quantidade: row.quantidade,
-        });
-      }
-
-      console.log('Sucesso ao Enviar Planilha');
-      console.log(sheet);
-
-      for (const row of sheet) {
-        for (const key in row) {
-          if (row.hasOwnProperty(key)) {
-            console.log(`${key}: ${row[key]}`);
-          }
-        }
-      }
-
-      res.send('Planilha enviada e dados salvos no banco de dados com sucesso.');
-    } catch (error) {
-      console.error('Erro ao salvar no banco de dados:', error);
-      res.status(500).send('Erro ao salvar no banco de dados.');
-    }
-  } else {
-    res.send('Erro ao enviar a planilha.');
-    console.log('Erro ao enviar a Planilha');
-  }
-});
-
-
 app.post("/cadastro-graficas", async (req, res) => {
  
   try {
@@ -281,7 +232,7 @@ app.get('/pedidos-usuario/:userId', async (req, res) => {
 app.post("/cadastrar", async (req, res) => { 
 
     try {
-        const { userCad, cpfCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;
+        const { userCad, cpfCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;
         const hashedPassword = await bcrypt.hash(passCad, 10);
 
             // Verifique se já existe um usuário com o mesmo CPF, email ou senha
@@ -303,6 +254,9 @@ app.post("/cadastrar", async (req, res) => {
             userCad: userCad,
             cpfCad: cpfCad,
             endereçoCad: endereçoCad,
+            numCad: numCad,
+            compCad: compCad,
+            bairroCad: bairroCad,
             cepCad: cepCad,
             cidadeCad: cidadeCad,
             estadoCad: estadoCad,
@@ -765,6 +719,56 @@ app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
   res.json({ success: true });
 });
 
+app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
+  if (req.file) {
+    const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+    const Enderecos = require('./models/Enderecos'); // Importe o modelo de dados Enderecos
+
+    // Iterar sobre as linhas e criar instâncias do modelo para salvar no banco de dados
+    try {
+      for (const row of sheet) {
+        await Enderecos.create({
+          idPed: row.idPed,
+          rua: row.endereço,
+          cep: row.cep,
+          cidade: row.cidade,
+          estado: row.estado,
+          numero: row.numero,
+          complemento: row.complemento,
+          bairro: row.bairro,
+          cuidados: row.cuidados,
+          celular: row.celular,
+          quantidade: row.quantidade,
+        });
+      }
+
+      console.log('Sucesso ao Enviar Planilha');
+      console.log(sheet);
+
+      for (const row of sheet) {
+        for (const key in row) {
+          if (row.hasOwnProperty(key)) {
+            console.log(`${key}: ${row[key]}`);
+          }
+        }
+      }
+
+      res.send('Planilha enviada e dados salvos no banco de dados com sucesso.');
+    } catch (error) {
+      console.error('Erro ao salvar no banco de dados:', error);
+      res.status(500).send('Erro ao salvar no banco de dados.');
+    }
+  } else {
+    res.send('Erro ao enviar a planilha.');
+    console.log('Erro ao enviar a Planilha');
+  }
+});
+
+
+
 app.get('/carrinho', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'carrinho.html');
   res.sendFile(filePath);
@@ -853,7 +857,7 @@ app.post('/criar-pedidos', async (req, res) => {
           nomePed: produto.nomeProd,
           quantPed: produtoNoCarrinho.quantidade,
           valorPed: totalAPagar,
-          enderecoEntrega: req.cookies.enderecoCadastrado, // Include the selected address in the order
+          enderecoEntrega: req.cookies.enderecoCadastrado, //Salvando o endereço cadastrado nos cookies
           statusPed: 'Aguardando'
         });
 

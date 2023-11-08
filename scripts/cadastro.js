@@ -18,6 +18,12 @@ let validTelefone = false
 const cpf = document.getElementById('cpf')
 let validCPF = false
 const inscricaoEstadual = document.getElementById('inscricaoEstadual')
+const numero = document.getElementById('numero')
+let validNumero = false
+const complemento = document.getElementById('complemento')
+let validComplemento = false
+const bairro = document.getElementById('bairro')
+let validBairro = false
 
 
 usuario.addEventListener('keyup', () => {
@@ -39,6 +45,33 @@ endereço.addEventListener('keyup', () => {
     } else {
         endereço.setAttribute('style', 'color: black; border-color: green;')
         validEndereco = true
+    }
+})
+numero.addEventListener('keyup', () => {
+    if(!/^\d+$/.test(numero.value)){
+        numero.setAttribute('style', 'color: red; border-color: red;')
+        validNumero = false
+    }else{
+        numero.setAttribute('style', 'color: black; border-color: green;')
+        validNumero = true
+    }
+})
+complemento.addEventListener('keyup', () => {
+    if(complemento.value.length > 10){
+        complemento.setAttribute('style', 'color: red; border-color: red;')
+        validComplemento = false
+        }else{
+        complemento.setAttribute('style', 'color: black; border-color: green;')
+        validComplemento = true
+    }
+})
+bairro.addEventListener('keyup', () => {
+    if(bairro.value.length < 3){
+        bairro.setAttribute('style', 'color: red; border-color: red;')
+        validBairro = false
+        }else{
+        bairro.setAttribute('style', 'color: black; border-color: green;')
+        validBairro = true
     }
 })
 cep.addEventListener('input', () => {
@@ -173,6 +206,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const usuario = document.getElementById('usuario').value;
       const cpf = document.getElementById('cpf').value;
       const endereço = document.getElementById('endereço').value;
+      const numero = document.getElementById('numero').value;
+      const complemento = document.getElementById('complemento').value;
+      const bairro = document.getElementById('bairro').value;
       const cep = document.getElementById('cep').value;
       const cidade = document.getElementById('cidade').value;
       const estado = document.getElementById('estado').value;
@@ -191,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else if (pass.length <= 8 || !validPass) {
         msg.innerHTML = '<strong>Verifique o campo "Senha" se ele foi digitado Corretamente.</strong>';
         msg.setAttribute('style', 'color: red;');
-      } else if (!validCPF || !validCep || !validTelefone) {
+      } else if (!validCPF || !validCep || !validTelefone || !validNumero || !validComplemento || !validBairro) {
         msg.innerHTML = '<strong>Verifique os Outros Campos e verifique se estão corretos!.</strong>';
         msg.setAttribute('style', 'color: red;');
       } else {
@@ -199,6 +235,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const userData = {
           userCad: usuario,
           endereçoCad: endereço,
+          numCad: numero,
+          compCad: complemento,
+          bairroCad: bairro,
           cepCad: cep,
           cidadeCad: cidade,
           estadoCad: estado,

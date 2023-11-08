@@ -17,6 +17,18 @@ const  User = db.define('users', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
+    numCad: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
+    compCad: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
+    bairroCad: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
     cepCad: {
         type : Sequelize.STRING(255),
         allowNull: true,
@@ -54,8 +66,8 @@ const  User = db.define('users', {
 
 
 //CRIAR A TABELA
-User.sync()
-//User.sync({ force: true })
+//User.sync()
+User.sync({ force: true })
 
 
 module.exports = User
