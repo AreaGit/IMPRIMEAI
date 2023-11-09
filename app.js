@@ -690,34 +690,72 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
 });
 
 app.post('/salvar-endereco-no-carrinho', (req, res) => {
-  const { endereco } = req.body;
+  const {
+    enderecoData: {
+      endereçoCad,
+      numCad,
+      compCad,
+      bairroCad,
+      cepCad,
+      cidadeCad,
+      telefoneCad,
+      estadoCad
+    }
+  } = req.body;
 
-  // Crie um cookie com o endereço
-res.cookie('enderecoCadastrado', endereco);
+  const endereco = {
+    enderecoCad: endereçoCad,
+    numCad: numCad,
+    compCad: compCad,
+    bairroCad: bairroCad,
+    cepCad: cepCad,
+    cidadeCad: cidadeCad,
+    telefoneCad: telefoneCad,
+    estadoCad: estadoCad
+  };
 
-  console.log('Endereço Salvo nos Cookies:', endereco);
+  // Salve o endereço na sessão
+  req.session.endereco = endereco;
+
+  console.log('Endereço Salvo na Sessão:', endereco);
+
+  console.log('Conteúdo da Sessão:', req.session);
 
   res.json({ success: true });
 });
 
 app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
-  const { rua, cep, cidade, estado } = req.body;
+  const {
+    rua,
+    numero,
+    complemento,
+    bairro,
+    cep,
+    cidade,
+    estado,
+    telefone
+  } = req.body;
 
-  // Verificar se a sessão do carrinho já existe
-  /*const novoEndereco = {rua, cep, cidade, estado}
+  // Crie um objeto com os detalhes do endereço
+  const endereco = {
+    enderecoCad: rua,
+    numCad: numero,
+    compCad: complemento,
+    bairroCad: bairro,
+    cepCad: cep,
+    cidadeCad: cidade,
+    telefoneCad: telefone,
+    estadoCad: estado
+  };
 
-  console.log(novoEndereco)
+  // Salve o endereço na sessão
+  req.session.endereco = endereco;
 
-  res.cookie('enderecoCadastrado', JSON.stringify(novoEndereco))*/
-  const enderecoFormatado = `${rua}, ${cep}, ${cidade}, ${estado}`;
-
-  // Salve a string formatada nos cookies
-  res.cookie('enderecoCadastrado', enderecoFormatado);
-
-  console.log(enderecoFormatado);
+  console.log('Endereço Salvo na Sessão:', endereco);
 
   res.json({ success: true });
 });
+
 
 app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
   if (req.file) {
@@ -838,7 +876,8 @@ app.get('/pagamento', (req, res) => {
 app.post('/criar-pedidos', async (req, res) => {
   try {
     // Obtenha o carrinho da sessão (supondo que você o tenha configurado na sessão)
-    const carrinho = req.session.carrinho || [];
+    const carrinho = req.session.carrinho || []; 
+    const enderecoDaSessao = req.session.endereco;
 
     // Crie um pedido para cada produto no carrinho
     const pedidosCriados = await Promise.all(
@@ -856,18 +895,27 @@ app.post('/criar-pedidos', async (req, res) => {
           idUserPed: req.cookies.userId,
           nomePed: produto.nomeProd,
           quantPed: produtoNoCarrinho.quantidade,
-          valorPed: totalAPagar,
-          enderecoEntrega: req.cookies.enderecoCadastrado, //Salvando o endereço cadastrado nos cookies
+          valorPed: totalAPagar,//Salvando o endereço cadastrado nos cookies
           statusPed: 'Aguardando'
         });
 
+        const endereco = await Enderecos.create({
+          idPed: pedido.id,
+          rua: enderecoDaSessao.enderecoCad,
+          cep: enderecoDaSessao.cepCad,
+          cidade: enderecoDaSessao.cidadeCad,
+          numero: enderecoDaSessao.numCad,
+          complemento: enderecoDaSessao.compCad,
+          bairro: enderecoDaSessao.bairroCad,
+          quantidade: produtoNoCarrinho.quantidade,
+          celular: enderecoDaSessao.telefoneCad,
+          estado: enderecoDaSessao.estadoCad
+        })
         return pedido;
       })
     );
-
-    // Limpe o carrinho após a criação dos pedidos (se desejado)
-    // Isso depende de como você gerencia o carrinho na sua aplicação
-    res.clearCookie('enderecoCadastrado');
+    req.session.carrinho = [];
+    req.session.endereco = {};
     res.json({ message: 'Pedidos criados com sucesso', pedidos: pedidosCriados })
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);

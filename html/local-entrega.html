@@ -177,7 +177,7 @@
     #formAdicionarEnd {
         display: none;
         width: 180%;
-        height: 550px;
+        height: 971px;
         position: relative;
         left: 150%;
         top: -240px;
@@ -845,6 +845,13 @@
                     <br>
                     <input type="text" name="rua" id="rua" placeholder="Digite sua Rua..." required autocomplete="address-level1" required minlength="5">
                     <br>
+                    <label for="numero">Número</label>
+                    <br>
+                    <input type="number" name="numero" id="numero" placeholder="Digite o Número de sua Residência..." autocomplete="address-level1" required>
+                    <br>
+                    <label for="complemento">Complemento</label>
+                    <input type="text" name="complemento" id="complemento" placeholder="Digite o Complemento de sua Residência..." autocomplete="address-level1" required>
+                    <br>
                     <label for="cep">Cep</label>
                     <br>
                     <input type="text" name="cep" id="cep" placeholder="Digite o seu Cep..." autocomplete="address-level1" required minlength="8">
@@ -856,6 +863,14 @@
                     <label for="estado">Estado</label>
                     <br>
                     <input type="text" name="estado" id="estado" placeholder="Digite o sua Estado..." autocomplete="address-level1" required minlength="3">
+                    <br>
+                    <label for="bairro">Bairro</label>
+                    <br>
+                    <input type="text" name="bairro" id="bairro" placeholder="Digite seu Bairro..." autocomplete="address-level1" required minlength="3">
+                    <br>
+                    <label for="telefone">Telefone</label>
+                    <br>
+                    <input type="text" name="telefone" id="telefone" placeholder="Digite seu Telefone..." autocomplete="address-level1" required minlength="3">
                     <button type="submit">Confirmar</button>
                 </form>
             </div>
@@ -890,7 +905,17 @@ const end = document.getElementById('end');
 const endP = document.getElementById('endP');
 const msg = document.getElementById('msg');
 const rua = document.getElementById('rua')
+let validRua = false;
 const cep = document.getElementById('cep')
+const numero = document.getElementById('numero');
+let validNumero = false;
+const complemento = document.getElementById('complemento');
+let validComplemento = false;
+const telefone = document.getElementById('telefone');
+let validTelefone = false;
+const bairro = document.getElementById('bairro');
+const bairroInput = document.getElementById('bairro');
+let validBairro = false;
 const cepInput = document.getElementById("cep");
 const cidadeInput = document.getElementById("cidade");
 const estadoInput = document.getElementById("estado");
@@ -900,6 +925,16 @@ const envPl = document.getElementById('envPl');
 const baixarPl = document.getElementById('baixarPl');
 const enviarPl = document.getElementById('enviarPl')
 const btnMult = document.getElementById('btnMult')
+
+rua.addEventListener('keyup', () => {
+    if(rua.value.length <= 5) {
+        endereço.setAttribute('style', 'color: red; border-color: red;')
+        validRua = false
+    } else {
+        rua.setAttribute('style', 'color: black; border-color: green;')
+        validRua = true
+    }
+})
 
 cepInput.addEventListener("input", () => {
     const cepValue = cepInput.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
@@ -932,6 +967,7 @@ function buscarEnderecoPorCEP(cep) {
             if (!data.erro) {
                 cidadeInput.value = data.localidade;
                 estadoInput.value = data.uf;
+                bairroInput.value = data.bairro;
             } else {
                 alert("CEP não encontrado.");
             }
@@ -968,6 +1004,57 @@ estadoInput.addEventListener('keyup', () => {
         validEstado = true
     }
 })
+numero.addEventListener('keyup', () => {
+    if(!/^\d+$/.test(numero.value)){
+        numero.setAttribute('style', 'color: red; border-color: red;')
+        validNumero = false
+    }else{
+        numero.setAttribute('style', 'color: black; border-color: green;')
+        validNumero = true
+    }
+})
+complemento.addEventListener('keyup', () => {
+    if(complemento.value.length > 10){
+        complemento.setAttribute('style', 'color: red; border-color: red;')
+        validComplemento = false
+        }else{
+        complemento.setAttribute('style', 'color: black; border-color: green;')
+        validComplemento = true
+    }
+})
+bairroInput.addEventListener('keyup', () => {
+    if(bairroInput.value.length < 3){
+        bairroInput.setAttribute('style', 'color: red; border-color: red;')
+        validBairro = false
+        }else{
+        bairroInput.setAttribute('style', 'color: black; border-color: green;')
+        validBairro = true
+    }
+})
+telefone.addEventListener('input', () => {
+    let telefoneValue = telefone.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (telefoneValue.length > 11) {
+        telefoneValue = telefoneValue.slice(0, 11); // Limite o comprimento a 11 caracteres
+    }
+
+    // Formata o telefone com parênteses e traço (por exemplo, (99) 99999-9999)
+    telefoneValue = telefoneValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+
+    telefone.value = telefoneValue; // Define o valor formatado de volta no campo
+});
+telefone.addEventListener('keyup', () => {
+    const telefoneValue = telefone.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if(telefone.value.length <= 11) {
+        telefone.setAttribute('style', 'color: red; border-color: red;')
+        validTelefone = false
+    } else {
+        telefone.setAttribute('style', 'color: black; border-color: green;')
+        validTelefone = true
+    }
+})
+
+
+
 
 let mostrar = false;
 let mostrarForm = true;
@@ -1032,80 +1119,109 @@ fetch('/perfil/dados') // Substitua pela URL correta da sua rota do servidor
       return response.json();
     })
     .then((data) => {
-      // Manipule os dados do usuário aqui
       const endP = document.getElementById('endP');
+      const endereçoCad = data.endereçoCad;
+      const numCad = data.numCad;
+      const compCad = data.compCad;
+      const bairroCad = data.bairroCad;
+      const cepCad = data.cepCad;
+      const cidadeCad = data.cidadeCad;
+      const telefoneCad = data.telefoneCad;
+      const estadoCad = data.estadoCad
       endP.innerText = `${data.endereçoCad} ${data.numCad}, ${data.compCad}, ${data.bairroCad}, ${data.cidadeCad}, ${data.estadoCad}, ${data.cepCad}`;
+
+      console.log(`${endereçoCad}, ${numCad}, ${compCad}, ${bairroCad}, ${cepCad}, ${cidadeCad}`);
+
+      const confEndCad = document.getElementById('confEndCad');
+      
+      confEndCad.addEventListener('click', () => { 
+        const enderecoData = {
+            endereçoCad: endereçoCad,
+            compCad: compCad,
+            bairroCad: bairroCad,
+            cepCad: cepCad,
+            cidadeCad: cidadeCad,
+            numCad: numCad,
+            telefoneCad: telefoneCad,
+            estadoCad: estadoCad
+        }
+        fetch('/salvar-endereco-no-carrinho', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ enderecoData })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+    if (data.success) {
+        msg.innerHTML = `<strong>Endereço Salvo com Sucesso</strong>`;
+        msg.setAttribute('style', 'color:green');
+    } else {
+        msg.innerHTML = `<strong>Erro ao Salvar Endereço</strong>`;
+        msg.setAttribute('style', 'color:red');
+    }
+        })
+    .catch((error) => {
+        console.error('Erro ao fazer a solicitação:', error);
+    });
+      });
     })
     .catch((error) => {
       console.error(error);
       const end = document.getElementById('end');
       end.innerHTML = '<p>Erro ao buscar os dados do usuário.</p>';
     });
+    formAdicionarEnd.addEventListener('submit', (event) => {
+  event.preventDefault();
 
-    
-    confEndCad.addEventListener('click', () => {
-    const endereco = endP.innerText;
-    fetch('/salvar-endereco-no-carrinho', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ endereco }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            //alert('Endereço salvo com sucesso no carrinho.');
-            msg.innerHTML = `<strong>Endereço Salvo com Sucesso</strong>`
-            msg.setAttribute('style', 'color:green');
-        } else {
-            //alert('Erro ao salvar o endereço no carrinho.');
-            msg.innerHTML = `<strong>Erro ao Salvar Endereço</strong>`
-            msg.setAttribute('style', 'color:red');
-        }
-        })
-        .catch(error => {
-            console.error('Erro ao fazer a solicitação:', error);
-        });
-    });
+  const rua = document.getElementById('rua').value;
+  const cep = document.getElementById('cep').value;
+  const cidade = document.getElementById('cidade').value;
+  const estado = document.getElementById('estado').value;
+  const complemento = document.getElementById('complemento').value;
+  const bairro = document.getElementById('bairro').value;
+  const numero = document.getElementById('numero').value;
+  const telefone = document.getElementById('telefone').value;
 
-formAdicionarEnd.addEventListener('submit', (event) => {
-    event.preventDefault(); // Evita que o formulário seja enviado da maneira tradicional
+  // Criar um objeto com os dados do novo endereço
+  const novoEndereco = {
+    rua,
+    cep,
+    cidade,
+    estado,
+    complemento,
+    bairro,
+    numero,
+    telefone
+  };
 
-    const rua = document.getElementById('rua').value;
-    const cep = document.getElementById('cep').value;
-    const cidade = document.getElementById('cidade').value;
-    const estado = document.getElementById('estado').value;
+  // Enviar os dados do novo endereço para o servidor usando fetch
+  fetch('/salvar-novo-endereco-no-carrinho', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(novoEndereco),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      msg.innerHTML = `<strong>Endereço Salvo com Sucesso</strong>`;
+      msg.setAttribute('style', 'color:green');
 
-    // Criar um objeto com os dados do novo endereço
-    const novoEndereco = { rua, cep, cidade, estado };
-
-    // Enviar os dados do novo endereço para o servidor usando fetch
-    fetch('/salvar-novo-endereco-no-carrinho', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(novoEndereco),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (validCep || validCidade || validEstado || validRua == true) {
-            //alert('Novo endereço salvo com sucesso no carrinho.');
-            msg.innerHTML= `<strong>Endereço Salvo com Sucesso</strong>`;
-            msg.setAttribute('style', 'color:green');
-            window.location.href = 'pagamento.html'
-
-
-        } else {
-            //alert('Erro ao salvar o novo endereço no carrinho.');
-            msg.innerHTML = `<strong>Erro ao Salvar o Endereço</strong>`
-            msg.setAttribute('style', 'color:red');
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao fazer a solicitação:', error);
-    });
+      setTimeout(() => {
+        window.location.href = 'pagamento.html';
+    }, 3000)
+    } else {
+      msg.innerHTML = `<strong>Erro ao Salvar Endereço</strong>`;
+      msg.setAttribute('style', 'color:red');
+    }
+  })
+  .catch(error => {
+    console.error('Erro ao fazer a solicitação:', error);
+  });
 });
+
 </script>
 </html>
