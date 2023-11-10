@@ -755,56 +755,127 @@ app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
 
   res.json({ success: true });
 });
+/**/
+/*if (req.file) {
+  const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+  const sheetName = workbook.SheetNames[0];
+  const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
 
+  try {
+    // Defina o índice da linha a partir da qual você deseja começar a iterar
+    const startRowIndex = 30;
+  
+    // Iterar a partir da linha especificada
+    for (let i = startRowIndex; i < sheet.length; i++) {
+      const row = sheet[i];
+  
+      // Certifique-se de que a linha possui pelo menos 11 colunas (ajuste conforme necessário)
+      if (row.length >= 11) {
+        // Valide os dados antes de criar a instância do modelo
+        const dataIsValid = validateRowData(row);
+
+        const cep = sheet.map((row) => row[1]);
+        const rua = sheet.map((row) => row[2]);
+        const numero = sheet.map((row) => row[3]);
+        const complemento = sheet.map((row) => row[4]);
+        const bairro = sheet.map((row) => row[5]);
+        const cidade = sheet.map((row) => row[6]);
+        const estado = sheet.map((row) => row[7]);
+        const cuidados = sheet.map((row) => row[8]);
+        const telefone = sheet.map((row) => row[9]);
+  
+        if (dataIsValid) {
+          // Crie variáveis para armazenar os dados temporariamente na sessão
+          const endereco= {
+            cepCad: cep,
+            enderecoCad: rua,
+            numCad: numero,
+            compCad: complemento,
+            bairroCad: bairro,
+            cidadeCad: cidade,
+            telefoneCad: telefone,
+            estadoCad: estado,
+            cuidadosCad: cuidados
+          };
+  
+          req.session.endereco = endereco;
+  
+          // Salve o endereço da primeira linha válida na sessão
+        }
+      }
+    }
+  
+    console.log('Sucesso ao Enviar Planilha');
+    console.log(sheet);
+  
+    // Adicione o console.log para visualizar a sessão
+    console.log(req.session);
+  
+    res.send('Dados da planilha armazenados temporariamente na sessão.');
+  } catch (error) {
+    console.error('Erro ao processar a planilha:', error);
+    res.status(500).send('Erro ao processar a planilha.');
+  }
+} else {
+  res.send('Erro ao enviar a planilha.');
+}*/
 
 app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
   if (req.file) {
     const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-    const Enderecos = require('./models/Enderecos'); // Importe o modelo de dados Enderecos
-
-    // Iterar sobre as linhas e criar instâncias do modelo para salvar no banco de dados
-    try {
-      for (const row of sheet) {
-        await Enderecos.create({
-          idPed: row.idPed,
-          rua: row.endereço,
-          cep: row.cep,
-          cidade: row.cidade,
-          estado: row.estado,
-          numero: row.numero,
-          complemento: row.complemento,
-          bairro: row.bairro,
-          cuidados: row.cuidados,
-          celular: row.celular,
-          quantidade: row.quantidade,
+  const sheetName = workbook.SheetNames[0];
+  const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+  
+  const Enderecos = require('./models/Enderecos'); // Importe o modelo de dados Enderecos
+  
+  try {
+    // Defina o índice da linha a partir da qual você deseja começar a iterar
+    const startRowIndex = 30;
+  
+    // Iterar a partir da linha especificada
+    for (let i = startRowIndex; i < sheet.length; i++) {
+      const row = sheet[i];
+  
+      // Certifique-se de que a linha possui pelo menos 10 colunas (ajuste conforme necessário)
+      if (row.length >= 10) {
+        const endereco = ({
+          //quantidade: row[0],
+          cepCad: row[1],
+          enderecoCad: row[2],
+          numCad: row[3],
+          compCad: row[4],
+          bairroCad: row[5],
+          cidadeCad: row[6],
+          estadoCad: row[7],
+          cuidadosCad: row[8],
+          telefoneCad: row[9],
+          //idPed: row[10],
         });
+        req.session.endereco = endereco;     
+        console.log('Endereço Salvo na Sessão:', endereco);
       }
-
-      console.log('Sucesso ao Enviar Planilha');
-      console.log(sheet);
-
-      for (const row of sheet) {
-        for (const key in row) {
-          if (row.hasOwnProperty(key)) {
-            console.log(`${key}: ${row[key]}`);
-          }
+    }
+  
+    console.log('Sucesso ao Enviar Planilha');
+    console.log(sheet);
+  
+    for (const row of sheet) {
+      for (const key in row) {
+        if (row.hasOwnProperty(key)) {
+          console.log(`${key}: ${row[key]}`);
         }
       }
-
-      res.send('Planilha enviada e dados salvos no banco de dados com sucesso.');
-    } catch (error) {
-      console.error('Erro ao salvar no banco de dados:', error);
-      res.status(500).send('Erro ao salvar no banco de dados.');
     }
-  } else {
-    res.send('Erro ao enviar a planilha.');
-    console.log('Erro ao enviar a Planilha');
+  
+    res.send('Planilha enviada e dados salvos no banco de dados com sucesso.');
+  } catch (error) {
+    console.error('Erro ao salvar no banco de dados:', error);
+    res.status(500).send('Erro ao salvar no banco de dados.');
   }
-});
+  
+  }
 
+});
 
 
 app.get('/carrinho', (req, res) => {
@@ -909,7 +980,8 @@ app.post('/criar-pedidos', async (req, res) => {
           bairro: enderecoDaSessao.bairroCad,
           quantidade: produtoNoCarrinho.quantidade,
           celular: enderecoDaSessao.telefoneCad,
-          estado: enderecoDaSessao.estadoCad
+          estado: enderecoDaSessao.estadoCad,
+          cuidados: enderecoDaSessao.cuidadosCad
         })
         return pedido;
       })
