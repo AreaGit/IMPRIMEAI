@@ -237,6 +237,28 @@ app.get('/pedidos-cadastrados', async (req, res) => {
     const pedidosCadastrados = await Pedidos.findAll();
     const enderecosPedCadastrados = await Enderecos.findAll();
 
+    // Verifique se há pelo menos um endereço cadastrado
+    if (enderecosPedCadastrados.length > 0) {
+      // Supondo que você deseje acessar o primeiro endereço da lista
+      const primeiroEndereco = enderecosPedCadastrados[0];
+    
+      const enderecoEntregaInfo = {
+        rua: primeiroEndereco.rua,
+        cep: primeiroEndereco.cep,
+        cidade: primeiroEndereco.cidade,
+        estado: primeiroEndereco.estado
+      };
+    
+      console.log('Informações de Endereço de Entrega', enderecoEntregaInfo);
+
+      const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey)
+      console.log('Latitude do Endereço de Entrega:', coordinatesEnd.latitude);
+      console.log('Longitude do Endereço de Entrega:', coordinatesEnd.longitude);
+    } else {
+      console.log('Nenhum endereço de entrega cadastrado.');
+    }
+    
+
     // Envie os cartões como resposta em JSON
     res.json({ pedidos: pedidosCadastrados });
   } catch (error) {
@@ -273,7 +295,32 @@ async function getCoordinatesFromAddress(graficaInfo, apiKey) {
   }
 }
 
+async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
+  const {rua, cep, estado, cidade} = enderecoEntregaInfo;
+  const formattedAddressEnd = `${rua}, ${cep}, ${cidade}, ${estado}`;
+  const geocodingUrlEnd = `https://dev.virtualearth.net/REST/v1/Locations/${encodeURIComponent(formattedAddressEnd)}?o=json&key=${apiKey}`
 
+  try {
+    const response = await fetch(geocodingUrlEnd);
+
+    if (!response.ok) {
+      throw new Error(`Erro na resposta da API: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+      const coordinates = data.resourceSets[0].resources[0].point.coordinates;
+      return { latitude: coordinates[0], longitude: coordinates[1] };
+    } else {
+      console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddressEnd);
+      return { latitude: null, longitude: null };
+    }
+  }catch (error) {
+    console.error('Erro ao obter coordenadas de geocodificação:', error.message);
+    return { latitude: null, longitude: null, errorMessage: error.message };
+  }
+}
 
 app.get('/pedidos-usuario/:userId', async (req, res) => {
   const userId = req.cookies.userId;
