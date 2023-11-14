@@ -155,6 +155,7 @@ app.post("/login-graficas", async (req, res) => {
     }
 
     res.cookie('userCad', grafica.userCad);
+    res.cookie('userId', grafica.id)
 
     // Gere um token de autenticação (exemplo simples)
     const token = Math.random().toString(16).substring(2);
@@ -197,6 +198,7 @@ app.get('/cartoes-cadastrados', async (req, res) => {
   }
 });
 
+
 app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     const graficaId = req.cookies.userId;
@@ -215,20 +217,63 @@ app.get('/pedidos-cadastrados', async (req, res) => {
       cepCad: grafica.cepCad,
       cidadeCad: grafica.cidadeCad,
       estadoCad: grafica.estadoCad,
-      endereçoCad: grafica.endereçoCad,
+      enderecoCad: grafica.endereçoCad,
     };
+
+    // Exibir informações da gráfica no console
+    console.log('Informações da Gráfica:', graficaInfo);
+
+    // Chave de API do Bing Maps (substitua com a sua própria chave)
+    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+
+    // Converter o endereço da gráfica em coordenadas de latitude e longitude
+    const coordinates = await getCoordinatesFromAddress(graficaInfo, apiKey);
+
+    // Console.log para verificar as coordenadas
+    console.log('Latitude da gráfica:', coordinates.latitude);
+    console.log('Longitude da gráfica:', coordinates.longitude);
 
     // Consulte o banco de dados para buscar os cartões cadastrados
     const pedidosCadastrados = await Pedidos.findAll();
-    const enderecosPedCadastrados = await Enderecos.findAll(); 
+    const enderecosPedCadastrados = await Enderecos.findAll();
 
     // Envie os cartões como resposta em JSON
     res.json({ pedidos: pedidosCadastrados });
   } catch (error) {
     console.error('Erro ao buscar pedidos cadastrados:', error);
-    //res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
+    // res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
   }
-}); 
+});
+
+// Função para obter coordenadas geográficas (latitude e longitude) a partir do endereço usando a API de Geocodificação do Bing Maps
+async function getCoordinatesFromAddress(graficaInfo, apiKey) {
+  const { enderecoCad, cepCad, cidadeCad, estadoCad } = graficaInfo;
+  const formattedAddress = `${enderecoCad}, ${cepCad}, ${cidadeCad}, ${estadoCad}`;
+  const geocodingUrl = `https://dev.virtualearth.net/REST/v1/Locations/${encodeURIComponent(formattedAddress)}?o=json&key=${apiKey}`;
+
+  try {
+    const response = await fetch(geocodingUrl);
+
+    if (!response.ok) {
+      throw new Error(`Erro na resposta da API: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+      const coordinates = data.resourceSets[0].resources[0].point.coordinates;
+      return { latitude: coordinates[0], longitude: coordinates[1] };
+    } else {
+      console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddress);
+      return { latitude: null, longitude: null };
+    }
+  } catch (error) {
+    console.error('Erro ao obter coordenadas de geocodificação:', error.message);
+    return { latitude: null, longitude: null, errorMessage: error.message };
+  }
+}
+
+
 
 app.get('/pedidos-usuario/:userId', async (req, res) => {
   const userId = req.cookies.userId;
