@@ -112,7 +112,7 @@
         <div class="elem1">
            <a href="pedidos-grafica.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
             <div id="logado"></div>
-            <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
+            <button style="display: block;" id="sairBtn" onclick="sair()">&RightArrow;</button>
         </div>
     </header>
     <main>
@@ -135,7 +135,7 @@
                     const li = document.createElement('li');
                     li.style.display = 'block';
                     li.innerHTML = `
-                        <p class="ped-id">${pedidos.id}</p>
+                        <p class="ped-id">${pedidos.idUserPed}</p>
                         <p class="ped-nome">${pedidos.nomePed}</p>
                         <p class="ped-valor">${pedidos.valorPed}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
@@ -215,6 +215,11 @@
                 .catch(error => console.error('Erro ao enviar a solicitação AJAX:', error));
         }
     });
+});
+
+sairBtn.addEventListener("click", function () {
+  // Redirecionar para a rota de logout no servidor
+  window.location.href = "/logout";
 });
 
     </script>

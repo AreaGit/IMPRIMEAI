@@ -9,6 +9,7 @@ const Cartoes = require('./models/Cartoes');
 const Graficas = require('./models/Graficas');
 const Pedidos = require('./models/Pedidos');
 const Enderecos = require('./models/Enderecos');
+const ItensPedido = require('./models/ItensPedido');
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
@@ -198,8 +199,28 @@ app.get('/cartoes-cadastrados', async (req, res) => {
 
 app.get('/pedidos-cadastrados', async (req, res) => {
   try {
+    const graficaId = req.cookies.userId;
+
+    if (!graficaId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const grafica = await Graficas.findByPk(graficaId);
+
+    if (!grafica) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    const graficaInfo = {
+      cepCad: grafica.cepCad,
+      cidadeCad: grafica.cidadeCad,
+      estadoCad: grafica.estadoCad,
+      endereçoCad: grafica.endereçoCad,
+    };
+
     // Consulte o banco de dados para buscar os cartões cadastrados
-    const pedidosCadastrados = await Pedidos.findAll(); 
+    const pedidosCadastrados = await Pedidos.findAll();
+    const enderecosPedCadastrados = await Enderecos.findAll(); 
 
     // Envie os cartões como resposta em JSON
     res.json({ pedidos: pedidosCadastrados });
@@ -321,6 +342,7 @@ app.post("/login", async (req, res) => {
 
     // Excluir o cookie "userCad"
     res.clearCookie("userCad");
+    res.clearCookie("userId");
 
     // Redirecionar para a página de login ou para onde desejar
     res.redirect("html/form.html");
@@ -683,6 +705,7 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
 
     // Responda com uma mensagem de sucesso e o carrinho atualizado
     res.json({ message: 'Produto adicionado ao carrinho com sucesso', carrinho: req.session.carrinho });
+    console.log(req.session.carrinho)
   } catch (error) {
     console.error('Erro ao adicionar o produto ao carrinho:', error);
     res.status(500).json({ message: 'Erro ao adicionar o produto ao carrinho' });
@@ -883,48 +906,63 @@ app.get('/pagamento', (req, res) => {
 app.post('/criar-pedidos', async (req, res) => {
   try {
     // Obtenha o carrinho da sessão (supondo que você o tenha configurado na sessão)
-    const carrinho = req.session.carrinho || []; 
+    const carrinho = req.session.carrinho || [];
     const enderecoDaSessao = req.session.endereco;
 
-    // Crie um pedido para cada produto no carrinho
-    const pedidosCriados = await Promise.all(
-      carrinho.map(async (produtoNoCarrinho) => {
-        // Encontre o produto no banco de dados com base no ID do produto no carrinho
-        const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+    // Calcule o valor total do carrinho
+// ...
 
-        // Calcule o valor total do produto no carrinho
-        const totalAPagar = produto.valorProd * produtoNoCarrinho.quantidade;
+// Calcule o valor total do carrinho
+const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
+  const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+  return produto.valorProd * produtoNoCarrinho.quantidade;
+})).then((valores) => valores.reduce((total, valor) => total + valor, 0));
 
-        // Determine o endereço de entrega com base na escolha do usuário
+// ...
 
-        // Crie um pedido com as informações do produto, quantidade do carrinho e endereço de entrega
-        const pedido = await Pedidos.create({
-          idUserPed: req.cookies.userId,
-          nomePed: produto.nomeProd,
-          quantPed: produtoNoCarrinho.quantidade,
-          valorPed: totalAPagar,//Salvando o endereço cadastrado nos cookies
-          statusPed: 'Aguardando'
-        });
 
-        const endereco = await Enderecos.create({
-          idPed: pedido.id,
-          rua: enderecoDaSessao.enderecoCad,
-          cep: enderecoDaSessao.cepCad,
-          cidade: enderecoDaSessao.cidadeCad,
-          numero: enderecoDaSessao.numCad,
-          complemento: enderecoDaSessao.compCad,
-          bairro: enderecoDaSessao.bairroCad,
-          quantidade: produtoNoCarrinho.quantidade,
-          celular: enderecoDaSessao.telefoneCad,
-          estado: enderecoDaSessao.estadoCad,
-          cuidados: enderecoDaSessao.cuidadosCad
-        })
-        return pedido;
-      })
-    );
+    // Crie um único pedido para a gráfica com base no carrinho
+    const pedido = await Pedidos.create({
+      idUserPed: req.cookies.userId,
+      nomePed: 'Pedido Geral', // Você pode ajustar isso conforme necessário
+      quantPed: 1, // Quantidade de produtos no pedido geral
+      valorPed: totalAPagar,
+      statusPed: 'Aguardando',
+    });
+
+    // Para cada produto no carrinho, adicione uma entrada na tabela ItensPedido
+    await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
+      const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+      // Adicione as informações necessárias para cada produto no carrinho
+      await ItensPedido.create({
+        idPed: pedido.id,
+        nomeProd: produto.nomeProd,
+        quantidade: produtoNoCarrinho.quantidade,
+        valorProd: produto.valorProd,
+        // Adicione outras informações necessárias
+      });
+    }));
+
+    // Adicione as informações de endereço para o pedido
+    const endereco = await Enderecos.create({
+      idPed: pedido.id,
+      rua: enderecoDaSessao.enderecoCad,
+      cep: enderecoDaSessao.cepCad,
+      cidade: enderecoDaSessao.cidadeCad,
+      numero: enderecoDaSessao.numCad,
+      complemento: enderecoDaSessao.compCad,
+      bairro: enderecoDaSessao.bairroCad,
+      quantidade: carrinho.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
+      celular: enderecoDaSessao.telefoneCad,
+      estado: enderecoDaSessao.estadoCad,
+      cuidados: enderecoDaSessao.cuidadosCad,
+    });
+
+    // Limpe o carrinho e o endereço da sessão após a criação do pedido
     req.session.carrinho = [];
     req.session.endereco = {};
-    res.json({ message: 'Pedidos criados com sucesso', pedidos: pedidosCriados })
+
+    res.json({ message: 'Pedido criado com sucesso', pedido });
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);
     res.status(500).json({ error: 'Erro ao criar pedidos' });
