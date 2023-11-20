@@ -49,17 +49,23 @@
   .product-card h2 {
     font-size: 18px;
     margin-top: 10px;
+    color: #222529;
+    text-decoration: none;
   }
   
   .product-card p {
     font-size: 14px;
     margin-top: 10px;
+    color: #222529;
+    text-decoration: none;
   }
   
   .product-card p:last-child {
     font-weight: bold;
   }
-  
+  a {
+    text-decoration: none;
+  }
 
 /*PÁGINA DE COMPRA*/
 

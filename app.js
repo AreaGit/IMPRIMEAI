@@ -198,13 +198,12 @@ app.get('/cartoes-cadastrados', async (req, res) => {
   }
 });
 
-
 app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     const graficaId = req.cookies.userId;
 
     if (!graficaId) {
-      return res.status(401).json({ message: "Usuário não autenticado" }); 
+      return res.status(401).json({ message: "Usuário não autenticado" });
     }
 
     const grafica = await Graficas.findByPk(graficaId);
@@ -233,75 +232,87 @@ app.get('/pedidos-cadastrados', async (req, res) => {
     console.log('Latitude da gráfica:', coordinates.latitude);
     console.log('Longitude da gráfica:', coordinates.longitude);
 
-    // Consulte o banco de dados para buscar os cartões cadastrados
+    // Consulte o banco de dados para buscar os pedidos cadastrados
     const pedidosCadastrados = await Pedidos.findAll();
     const enderecosPedCadastrados = await Enderecos.findAll();
 
-    // Verifique se há pelo menos um endereço cadastrado
+    // Verificar se há pelo menos um endereço cadastrado
     if (enderecosPedCadastrados.length > 0) {
-      // Supondo que você deseje acessar o primeiro endereço da lista
-      const primeiroEndereco = enderecosPedCadastrados[0];
-    
-      const enderecoEntregaInfo = {
-        rua: primeiroEndereco.rua,
-        cep: primeiroEndereco.cep,
-        cidade: primeiroEndereco.cidade,
-        estado: primeiroEndereco.estado
-      };
-    
-      console.log('Informações de Endereço de Entrega', enderecoEntregaInfo);
-
-  /*    const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey)
-      console.log('Latitude do Endereço de Entrega:', coordinatesEnd.latitude);
-      console.log('Longitude do Endereço de Entrega:', coordinatesEnd.longitude);
-
-      const distance = haversineDistance(coordinates.latitude, coordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
-
-      // Verificar se a distância é menor ou igual a 15 km
-      if (distance <= 15) {
-        console.log('Distância entre a gráfica e o endereço de entrega:', distance, 'km');
-
-        // Envie os pedidos dentro da distância de 15 km como resposta em JSON
-        res.json({ pedidos: pedidosCadastrados });
-      } else {
-        console.log('Pedido fora da distância permitida.');
-        res.json({ message: 'Pedido fora da distância permitida.' });
-      }
-    } else {
-      console.log('Nenhum endereço de entrega cadastrado.');
-    }
-    // Envie os cartões como resposta em JSON
-    res.json({ pedidos: pedidosCadastrados });
-  } catch (error) {
-    //console.error('Erro ao buscar pedidos cadastrados:', error);
-    // res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
-  }
-});*/
-let found = false;
+      let found = false;
       let raio = 1;
+      let pedidosNoRaio = [];
 
-      while (!found && raio <= 30) {
-        // Atualize o raio no final do loop para tentar um raio maior na próxima iteração
-        const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey);
-        console.log(`Latitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.latitude);
-        console.log(`Longitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.longitude);
+      while (raio <= 8) {
+        // Utilize Promise.all para mapear assincronamente sobre todos os pedidos
+        pedidosNoRaio = await Promise.all(enderecosPedCadastrados.map(async (enderecoPedido) => {
+          const enderecoEntregaInfo = {
+            rua: enderecoPedido.rua,
+            cep: enderecoPedido.cep,
+            cidade: enderecoPedido.cidade,
+            estado: enderecoPedido.estado
+          };
 
-        const distance = haversineDistance(coordinates.latitude, coordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+          try {
+            // Tentar obter as coordenadas de geocodificação
+            const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey);
 
-        // Verificar se a distância é menor ou igual ao raio atual
-        if (distance <= raio) {
-          console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raio} km):`, distance, 'km');
+            // Verificar se as coordenadas são válidas
+            if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+              console.log(`Latitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.latitude);
+              console.log(`Longitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.longitude);
 
-          // Envie os pedidos dentro do raio atual como resposta em JSON
-          res.json({ pedidos: pedidosCadastrados });
-          found = true; // Encontrou um pedido dentro do raio
+              const distance = haversineDistance(coordinates.latitude, coordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+
+              // Verificar se a distância é menor ou igual ao raio atual
+              if (distance <= raio) {
+                console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raio} km):`, distance, 'km');
+                return enderecoPedido;
+              }
+            } else {
+              console.log(`Coordenadas nulas para o Endereço de Entrega (raio ${raio} km).`);
+            }
+          } catch (error) {
+            console.log(`Erro ao obter coordenadas de geocodificação: ${error.message}`);
+          }
+
+          return null;
+        }));
+
+        // Remover endereços que são null (fora do raio)
+        pedidosNoRaio = pedidosNoRaio.filter((enderecoPedido) => enderecoPedido !== null);
+
+        if (pedidosNoRaio.length > 0) {
+          found = true; // Encontrou pelo menos um pedido dentro do raio
         } else {
           console.log(`Nenhum pedido encontrado dentro do raio ${raio} km.`);
-          raio++; // Tente um raio maior na próxima iteração
         }
+
+        raio++; // Tente um raio maior na próxima iteração
       }
 
-      if (!found) {
+      if (found) {
+        /*console.log('Pedidos dentro do raio:', pedidosNoRaio);
+        // Envie os pedidos dentro do raio como resposta em JSON
+        res.json({ pedidos: pedidosNoRaio });*/
+          // Log detalhado dos pedidos dentro do raio
+        console.log('Pedidos dentro do raio:', pedidosNoRaio);
+
+        // Mapear os IDs dos pedidos dentro do raio
+        const idsPedidos = pedidosNoRaio.map(endereco => endereco.dataValues.idPed);
+
+          // Consultar detalhes completos dos pedidos no banco de dados
+          const detalhesPedidos = await Pedidos.findAll({
+            where: {
+              id: idsPedidos,
+            },
+          });
+
+        // Log detalhado dos pedidos completos
+        console.log('Detalhes completos dos pedidos dentro do raio:', detalhesPedidos);
+
+        // Envie os pedidos dentro do raio como resposta em JSON
+        res.json({ pedidos: detalhesPedidos });
+      } else {
         console.log('Nenhum pedido encontrado dentro dos raios permitidos.');
         res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos.' });
       }
@@ -312,44 +323,9 @@ let found = false;
     }
   } catch (error) {
     console.error('Erro ao buscar pedidos cadastrados:', error);
-    // res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
+    res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
   }
 });
-
-
-/*
-  let found = false;
-  let raio = 15;
-
-  while (!found && raio >= 10) {
-    // Atualize o raio no final do loop para tentar um raio menor na próxima iteração
-    const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey);
-    console.log(`Latitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.latitude);
-    console.log(`Longitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.longitude);
-
-    const distance = haversineDistance(coordinates.latitude, coordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
-
-    // Verificar se a distância é menor ou igual ao raio atual
-    if (distance <= raio) {
-      console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raio} km):`, distance, 'km');
-
-      // Envie os pedidos dentro do raio atual como resposta em JSON
-      res.json({ pedidos: pedidosCadastrados });
-      found = true; // Encontrou um pedido dentro do raio
-    } else {
-      console.log(`Nenhum pedido encontrado dentro do raio ${raio} km.`);
-      raio--; // Tente um raio menor na próxima iteração
-    }
-  }
-
-  if (!found) {
-    console.log('Nenhum pedido encontrado dentro dos raios permitidos.');
-    res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos.' });
-  }
-} else {
-  console.log('Nenhum endereço de entrega cadastrado.');
-}
-*/
 
 // Função para calcular a distância haversine entre duas coordenadas geográficas
 function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -547,7 +523,7 @@ app.get('/cadastrar-produto', (req, res) => {
 // Rota para processar o envio do formulário
 app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
   try {
-    const { nomeProd, descProd, valorProd, categoriaProd } = req.body;
+    const { nomeProd, descProd, valorProd, categoriaProd, raioProd } = req.body;
     const imgProd = req.file; // O arquivo de imagem é acessado aqui
 
     // Insira os dados na tabela Produtos
@@ -556,6 +532,7 @@ app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
       descProd: descProd,
       valorProd: valorProd,
       categProd: categoriaProd,
+      raioProd: raioProd,
       imgProd: imgProd ? imgProd.buffer : null, // Armazena a imagem como buffer
     });
 

@@ -18,6 +18,10 @@ const Produtos = db.define('produtos', {
     type: Sequelize.STRING, // Use STRING para categorias
     allowNull: false,
   },
+  raioProd: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
   imgProd: {
     type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
@@ -25,6 +29,6 @@ const Produtos = db.define('produtos', {
 });
 
 Produtos.sync() // Use isso para criar ou atualizar a tabela
-// Produtos.sync({ force: true }) // Use isso para recriar a tabela (cuidado, dados existentes serão apagados)
+//Produtos.sync({ force: true }) // Use isso para recriar a tabela (cuidado, dados existentes serão apagados)
 
 module.exports = Produtos;

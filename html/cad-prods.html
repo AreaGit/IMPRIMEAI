@@ -94,6 +94,9 @@
         <label for="categoriaProd">Categoria do Produto</label>
         <input type="text" name="categoriaProd" id="categoriaProd" required>
         <br>
+        <label for="raioProd">Raio do Produto</label>
+        <input type="number" name="raioProd" id="raioProd" required>
+        <br>
         <button type="submit" id="btnCadProd">Cadastrar Produto</button>
     </form>
     <script>
@@ -103,6 +106,7 @@
             const valorProd = document.getElementById('valorProd');
             const imgProd = document.getElementById('imgProd');
             const categoriaProd = document.getElementById('categoriaProd');
+            const raioProd = document.getElementById('raioProd');
             const btnCadProd = document.getElementById('btnCadProd');
 
             btnCadProd.addEventListener('click', cadastrarProduto);
@@ -115,6 +119,7 @@
                     descProd: descProd.value,
                     valorProd: parseFloat(valorProd.value), // Converte para número decimal
                     categoriaProd: categoriaProd.value,
+                    raioProd: parseInt(raioProd.value), // Converte para inteiro
                     imgProd: imgProd.files[0], // O arquivo de imagem selecionado
                 };
 
@@ -123,6 +128,7 @@
                 formData.append('descProd', produto.descProd);
                 formData.append('valorProd', produto.valorProd);
                 formData.append('categoriaProd', produto.categoriaProd);
+                formData.append('raioProd', produto.raioProd)
                 formData.append('imgProd', produto.imgProd);
 
                 fetch('/cadastrar-produto', {
@@ -139,6 +145,7 @@
                         valorProd.value = '';
                         imgProd.value = '';
                         categoriaProd.value = '';
+                        raioProd.value = '';
                     })
                     .catch((error) => console.error(error));
             }
