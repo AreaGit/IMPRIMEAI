@@ -241,15 +241,16 @@ app.get('/pedidos-cadastrados', async (req, res) => {
       let found = false;
       let raio = 1;
       let pedidosNoRaio = [];
+      //const raioMax = await Enderecos.max('raio');
 
       while (raio <= 8) {
         // Utilize Promise.all para mapear assincronamente sobre todos os pedidos
         pedidosNoRaio = await Promise.all(enderecosPedCadastrados.map(async (enderecoPedido) => {
-          const enderecoEntregaInfo = {
+          const enderecoEntregaInfo = { 
             rua: enderecoPedido.rua,
             cep: enderecoPedido.cep,
             cidade: enderecoPedido.cidade,
-            estado: enderecoPedido.estado
+            estado: enderecoPedido.estado,
           };
 
           try {
@@ -814,6 +815,7 @@ app.get('/produto/:id', async (req, res) => {
         nomeProd: produto.nomeProd,
         descProd: produto.descProd,
         valorProd: produto.valorProd,
+        raioProd: produto.raioProd,
         // Adicione outras propriedades do produto conforme necessário
       });
     }
@@ -867,6 +869,7 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
         quantidade: quantidade,
         valorUnitario: produto.valorProd,
         subtotal: quantidade * produto.valorProd,
+        raioProd: produto.raioProd
       });
     }
 
@@ -1123,13 +1126,14 @@ const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => 
       celular: enderecoDaSessao.telefoneCad,
       estado: enderecoDaSessao.estadoCad,
       cuidados: enderecoDaSessao.cuidadosCad,
+      raio: carrinho.length > 0 ? carrinho[0].raioProd : 0, // Acessa o raio do primeiro produto no carrinho
     });
 
     // Limpe o carrinho e o endereço da sessão após a criação do pedido
     req.session.carrinho = [];
     req.session.endereco = {};
 
-    res.json({ message: 'Pedido criado com sucesso', pedido });
+    res.json({ message: 'Pedido criado com sucesso', pedido, endereco });
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);
     res.status(500).json({ error: 'Erro ao criar pedidos' });

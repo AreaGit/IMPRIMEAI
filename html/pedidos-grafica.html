@@ -139,7 +139,7 @@
                         <p class="ped-nome">${pedidos.nomePed}</p>
                         <p class="ped-valor">${pedidos.valorPed}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
-                        <a href="detalhes-pedidos.html" id="verPed">Detalhes do Pedido</a>
+                        <a href="detalhes-pedidos.html?id=${pedidos.id}" id="verPed">Detalhes do Pedido</a>
                         <button class="ped-recusar">Recusar</button>
                         <button class="ped-aceitar">Aceitar</button>
                     `;
@@ -148,6 +148,23 @@
                 });
             })
             .catch(error => console.error('Erro ao buscar pedidos:', error));
+
+            document.addEventListener('DOMContentLoaded', function () {
+    const pedidosList = document.getElementById('pedidos-list');
+
+    // Adicione um evento de clique ao link "Detalhes do Pedido"
+    pedidosList.addEventListener('click', function (event) {
+        if (event.target.id === 'verPed') {
+            // Obtém o ID do pedido do elemento pai
+            const li = event.target.parentElement;
+            const pedidoId = li.querySelector('.ped-id').textContent;
+
+            // Redireciona para a página de detalhes do pedido, passando o ID do pedido como parâmetro
+            window.location.href = `detalhes-pedidos.html?id=${pedidoId}`;
+        }
+    });
+});
+
 
 
             document.addEventListener('DOMContentLoaded', function () {

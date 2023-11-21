@@ -231,7 +231,8 @@
 
       // Loop através dos produtos e gere os cards
       data.produtos.forEach((produto) => {
-        const productCard = document.createElement('div');
+        const productCard = document.createElement('a');
+        productCard.href = `detalhes-produtos.html?id=${produto.id}`
         productCard.classList.add('product-card');
 
         // Certifique-se de que produto.valorProd seja tratado como um número antes de usar toFixed
@@ -243,7 +244,7 @@
             <h2>${produto.nomeProd}</h2>
             <p>${produto.descProd}</p>
             <p>Valor: R$ ${valorProd.toFixed(2)}</p>
-            <a href="detalhes-produtos.html?id=${produto.id}">Ver Detalhes</a>
+            <!--<a href="detalhes-produtos.html?id=${produto.id}">Ver Detalhes</a>-->
         `;
 
         // Adiciona o card de produto à div de contêiner

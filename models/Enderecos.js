@@ -50,6 +50,10 @@ const Enderecos = db.define('enderecos', {
     quantidade: {
         type: Sequelize.STRING(255),
         allownull: false
+    },
+    raio: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
     }
 })
 
