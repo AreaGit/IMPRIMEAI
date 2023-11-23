@@ -26,6 +26,10 @@ const Pedidos = db.define('pedidos', {
     statusPed: {
         type: Sequelize.STRING(255),
         allowNull: true
+    },
+    raio: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
     }
 })
 

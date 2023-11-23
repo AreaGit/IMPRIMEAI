@@ -91,7 +91,7 @@ app.get("/detalhes-pedidos", (req, res) => {
   res.sendFile(__dirname + "html", "detalhes-pedidos.html"); // Verifique o caminho do arquivo
 });
 
-app.post("/cadastro-graficas", async (req, res) => {
+app.post("/cadastro-graficas", async (req, res) => { 
  
   try {
       const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, emailCad, passCad } = req.body;
@@ -197,7 +197,6 @@ app.get('/cartoes-cadastrados', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar cartões cadastrados', message: error.message });
   }
 });
-
 app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     const graficaId = req.cookies.userId;
@@ -219,108 +218,71 @@ app.get('/pedidos-cadastrados', async (req, res) => {
       enderecoCad: grafica.endereçoCad,
     };
 
-    // Exibir informações da gráfica no console
     console.log('Informações da Gráfica:', graficaInfo);
 
-    // Chave de API do Bing Maps (substitua com a sua própria chave)
     const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
 
-    // Converter o endereço da gráfica em coordenadas de latitude e longitude
     const coordinates = await getCoordinatesFromAddress(graficaInfo, apiKey);
 
-    // Console.log para verificar as coordenadas
     console.log('Latitude da gráfica:', coordinates.latitude);
     console.log('Longitude da gráfica:', coordinates.longitude);
 
-    // Consulte o banco de dados para buscar os pedidos cadastrados
-    const pedidosCadastrados = await Pedidos.findAll();
+    const pedidosCadastrados = await ItensPedido.findAll();
     const enderecosPedCadastrados = await Enderecos.findAll();
 
-    // Verificar se há pelo menos um endereço cadastrado
-    if (enderecosPedCadastrados.length > 0) {
-      let found = false;
-      let raio = 1;
-      let pedidosNoRaio = [];
-      //const raioMax = await Enderecos.max('raio');
+    // Mapeamento de endereços por idPed para otimizar a busca
+    const enderecoMap = new Map();
+    enderecosPedCadastrados.forEach(endereco => {
+      enderecoMap.set(endereco.idPed, endereco);
+    });
 
-      while (raio <= 8) {
-        // Utilize Promise.all para mapear assincronamente sobre todos os pedidos
-        pedidosNoRaio = await Promise.all(enderecosPedCadastrados.map(async (enderecoPedido) => {
-          const enderecoEntregaInfo = { 
-            rua: enderecoPedido.rua,
-            cep: enderecoPedido.cep,
-            cidade: enderecoPedido.cidade,
-            estado: enderecoPedido.estado,
-          };
+    let found = false;
+    let pedidosNoRaio = [];
 
-          try {
-            // Tentar obter as coordenadas de geocodificação
-            const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey);
+    for (let pedido of pedidosCadastrados) {
+      const enderecoPedido = enderecoMap.get(pedido.idPed);
 
-            // Verificar se as coordenadas são válidas
-            if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
-              console.log(`Latitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.latitude);
-              console.log(`Longitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.longitude);
+      if (!enderecoPedido) {
+        console.log(`Endereço não encontrado para o pedido com Id: ${pedido.idPed}`);
+        continue;
+      }
 
-              const distance = haversineDistance(coordinates.latitude, coordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+      const raio = pedido.raio; // Agora acessamos diretamente o raio do pedido
 
-              // Verificar se a distância é menor ou igual ao raio atual
-              if (distance <= raio) {
-                console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raio} km):`, distance, 'km');
-                return enderecoPedido;
-              }
-            } else {
-              console.log(`Coordenadas nulas para o Endereço de Entrega (raio ${raio} km).`);
-            }
-          } catch (error) {
-            console.log(`Erro ao obter coordenadas de geocodificação: ${error.message}`);
-          }
+      const enderecoEntregaInfo = {
+        rua: enderecoPedido.rua,
+        cep: enderecoPedido.cep,
+        cidade: enderecoPedido.cidade,
+        estado: enderecoPedido.estado,
+      };
 
-          return null;
-        }));
+      console.log(`Verificando pedido com o Id: ${pedido.idPed}`);
+      console.log(`Endereço de Entrega do pedido com o Id: ${pedido.idPed}`, enderecoEntregaInfo);
 
-        // Remover endereços que são null (fora do raio)
-        pedidosNoRaio = pedidosNoRaio.filter((enderecoPedido) => enderecoPedido !== null);
+      const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey);
 
-        if (pedidosNoRaio.length > 0) {
-          found = true; // Encontrou pelo menos um pedido dentro do raio
-        } else {
-          console.log(`Nenhum pedido encontrado dentro do raio ${raio} km.`);
+      if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+        console.log(`Latitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.latitude);
+        console.log(`Longitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.longitude);
+
+        const distance = haversineDistance(coordinates.latitude, coordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+
+        if (distance <= raio) {
+          console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raio} km):`, distance, 'km');
+          pedidosNoRaio.push(pedido);
+          found = true; // Marcamos como encontrado pelo menos um pedido dentro do raio
         }
-
-        raio++; // Tente um raio maior na próxima iteração
-      }
-
-      if (found) {
-        /*console.log('Pedidos dentro do raio:', pedidosNoRaio);
-        // Envie os pedidos dentro do raio como resposta em JSON
-        res.json({ pedidos: pedidosNoRaio });*/
-          // Log detalhado dos pedidos dentro do raio
-        console.log('Pedidos dentro do raio:', pedidosNoRaio);
-
-        // Mapear os IDs dos pedidos dentro do raio
-        const idsPedidos = pedidosNoRaio.map(endereco => endereco.dataValues.idPed);
-
-          // Consultar detalhes completos dos pedidos no banco de dados
-          const detalhesPedidos = await Pedidos.findAll({
-            where: {
-              id: idsPedidos,
-            },
-          });
-
-        // Log detalhado dos pedidos completos
-        console.log('Detalhes completos dos pedidos dentro do raio:', detalhesPedidos);
-
-        // Envie os pedidos dentro do raio como resposta em JSON
-        res.json({ pedidos: detalhesPedidos });
       } else {
-        console.log('Nenhum pedido encontrado dentro dos raios permitidos.');
-        res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos.' });
+        console.log(`Coordenadas nulas para o Endereço de Entrega (raio ${raio} km).`);
       }
+    }
+
+    if (found) {
+      console.log('Pedidos dentro do raio:', pedidosNoRaio);
+      res.json({ pedidos: pedidosNoRaio });
     } else {
-      console.log('Nenhum endereço de entrega cadastrado.');
-      // Envie uma resposta vazia se não houver endereços cadastrados
-      res.json({ pedidos: [] });
+      console.log('Nenhum pedido encontrado dentro dos raios permitidos.');
+      res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos.' });
     }
   } catch (error) {
     console.error('Erro ao buscar pedidos cadastrados:', error);
@@ -415,7 +377,6 @@ app.get('/pedidos-usuario/:userId', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
   }
 });
-
 
 app.post("/cadastrar", async (req, res) => { 
 
@@ -1075,72 +1036,112 @@ app.get('/pagamento', (req, res) => {
 
 app.post('/criar-pedidos', async (req, res) => {
   try {
-    // Obtenha o carrinho da sessão (supondo que você o tenha configurado na sessão)
     const carrinho = req.session.carrinho || [];
     const enderecoDaSessao = req.session.endereco;
-
-    // Calcule o valor total do carrinho
-// ...
-
-// Calcule o valor total do carrinho
-const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
-  const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-  return produto.valorProd * produtoNoCarrinho.quantidade;
-})).then((valores) => valores.reduce((total, valor) => total + valor, 0));
-
-// ...
-
-
-    // Crie um único pedido para a gráfica com base no carrinho
-    const pedido = await Pedidos.create({
-      idUserPed: req.cookies.userId,
-      nomePed: 'Pedido Geral', // Você pode ajustar isso conforme necessário
-      quantPed: 1, // Quantidade de produtos no pedido geral
-      valorPed: totalAPagar,
-      statusPed: 'Aguardando',
-    });
-
-    // Para cada produto no carrinho, adicione uma entrada na tabela ItensPedido
-    await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
-      const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-      // Adicione as informações necessárias para cada produto no carrinho
-      await ItensPedido.create({
-        idPed: pedido.id,
-        nomeProd: produto.nomeProd,
-        quantidade: produtoNoCarrinho.quantidade,
-        valorProd: produto.valorProd,
-        // Adicione outras informações necessárias
-      });
-    }));
-
-    // Adicione as informações de endereço para o pedido
-    const endereco = await Enderecos.create({
-      idPed: pedido.id,
-      rua: enderecoDaSessao.enderecoCad,
-      cep: enderecoDaSessao.cepCad,
-      cidade: enderecoDaSessao.cidadeCad,
-      numero: enderecoDaSessao.numCad,
-      complemento: enderecoDaSessao.compCad,
-      bairro: enderecoDaSessao.bairroCad,
-      quantidade: carrinho.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
-      celular: enderecoDaSessao.telefoneCad,
-      estado: enderecoDaSessao.estadoCad,
-      cuidados: enderecoDaSessao.cuidadosCad,
-      raio: carrinho.length > 0 ? carrinho[0].raioProd : 0, // Acessa o raio do primeiro produto no carrinho
-    });
-
-    // Limpe o carrinho e o endereço da sessão após a criação do pedido
-    req.session.carrinho = [];
-    req.session.endereco = {};
-
-    res.json({ message: 'Pedido criado com sucesso', pedido, endereco });
-  } catch (error) {
-    console.error('Erro ao criar pedidos:', error);
-    res.status(500).json({ error: 'Erro ao criar pedidos' });
-  }
-});
-
-
+      if (carrinho.length > 1) {
+        const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
+          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+          return produto.valorProd * produtoNoCarrinho.quantidade;
+        })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
+  
+        const pedido = await Pedidos.create({
+          idUserPed: req.cookies.userId,
+          nomePed: 'Pedido Geral',
+          quantPed: carrinho.length,
+          valorPed: totalAPagar,
+          statusPed: 'Aguardando',
+        });
+  
+        // Crie uma lista de promessas para os itens do pedido
+        const itensPedidoPromises = carrinho.map(async (produtoNoCarrinho) => {
+          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+          return ItensPedido.create({
+            idPed: pedido.id,
+            nomeProd: produto.nomeProd,
+            quantidade: produtoNoCarrinho.quantidade,
+            valorProd: produto.valorProd,
+            raio: produto.raioProd,
+            statusPed: 'Aguardando',
+          });
+        });
+  
+        // Aguarde a conclusão de todas as promessas
+        const enderecoPromises = carrinho.map(async (produtoNoCarrinho) => {
+          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+          return Enderecos.create({
+            idPed: pedido.id,
+            rua: enderecoDaSessao.enderecoCad,
+            cep: enderecoDaSessao.cepCad,
+            cidade: enderecoDaSessao.cidadeCad,
+            numero: enderecoDaSessao.numCad,
+            complemento: enderecoDaSessao.compCad,
+            bairro: enderecoDaSessao.bairroCad,
+            quantidade: produtoNoCarrinho.quantidade,
+            celular: enderecoDaSessao.telefoneCad,
+            estado: enderecoDaSessao.estadoCad,
+            cuidados: enderecoDaSessao.cuidadosCad,
+            raio: produto.raioProd,
+          });
+        });
+  
+        req.session.carrinho = [];
+        req.session.endereco = {};
+  
+        res.json({ message: 'Mini Pedido criado com sucesso', pedido /*endereco, itensPedido*/ });
+      } else {
+        const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
+          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+          return produto.valorProd * produtoNoCarrinho.quantidade;
+        })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
+  
+        //const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+        const pedido = await Pedidos.create({
+          idUserPed: req.cookies.userId,
+          nomePed: 'Pedido Geral',
+          quantPed: 1,
+          valorPed: totalAPagar,
+          statusPed: 'Aguardando',
+          //raio: produto.raioProd,
+        });
+  
+        const itensPedidoPromises = carrinho.map(async (produtoNoCarrinho) => {
+          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+          return ItensPedido.create({
+            idPed: pedido.id,
+            nomeProd: produto.nomeProd,
+            quantidade: produtoNoCarrinho.quantidade,
+            valorProd: produto.valorProd,
+            raio: produto.raioProd,
+          });
+        });
+  
+        const itensPedido = await Promise.all(itensPedidoPromises);
+  
+        const endereco = await Enderecos.create({
+          idPed: pedido.id,
+          rua: enderecoDaSessao.enderecoCad,
+          cep: enderecoDaSessao.cepCad,
+          cidade: enderecoDaSessao.cidadeCad,
+          numero: enderecoDaSessao.numCad,
+          complemento: enderecoDaSessao.compCad,
+          bairro: enderecoDaSessao.bairroCad,
+          quantidade: carrinho.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
+          celular: enderecoDaSessao.telefoneCad,
+          estado: enderecoDaSessao.estadoCad,
+          cuidados: enderecoDaSessao.cuidadosCad,
+          raio: carrinho.length > 0 ? carrinho[0].raioProd : 0,
+        });
+  
+        req.session.carrinho = [];
+        req.session.endereco = {};
+  
+        res.json({ message: 'Pedido criado com sucesso', pedido/*, endereco, itensPedido*/ });
+      }
+    } catch (error) {
+      console.error('Erro ao criar pedidos:', error);
+      res.status(500).json({ error: 'Erro ao criar pedidos' });
+    }
+  });
 
 // Exemplo de rota no servidor Node.js    console.log('Sessão do Carrinho:', req.session.carrinho);
 app.post('/atualizar-status-pedido', async (req, res) => {
@@ -1148,15 +1149,17 @@ app.post('/atualizar-status-pedido', async (req, res) => {
       const { pedidoId, novoStatus } = req.body;
 
       // Atualize o status do pedido no banco de dados
+      const graficaAtend = req.cookies.userCad
       const pedido = await Pedidos.findByPk(pedidoId);
       if (!pedido) {
           return res.json({ success: false, message: 'Pedido não encontrado.' });
       }
 
       pedido.statusPed = novoStatus;
+      pedido.graficaatend = graficaAtend
       await pedido.save();
 
-      return res.json({ success: true });
+      return res.json({ success: true, graficaAtend });
   } catch (error) {
       console.error('Erro ao atualizar o status do pedido:', error);
       return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });

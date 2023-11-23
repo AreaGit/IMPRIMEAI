@@ -23,13 +23,15 @@ const ItensPedidos = db.define('itenspedidos', {
         type: Sequelize.FLOAT, // Use FLOAT para valores decimais
         allowNull: false,
     },
-    /*statusPed: {
+    raio: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+    },
+    statusPed: {
         type: Sequelize.STRING(255),
-        allowNull: true
-    }*/
+        allowNull: true,
+    },
 })
-
-
 
 ItensPedidos.sync({force:true})
 //ItensPedidos.sync()

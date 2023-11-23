@@ -67,21 +67,21 @@
     .ped-nome {
         font-weight: normal;
         position: relative;
-        left: 26%;
+        left: 24%;
         width: fit-content;
         top: -20px;
     }
     .ped-valor {
         font-weight: normal;
         position: relative;
-        left: 36%;
+        left: 37%;
         width: fit-content;
         top: -42px;
     }
     .ped-quant {
         font-weight: normal;
         position: relative;
-        left: 46%;
+        left: 47%;
         width: fit-content;
         top: -64px;
     }
@@ -135,10 +135,10 @@
                     const li = document.createElement('li');
                     li.style.display = 'block';
                     li.innerHTML = `
-                        <p class="ped-id">${pedidos.id}</p>
-                        <p class="ped-nome">${pedidos.nomePed}</p>
-                        <p class="ped-valor">${pedidos.valorPed}</p>
-                        <p class="ped-quant">${pedidos.quantPed}</p>
+                        <p class="ped-id">${pedidos.idPed}</p>
+                        <p class="ped-nome">${pedidos.nomeProd}</p>
+                        <p class="ped-valor">${pedidos.valorProd}</p>
+                        <p class="ped-quant">${pedidos.quantidade}</p>
                         <a href="detalhes-pedidos.html?id=${pedidos.id}" id="verPed">Detalhes do Pedido</a>
                         <button class="ped-recusar">Recusar</button>
                         <button class="ped-aceitar">Aceitar</button>
@@ -224,7 +224,7 @@
                     // Verifique se a atualização foi bem-sucedida (pode variar com base na sua implementação)
                     if (data.success) {
                         // Atualize o texto do status na página
-                        li.querySelector('.ped-status').textContent = 'Aceito';
+                        li.querySelector('.ped-status').textContent = 'Aceito por ' + data.graficaAtend;
                     } else {
                         console.error('Erro ao atualizar o status do pedido.');
                     }

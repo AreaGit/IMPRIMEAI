@@ -72,55 +72,55 @@
     </main>
     <script>
 document.addEventListener('DOMContentLoaded', function () {
-        // Obtenha o ID do pedido da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const pedidoId = urlParams.get('id');
+            // Obtenha o ID do pedido da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const pedidoId = urlParams.get('id');
 
-        // Verifique se há um ID de pedido válido
-        if (pedidoId) {
-            // Realize uma solicitação para obter os detalhes do pedido com base no ID
-            fetch(`/detalhes-pedido?id=${pedidoId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Erro na solicitação: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Verifique se há dados válidos retornados
-                    if (data.success) {
-                        const dadosEntrega = document.getElementById('dados-entrega');
-                        const produtosPedido = document.getElementById('produtos-pedido');
+            // Verifique se há um ID de pedido válido
+            if (pedidoId) {
+                // Realize uma solicitação para obter os detalhes do pedido com base no ID
+                fetch(`/detalhes-pedido/${pedidoId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Erro na solicitação: ${response.status} - ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Verifique se há dados válidos retornados
+                        if (data.success) {
+                            const dadosEntrega = document.getElementById('dados-entrega');
+                            const produtosPedido = document.getElementById('produtos-pedido');
 
-                        // Preencha os dados de entrega
-                        dadosEntrega.innerHTML = `
-                            <p>Nome do Destinatário: ${data.dadosEntrega.nomeDestinatario}</p>
-                            <p>Cep: ${data.dadosEntrega.cep}</p>
-                            <p>Rua: ${data.dadosEntrega.rua}</p>
-                            <p>Estado: ${data.dadosEntrega.estado}</p>
-                            <p>Cidade: ${data.dadosEntrega.cidade}</p>
-                        `;
+                            // Preencha os dados de entrega
+                            dadosEntrega.innerHTML = `
+                                <p>Nome do Destinatário: ${data.dadosEntrega.nomeDestinatario}</p>
+                                <p>Cep: ${data.dadosEntrega.cep}</p>
+                                <p>Rua: ${data.dadosEntrega.rua}</p>
+                                <p>Estado: ${data.dadosEntrega.estado}</p>
+                                <p>Cidade: ${data.dadosEntrega.cidade}</p>
+                            `;
 
-                        // Preencha os produtos do pedido
-                        produtosPedido.innerHTML = `
-                            <p>Nome do Produto: ${data.produtosPedido.nomeProduto}</p>
-                            <p>Quantidade: ${data.produtosPedido.quantidade}</p>
-                            <p>Valor: ${data.produtosPedido.valor}</p>
-                        `;
-                    } else {
-                        console.error('Erro ao obter detalhes do pedido.');
+                            // Preencha os produtos do pedido
+                            produtosPedido.innerHTML = `
+                                <p>Nome do Produto: ${data.produtosPedido.nomeProduto}</p>
+                                <p>Quantidade: ${data.produtosPedido.quantidade}</p>
+                                <p>Valor: ${data.produtosPedido.valor}</p>
+                            `;
+                        } else {
+                            console.error('Erro ao obter detalhes do pedido.');
+                            // Adicione uma mensagem de erro na interface, se necessário
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro na solicitação AJAX:', error);
                         // Adicione uma mensagem de erro na interface, se necessário
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro na solicitação AJAX:', error);
-                    // Adicione uma mensagem de erro na interface, se necessário
-                });
-        } else {
-            console.error('ID do pedido não encontrado na URL.');
-            // Adicione uma mensagem de erro na interface, se necessário
-        }
-    });
+                    });
+            } else {
+                console.error('ID do pedido não encontrado na URL.');
+                // Adicione uma mensagem de erro na interface, se necessário
+            }
+        });
     </script>
 </body>
 </html>
