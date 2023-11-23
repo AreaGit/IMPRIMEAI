@@ -54,7 +54,11 @@ const Enderecos = db.define('enderecos', {
     raio: {
         type: Sequelize.FLOAT,
         allowNull: true,
-    }
+    },
+    produtos: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
 })
 
 //Criar Tabela

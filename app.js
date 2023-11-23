@@ -939,7 +939,7 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
           estadoCad: row[7],
           cuidadosCad: row[8],
           telefoneCad: row[9],
-          //idPed: row[10],
+          produtosCad: row[10],
         });
         req.session.endereco = endereco;     
         console.log('Endereço Salvo na Sessão:', endereco);
@@ -1081,12 +1081,13 @@ app.post('/criar-pedidos', async (req, res) => {
             estado: enderecoDaSessao.estadoCad,
             cuidados: enderecoDaSessao.cuidadosCad,
             raio: produto.raioProd,
+            produtos: enderecoDaSessao.produtosCad
           });
         });
   
         req.session.carrinho = [];
         req.session.endereco = {};
-  
+        
         res.json({ message: 'Mini Pedido criado com sucesso', pedido /*endereco, itensPedido*/ });
       } else {
         const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
@@ -1130,6 +1131,7 @@ app.post('/criar-pedidos', async (req, res) => {
           estado: enderecoDaSessao.estadoCad,
           cuidados: enderecoDaSessao.cuidadosCad,
           raio: carrinho.length > 0 ? carrinho[0].raioProd : 0,
+          produtos: enderecoDaSessao.produtosCad
         });
   
         req.session.carrinho = [];
