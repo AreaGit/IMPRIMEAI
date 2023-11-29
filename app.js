@@ -843,6 +843,12 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   }
 });
 
+// Adicione esta rota no seu código existente
+app.get('/carrinho', (req, res) => {
+  res.json({ carrinho: req.session.carrinho || [] });
+});
+
+
 app.post('/salvar-endereco-no-carrinho', (req, res) => {
   const {
     enderecoData: {

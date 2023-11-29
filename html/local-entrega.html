@@ -13,6 +13,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <style>
+    button:hover {
+        transform: none;
+        transition: none;
+    }
+    #avisoMult {
+        display: none;
+    }
     .logo-imprimeai {
         position: absolute;
         top: 6%;
@@ -103,16 +110,18 @@
         left: 10%;
         top: 20px;
     }
-    #multEnd > a {
+    #multEnd > button {
         text-decoration: none;
         background-color: #EF4126;
         color: white;
         position: relative;
         padding: 8px 18px 8px 18px;
-        top: -10px;
+        top: -50px;
         font-size: 13px;
         font-weight: bold;
         left: 80%;
+        width: 101px;
+        height: 34px;
     }
     #multEnd > h2 {
         position: relative;
@@ -132,13 +141,21 @@
         left: 15px;
     }
     #endCad {
-        display: none;
+        /*display: none;
         width: 50%;
         position: relative;
         top: 80px;
         height: 80px;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+        border-radius: 5px;*/
+        display: none;
+        width: 31%;
+        position: relative;
+        top: 80px;
+        height: 80px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
         border-radius: 5px;
+        left: 4%;
     }
     #endCad > img {
         position: relative;
@@ -146,26 +163,44 @@
         top: 8px;
     }
     #endCad > a {
-        font-size: 18px;
+        /*font-size: 18px;
         position: relative;
         left: 7%;
+        top: 35px;
+        color: #F37160;*/
+        font-size: 18px;
+        position: relative;
+        left: -5%;
         top: 35px;
         color: #F37160;
     }
     #novoEnd {
-        display: none;
+        /*display: none;
         width: 49%;
         height: 80px;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
         border-radius: 5px;
         left: 52%;
         top: 0px;
+        position: relative;*/
+        display: none;
+        width: 31%;
+        height: 80px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+        border-radius: 5px;
+        left: 36%;
+        top: 0px;
         position: relative;
     }
     #novoEnd > a {
-        font-size: 18px;
+        /*font-size: 18px;
         left: 18%;
         top: 35px;
+        color: #F37160;
+        position: relative;*/
+        font-size: 18px;
+        left: 4%;
+        top: 32px;
         color: #F37160;
         position: relative;
     }
@@ -179,10 +214,10 @@
     }
     #formAdicionarEnd {
         display: none;
-        width: 180%;
+        width: 288%;
         height: 971px;
         position: relative;
-        left: 150%;
+        left: 233%;
         top: -240px;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
         border-radius: 5px;
@@ -202,9 +237,9 @@
     }
     div#end {
         display: none;
-        width: 225%;
+        width: 368%;
         position: relative;
-        left: 207%;
+        left: 327%;
         top: -230px;
         height: 167px;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
@@ -227,6 +262,30 @@
         position: relative;
         left: 115px;
     }
+    #locRet {
+        display: none;
+        width: 31%;
+        height: 80px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+        border-radius: 5px;
+        left: 68%;
+        top: -79px;
+        position: relative;
+    }
+    a#btnRet {
+        position: relative;
+        top: 25px;
+        left: -2%;
+        color: #F37160;
+        font-size: 18px;
+        text-decoration: none;
+    }
+    img#imgRet {
+        position: relative;
+        left: 42%;
+        top: 6px;
+        width: 18%;
+    }
     #confEndCad {
         text-decoration: none;
         background-color: #EF4126;
@@ -243,7 +302,7 @@
         display: none;
         width: 50%;
         position: relative;
-        top: 80px;
+        top: 24px;
         height: 80px;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
         border-radius: 5px;
@@ -266,7 +325,7 @@
         height: 80px;
         border-radius: 5px;
         left: 52%;
-        top: 0px;
+        top: -58px;
         position: relative;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
     }
@@ -1127,7 +1186,7 @@
             <a id="btnUn">Confirmar</a>
             <div id="endCad">
                 <img src="https://wbl.blob.core.windows.net/public/local-icon.svg" alt="...">
-                <a id="mostrarEnd">Utilizar Endereço Cadastrado</a>
+                <a id="mostrarEnd">Endereço Cadastrado</a>
                 <div id="end">
                     <img id="imgEnd" src="../images/endereco-transp.png">
                     <p id="endP"></p>
@@ -1173,12 +1232,18 @@
                     <button type="submit">Confirmar</button>
                 </form>
             </div>
+            <div id="locRet">
+                <img id="imgRet" src="../images/shop-icone.PNG" alt="...">
+                <a href="#" id="btnRet">Local de Retirada</a>
+            </div>
         </div>
         <div id="multEnd">
             <img src="../images/globo-icon.png" id="globo-icon" alt="...">
             <h2>Múltiplos Endereços</h2>
-            <p>Utilize a opção de Entrega em Múltiplos Endereços</p>
-            <a id="btnMult">Confirmar</a>
+            <!--<p>Utilize a opção de Entrega em Múltiplos Endereços</p>-->
+            <p>Tem uma campanha promocional? Quer entregar em diversos pontos? <br> Baixe essa planilha e facilite a sua vida</p>
+            <p id="avisoMult">*Apenas um tipo de produto por pedido</p>
+            <button id="btnMult">Confirmar</button>
             <div id="baixarPl">
                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#989898}</style><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>
                 <a href="../images/planilhaModeloEnd.xlsx" download="Planilha-Modelo-Endereço" id="baixPl">Baixar Planilha</a>
@@ -1230,6 +1295,8 @@ const envPl = document.getElementById('envPl');
 const baixarPl = document.getElementById('baixarPl');
 const enviarPl = document.getElementById('enviarPl')
 const btnMult = document.getElementById('btnMult')
+const avisoMult = document.getElementById('avisoMult');
+const locRet = document.getElementById('locRet');
 
 rua.addEventListener('keyup', () => {
     if(rua.value.length <= 5) {
@@ -1371,10 +1438,12 @@ btnUn.addEventListener('click', () => {
         endCad.style.display = 'none';
         end.style.display = 'none';
         formAdicionarEnd.style.display = 'none';
+        locRet.style.display = 'none'
     } else {
         novoEnd.style.display = 'block';
         endCad.style.display = 'block';
         multEnd.style.display = 'block';
+        locRet.style.display = 'block'
     }
     mostrar = !mostrar;
 });
@@ -1384,6 +1453,7 @@ outroEnd.addEventListener('click', () => {
         end.style.display = 'none';
         formAdicionarEnd.style.display = 'block';
         multEnd.style.display = 'none';
+        locRet.style.display = 'block'
     } else {
         formAdicionarEnd.style.display = 'none';
         multEnd.style.display = 'block';
@@ -1396,6 +1466,7 @@ mostrarEnd.addEventListener('click', () => {
         formAdicionarEnd.style.display = 'none';
         end.style.display = 'block';
         multEnd.style.display = 'none';
+        locRet.style.display = 'block'
     } else {
         end.style.display = 'none';
         multEnd.style.display = 'block';
@@ -1571,5 +1642,35 @@ const form = document.getElementById('formEnviarPlanilha');
             }
         });
 
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                // Faça uma requisição para obter os detalhes do carrinho
+                const response = await fetch('/carrinho');
+                const data = await response.json();
+
+                // Verifique a quantidade de produtos no carrinho
+                const quantidadeProdutosNoCarrinho = data.carrinho ? data.carrinho.length : 0;
+                let btnDesativo = false
+
+                // Restante do seu código...
+                console.log(quantidadeProdutosNoCarrinho)
+
+                if(quantidadeProdutosNoCarrinho > 1) {
+                    btnMult.disabled = true
+                    console.log('O carrinho tem mais que 1 produto')
+                    //alert('Válido apenas para um item de produto por vez! Gere outro pedido para os itens excedentes');
+                    btnDesativo = true
+                    avisoMult.style.display = 'block';
+                    avisoMult.style.fontWeight = 'bold'
+                    console.log(btnDesativo)
+                } else if(quantidadeProdutosNoCarrinho === 1) {
+                    btnMult.disabled = false
+                    console.log('O carrinho possui apenas 1 produto')
+                    avisoMult.style.display = 'none';
+                }
+                } catch (error) {
+                    console.error('Erro ao obter os detalhes do carrinho:', error);
+                }
+        });
 </script>
 </html>

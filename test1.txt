@@ -4,113 +4,211 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../styles/form.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/style.css" media="all">
+<link rel="stylesheet" href="styles/pag-prods.css">
+<link rel="stylesheet" href="styles/medias.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
+    .carrinho-vazio {
+        width: fit-content;
+        position: absolute;
+        left: 40%;
+
+    }
+    .carrinho-vazio > h1 {
+        font-size: 16px;
+        color: #D9D9D9;
+        text-align: center;
+    }
+    .carrinho-vazio > p {
+        font-size: 12px;
+        color: #D9D9D9;
+        text-align: center;
+    }
+    .carrinho-vazio > a {
+        border: 1px solid #F37160;
+        padding: 0.7em 1.2em;
+        text-decoration: none;
+        color: #EF4126;
+        border-radius: 5px;
+        position: absolute;
+        top: 102%;
+        left: 34%;
+    }
+    .produto-carrinho {
+        color: #212529;
+        height: 192px;
+        margin: 72px;
+    }
+    .produto-carrinho > img {
+        width: 10%;
+    }
+    .produto-carrinho > h2 {
+        font-size: 20px;
+        width: fit-content;
+        position: relative;
+        top: -162px;
+        left: 14%;
+    }
+    .produto-carrinho > .qnt {
+        font-size: 14px;
+        width: fit-content;
+        position: relative;
+        top: -150px;
+        left: 14%;
+    }
+    .produto-carrinho > .vlr {
+        font-size: 14px;
+        width: fit-content;
+        position: relative;
+        top: -145px;
+        left: 14%;
+    }
+    .produto-carrinho > .sub {
+        font-size: 14px;
+        width: fit-content;
+        position: relative;
+        top: -140px;
+        left: 14%;
+    }
+    .produto-carrinho > .remover-produto {
+        background-color: white;
+        border: none;
+        font-size: 13px;
+        cursor: pointer;
+        color: #EF4126;
+        position: relative;
+        top: -270px;
+        left: 29%;
+    }
+    .produto-carrinho > .remover-produto:hover {
+        text-decoration: underline;
+    }
+    #resumo-compra {
+        width: 20%;
+        color: #222529;
+        height: 20%;
+        position: relative;
+        left: 76%;
+    }
+    #resumo-compra > h2 {
+        font-size: 25px;
+        font-weight: normal;
+    }
+    #resumo-compra > p,span,a {
+        font-size: 14px;
+        font-weight: normal;
+        margin: 20px 0px 20px 0px;
+    }
+    #resumo-compra > a {
+        padding: 8px 28px 8px 28px;
+    }
+    .lnk-volt {
+        border: 1px solid #EF4126;
+        color: #F37160;
+        text-decoration: none;
+    }
+.lnk-av {
+    background-color: #EF4126;
+    color: white;
+    text-decoration: none;
+    position: fixed;
+    bottom: 50px;
+    right: 6%;
+    cursor: pointer;
+    padding: 18px 28px 18px 28px;
+    border: none;
+    font-weight: bold;
+}
+li {
+    list-style: none;
+}
+.logo-imprimeai {
+    position: relative;
+    top: -39px;
+    left: 41%;
+    width: fit-content;
+}
+header > h1 {
+    position: relative;
+    top: -110px;
+    left: 41%;
+    width: fit-content;
+}
+.escLocBtn {
+    background-color: #EF4126;
+    color: white;
+    text-decoration: none;
+    padding: 8px 28px 8px 28px;
+    position: relative;
+    top: -180px;
+    left: 30%;
+}
+form#dados-entrega {
+    width: 733px;
+    position: absolute;
+    top: 107px;
+    left: 50%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+form.formulario-entrega {
+    position: relative;
+    top: -607px;
+    left: 109px;
+    margin-bottom: -27px;
+}
+.input-container > input {
+    width: 580px;
+    height: 60px;
+    text-indent: 20px;
+    margin: 10px;
+    position: relative;
+    left: -9px;
+}
+h1#formH1 {
+    font-size: 27px;
+}
+div#conteudo {
+    position: relative;
+    left: 30%;
+    width: 61%;
+}
+img {
+    position: relative;
+    left: -33%;
+    top: 300px;
+    width: 17%;
+    margin: 72px;
+}
+header > p {
+    position: relative;
+    top: -93px;
+    left: 40%;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    width: fit-content;
+}
+.input-container {
+    width: 61%;
+}
 </style>
 <body>
-    <button id="get-location">Obter Localização</button>
-    <div id="res"></div>
+    <header>
+        <img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="...">
+        <h1>Multiplos Endereços</h1>
+        <p>Utilize a opção de Entrega em Múltiplos Endereços</p>
+    </header>
+    <main>
+    </main>
+    <span id="voltar_ao_topo" class="material-icons">expand_less</span>
+    <!--<script src="scripts/slider.js"></script>-->
+    <script>
+    </script>
 </body>
-<script>
-    const res = document.getElementById('res')
- //API KEY => Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH
-fetch('/graficas-cadastradas')
-    .then(response => response.json())
-    .then(data => {
-        const graficasList = document.getElementById('graficas-list');
-        console.log(data.graficas);
-
-        const getLocationButton = document.getElementById('get-location');
-
-        function haversineDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Raio da Terra em quilômetros
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance;
-}
-
-        // Evento de clique para obter a localização
-        getLocationButton.addEventListener('click', async () => {
-            if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    const userLat = position.coords.latitude;
-                    const userLng = position.coords.longitude;
-
-                    // Chave de API do Bing Maps (substitua com a sua própria chave)
-                    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-
-                    // URL da API de geocodificação do Bing Maps para o usuário
-                    const userGeocodingUrl = `https://dev.virtualearth.net/REST/v1/Locations/${userLat},${userLng}?o=json&key=${apiKey}`;
-
-                    try {
-                        // Fazer uma solicitação para a API de geocodificação para o usuário
-                        const userResponse = await fetch(userGeocodingUrl);
-                        const userData = await userResponse.json();
-
-                        if (userData.resourceSets.length > 0 && userData.resourceSets[0].resources.length > 0) {
-                            const userAddress = userData.resourceSets[0].resources[0].address.formattedAddress;
-
-                            if (data && data.graficas && data.graficas.length > 0) {
-                                // Dados das gráficas cadastradas
-                                const graficasData = data.graficas;
-
-                                // Converter os endereços das gráficas em coordenadas de latitude e longitude
-                                for (const grafica of graficasData) {
-                                    const graficaGeocodingUrl = `https://dev.virtualearth.net/REST/v1/Locations/${grafica.endereçoCad}?o=json&key=${apiKey}`;
-
-                                    // Fazer uma solicitação para a API de geocodificação para cada gráfica
-                                    const graficaResponse = await fetch(graficaGeocodingUrl);
-                                    const graficaData = await graficaResponse.json();
-
-                                    if (graficaData.resourceSets.length > 0 && graficaData.resourceSets[0].resources.length > 0) {
-                                        // Obter as coordenadas de latitude e longitude da gráfica
-                                        const graficaLat = graficaData.resourceSets[0].resources[0].point.coordinates[0];
-                                        const graficaLng = graficaData.resourceSets[0].resources[0].point.coordinates[1];
-
-                                        // Calcular a distância entre o usuário e a gráfica
-                                        const distance = haversineDistance(userLat, userLng, graficaLat, graficaLng);
-
-                                        // Adicionar a distância à gráfica para fins de classificação
-                                        grafica.distance = distance;
-                                    }
-                                }
-
-                                // Classificar as gráficas com base na distância
-                                graficasData.sort((a, b) => a.distance - b.distance);
-
-                                if (graficasData.length > 0) {
-                                    const gráficaMaisPróxima = graficasData[0];
-                                    console.log('Endereço do usuário:', userAddress);
-                                    console.log('Endereço da gráfica mais próxima:', gráficaMaisPróxima.endereçoCad);
-                                    res.innerHTML = `<p>Endereço do Usuário é <strong>${userAddress}</strong> <br> Gráfica mais próxima cadastrada é <strong>${gráficaMaisPróxima.userCad} ${gráficaMaisPróxima.endereçoCad}</strong></p>`
-                                }
-                            } else {
-                                console.error('Nenhum resultado de gráficas encontrado.');
-                            }
-                        } else {
-                            console.error('Nenhum resultado de geocodificação encontrado para o usuário.');
-                        }
-                    } catch (error) {
-                        console.error('Erro ao obter dados de geocodificação:', error);
-                    }
-                }, (error) => {
-                    console.error('Erro ao obter a localização do usuário:', error);
-                });
-            } else {
-                console.error('Geolocalização não suportada pelo navegador.');
-            }
-        });
-    })
-    .catch(error => console.error('Erro ao buscar gráficas:', error));
-</script>
 </html>
