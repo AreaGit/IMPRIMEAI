@@ -842,12 +842,20 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
     res.status(500).json({ message: 'Erro ao adicionar o produto ao carrinho' });
   }
 });
-
-// Adicione esta rota no seu código existente
 app.get('/carrinho', (req, res) => {
-  res.json({ carrinho: req.session.carrinho || [] });
+  try {
+    // Se a sessão tiver o carrinho, envie os detalhes
+    if (req.session.carrinho) {
+      res.json({ carrinho: req.session.carrinho });
+    } else {
+      // Caso contrário, envie dados de exemplo (ou um objeto vazio)
+      res.json(carrinhoData);
+    }
+  } catch (error) {
+    console.error('Erro ao obter detalhes do carrinho:', error);
+    res.status(500).send('Erro ao obter detalhes do carrinho.');
+  }
 });
-
 
 app.post('/salvar-endereco-no-carrinho', (req, res) => {
   const {
@@ -876,6 +884,11 @@ app.post('/salvar-endereco-no-carrinho', (req, res) => {
 
   // Salve o endereço na sessão
   req.session.endereco = endereco;
+   // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
+   req.session.carrinho = req.session.carrinho || [];
+   req.session.carrinho.forEach(produto => {
+     produto.endereco = endereco;
+   });
 
   console.log('Endereço Salvo na Sessão:', endereco);
 
@@ -911,6 +924,12 @@ app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
   // Salve o endereço na sessão
   req.session.endereco = endereco;
 
+    // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
+    req.session.carrinho = req.session.carrinho || [];
+    req.session.carrinho.forEach(produto => {
+      produto.endereco = endereco;
+    });
+
   console.log('Endereço Salvo na Sessão:', endereco);
 
   res.json({ success: true });
@@ -919,65 +938,86 @@ app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
 app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
   if (req.file) {
     const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
-  const sheetName = workbook.SheetNames[0];
-  const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-  
-  const Enderecos = require('./models/Enderecos'); // Importe o modelo de dados Enderecos
-  
-  try {
-    // Defina o índice da linha a partir da qual você deseja começar a iterar
-    const startRowIndex = 30;
-  
-    // Iterar a partir da linha especificada
-    for (let i = startRowIndex; i < sheet.length; i++) {
-      const row = sheet[i];
-  
-      // Certifique-se de que a linha possui pelo menos 10 colunas (ajuste conforme necessário)
-      if (row.length >= 10) {
-        const endereco = ({
-          //quantidade: row[0],
-          cepCad: row[1],
-          enderecoCad: row[2],
-          numCad: row[3],
-          compCad: row[4],
-          bairroCad: row[5],
-          cidadeCad: row[6],
-          estadoCad: row[7],
-          cuidadosCad: row[8],
-          telefoneCad: row[9],
-          produtosCad: row[10],
-        });
-        req.session.endereco = endereco;     
-        console.log('Endereço Salvo na Sessão:', endereco);
-      }
-    }
-  
-    console.log('Sucesso ao Enviar Planilha');
-    console.log(sheet);
-  
-    for (const row of sheet) {
-      for (const key in row) {
-        if (row.hasOwnProperty(key)) {
-          console.log(`${key}: ${row[key]}`);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+
+    try {
+      const carrinho = req.session.carrinho || [];
+      const enderecosSalvos = [];
+
+      // Defina o índice da linha a partir da qual você deseja começar a iterar
+      const startRowIndex = 30;
+
+      // Iterar a partir da linha especificada
+      for (let i = startRowIndex; i < sheet.length; i++) {
+        const row = sheet[i];
+
+        // Certifique-se de que a linha possui pelo menos 10 colunas (ajuste conforme necessário)
+        if (row.length >= 10) {
+          const endereco = {
+            cepCad: row[1],
+            enderecoCad: row[2],
+            numCad: row[3],
+            compCad: row[4],
+            bairroCad: row[5],
+            cidadeCad: row[6],
+            estadoCad: row[7],
+            cuidadosCad: row[8],
+            telefoneCad: row[9],
+            quantidade: row[0],
+          };
+
+          // Adicione o endereço à lista de endereços com base na quantidade especificada
+          for (let j = 0; j < row[0]; j++) {
+            enderecosSalvos.push(endereco);
+          }
         }
       }
+
+      // Certifique-se de que o carrinho tenha produtos
+      if (carrinho.length === 0) {
+        return res.status(400).send('O carrinho está vazio. Adicione produtos antes de usar a planilha.');
+      }
+
+      // Quebrar produtos com base nos endereços salvos
+      const carrinhoQuebrado = [];
+      let enderecoIndex = 0; // Índice para rastrear os endereços
+
+      carrinho.forEach((produto) => {
+        const produtoId = produto.produtoId;
+        const quantidade = produto.quantidade;
+
+        for (let i = 0; i < quantidade; i++) {
+          const endereco = enderecosSalvos[enderecoIndex];
+          enderecoIndex = (enderecoIndex + 1) % enderecosSalvos.length; // Avança para o próximo endereço
+
+          carrinhoQuebrado.push({
+            produtoId: produtoId,
+            nomeProd: produto.nomeProd,
+            quantidade: 1,
+            valorUnitario: produto.valorUnitario,
+            subtotal: produto.subtotal,
+            raioProd: produto.raioProd,
+            endereco: endereco,
+          });
+        }
+      });
+
+      // Atualizar a sessão com o carrinho quebrado
+      req.session.carrinho = carrinhoQuebrado;
+
+      console.log('Carrinho Quebrado:', carrinhoQuebrado);
+
+      res.send('Planilha enviada e dados salvos no carrinho com sucesso.');
+    } catch (error) {
+      console.error('Erro ao processar a planilha:', error);
+      res.status(500).send('Erro ao processar a planilha.');
     }
-  
-    res.send('Planilha enviada e dados salvos no banco de dados com sucesso.');
-  } catch (error) {
-    console.error('Erro ao salvar no banco de dados:', error);
-    res.status(500).send('Erro ao salvar no banco de dados.');
+  } else {
+    res.status(400).send('Nenhum arquivo enviado.');
   }
-  
-  }
-
 });
-
-
-app.get('/carrinho', (req, res) => {
-  const filePath = path.join(__dirname, 'html', 'carrinho.html');
-  res.sendFile(filePath);
-});
+// Adicione esta rota no seu código existente
 
 app.get('/api/carrinho', (req, res) => {
   try {
@@ -1040,41 +1080,99 @@ app.get('/pagamento', (req, res) => {
   res.sendFile(filePath);
 });
 
-app.post('/criar-pedidos', async (req, res) => {
-  try {
-    const carrinho = req.session.carrinho || [];
-    const enderecoDaSessao = req.session.endereco;
-      if (carrinho.length > 1) {
-        const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
-          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-          return produto.valorProd * produtoNoCarrinho.quantidade;
-        })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
-  
-        const pedido = await Pedidos.create({
-          idUserPed: req.cookies.userId,
-          nomePed: 'Pedido Geral',
-          quantPed: carrinho.length,
-          valorPed: totalAPagar,
-          statusPed: 'Aguardando',
-        });
-  
-        // Crie uma lista de promessas para os itens do pedido
-        const itensPedidoPromises = carrinho.map(async (produtoNoCarrinho) => {
-          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-          return ItensPedido.create({
-            idPed: pedido.id,
-            nomeProd: produto.nomeProd,
-            quantidade: produtoNoCarrinho.quantidade,
-            valorProd: produto.valorProd,
-            raio: produto.raioProd,
+  app.post('/criar-pedidos', async (req, res) => {
+    try {
+      console.log('1')
+      const carrinhoQuebrado = req.session.carrinho || [];
+      const enderecoDaSessao = req.session.endereco;
+        if (carrinhoQuebrado.length > 1) {
+          const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoQuebrado) => {
+            const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
+            return produto.valorProd * produtoQuebrado.quantidade;
+          })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
+          
+          // Criar o pedido na tabela de Pedidos
+          const pedido = await Pedidos.create({
+            idUserPed: req.cookies.userId,
+            nomePed: 'Pedido Geral',
+            quantPed: carrinhoQuebrado.length,
+            valorPed: totalAPagar,
             statusPed: 'Aguardando',
+            // ... outros campos relevantes ...
           });
-        });
+          
+          // Criar os itens de pedido na tabela de ItensPedidos
+          const itensPedidoPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
+            const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
+            return ItensPedido.create({
+              idPed: pedido.id,
+              nomeProd: produto.nomeProd,
+              quantidade: produtoQuebrado.quantidade,
+              valorProd: produto.valorProd,
+              raio: produto.raioProd,
+              // ... outros campos relevantes ...
+            });
+          });
+          
+          const itensPedido = await Promise.all(itensPedidoPromises);
+          
+          // Criar os endereços na tabela de Enderecos
+          const enderecosPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
+            return Enderecos.create({
+              idPed: pedido.id,
+              rua: produtoQuebrado.endereco.enderecoCad,
+              cep: produtoQuebrado.endereco.cepCad,
+              cidade: produtoQuebrado.endereco.cidadeCad,
+              numero: produtoQuebrado.endereco.numCad,
+              complemento: produtoQuebrado.endereco.compCad,
+              bairro: produtoQuebrado.endereco.bairroCad,
+              quantidade: produtoQuebrado.quantidade,
+              celular: produtoQuebrado.endereco.telefoneCad,
+              estado: produtoQuebrado.endereco.estadoCad,
+              cuidados: produtoQuebrado.endereco.cuidadosCad,
+              raio: produtoQuebrado.raioProd,
+              produtos: produtoQuebrado.produtoId,
+              // ... outros campos relevantes ...
+            });
+          });
+          
+          const enderecos = await Promise.all(enderecosPromises);
+          
+          req.session.carrinho = [];
+          req.session.endereco = {};
   
-        // Aguarde a conclusão de todas as promessas
-        const enderecoPromises = carrinho.map(async (produtoNoCarrinho) => {
-          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-          return Enderecos.create({
+          res.json({ message: 'Mini Pedido criado com sucesso', pedido /*,endereco, itensPedido */});
+        } else {
+          console.log('2')
+          const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
+            const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+            return produto.valorProd * produtoNoCarrinho.quantidade;
+          })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
+    
+          //const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+          const pedido = await Pedidos.create({
+            idUserPed: req.cookies.userId,
+            nomePed: 'Pedido Geral',
+            quantPed: 1,
+            valorPed: totalAPagar,
+            statusPed: 'Aguardando',
+            //raio: produto.raioProd,
+          });
+    
+          const itensPedidoPromises = carrinho.map(async (produtoNoCarrinho) => {
+            const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+            return ItensPedido.create({
+              idPed: pedido.id,
+              nomeProd: produto.nomeProd,
+              quantidade: produtoNoCarrinho.quantidade,
+              valorProd: produto.valorProd,
+              raio: produto.raioProd,
+            });
+          });
+    
+          const itensPedido = await Promise.all(itensPedidoPromises);
+    
+          const endereco = await Enderecos.create({
             idPed: pedido.id,
             rua: enderecoDaSessao.enderecoCad,
             cep: enderecoDaSessao.cepCad,
@@ -1082,75 +1180,25 @@ app.post('/criar-pedidos', async (req, res) => {
             numero: enderecoDaSessao.numCad,
             complemento: enderecoDaSessao.compCad,
             bairro: enderecoDaSessao.bairroCad,
-            quantidade: produtoNoCarrinho.quantidade,
+            quantidade: carrinho.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
             celular: enderecoDaSessao.telefoneCad,
             estado: enderecoDaSessao.estadoCad,
             cuidados: enderecoDaSessao.cuidadosCad,
-            raio: produto.raioProd,
+            raio: carrinho.length > 0 ? carrinho[0].raioProd : 0,
             produtos: enderecoDaSessao.produtosCad
           });
-        });
-  
-        req.session.carrinho = [];
-        req.session.endereco = {};
-        
-        res.json({ message: 'Mini Pedido criado com sucesso', pedido /*endereco, itensPedido*/ });
-      } else {
-        const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
-          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-          return produto.valorProd * produtoNoCarrinho.quantidade;
-        })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
-  
-        //const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-        const pedido = await Pedidos.create({
-          idUserPed: req.cookies.userId,
-          nomePed: 'Pedido Geral',
-          quantPed: 1,
-          valorPed: totalAPagar,
-          statusPed: 'Aguardando',
-          //raio: produto.raioProd,
-        });
-  
-        const itensPedidoPromises = carrinho.map(async (produtoNoCarrinho) => {
-          const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-          return ItensPedido.create({
-            idPed: pedido.id,
-            nomeProd: produto.nomeProd,
-            quantidade: produtoNoCarrinho.quantidade,
-            valorProd: produto.valorProd,
-            raio: produto.raioProd,
-          });
-        });
-  
-        const itensPedido = await Promise.all(itensPedidoPromises);
-  
-        const endereco = await Enderecos.create({
-          idPed: pedido.id,
-          rua: enderecoDaSessao.enderecoCad,
-          cep: enderecoDaSessao.cepCad,
-          cidade: enderecoDaSessao.cidadeCad,
-          numero: enderecoDaSessao.numCad,
-          complemento: enderecoDaSessao.compCad,
-          bairro: enderecoDaSessao.bairroCad,
-          quantidade: carrinho.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
-          celular: enderecoDaSessao.telefoneCad,
-          estado: enderecoDaSessao.estadoCad,
-          cuidados: enderecoDaSessao.cuidadosCad,
-          raio: carrinho.length > 0 ? carrinho[0].raioProd : 0,
-          produtos: enderecoDaSessao.produtosCad
-        });
-  
-        req.session.carrinho = [];
-        req.session.endereco = {};
-  
-        res.json({ message: 'Pedido criado com sucesso', pedido/*, endereco, itensPedido*/ });
+    
+          req.session.carrinho = [];
+          req.session.endereco = {};
+    
+          res.json({ message: 'Pedido criado com sucesso', pedido/*, endereco, itensPedido*/});
+        }
+      } catch (error) {
+        console.error('Erro ao criar pedidos:', error);
+        res.status(500).json({ error: 'Erro ao criar pedidos' });
       }
-    } catch (error) {
-      console.error('Erro ao criar pedidos:', error);
-      res.status(500).json({ error: 'Erro ao criar pedidos' });
-    }
-  });
-
+    });
+  
 // Exemplo de rota no servidor Node.js    console.log('Sessão do Carrinho:', req.session.carrinho);
 app.post('/atualizar-status-pedido', async (req, res) => {
   try {
