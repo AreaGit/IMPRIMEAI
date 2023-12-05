@@ -71,56 +71,46 @@
         </div>
     </main>
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-            // Obtenha o ID do pedido da URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const pedidoId = urlParams.get('id');
+document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        // Obtenha o ID do pedido da URL
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        const pedidoId = params.id;
 
-            // Verifique se há um ID de pedido válido
-            if (pedidoId) {
-                // Realize uma solicitação para obter os detalhes do pedido com base no ID
-                fetch(`/detalhes-pedido/${pedidoId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Erro na solicitação: ${response.status} - ${response.statusText}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Verifique se há dados válidos retornados
-                        if (data.success) {
-                            const dadosEntrega = document.getElementById('dados-entrega');
-                            const produtosPedido = document.getElementById('produtos-pedido');
+        // Substitua 'SEU_ENDPOINT' pela URL correta da sua API para obter detalhes do pedido
+        const response = await fetch(`/detalhes-pedido/${pedidoId}`);
+        const data = await response.json();
 
-                            // Preencha os dados de entrega
-                            dadosEntrega.innerHTML = `
-                                <p>Nome do Destinatário: ${data.dadosEntrega.nomeDestinatario}</p>
-                                <p>Cep: ${data.dadosEntrega.cep}</p>
-                                <p>Rua: ${data.dadosEntrega.rua}</p>
-                                <p>Estado: ${data.dadosEntrega.estado}</p>
-                                <p>Cidade: ${data.dadosEntrega.cidade}</p>
-                            `;
+        if (response.ok) {
+            const pedido = data.pedido;
 
-                            // Preencha os produtos do pedido
-                            produtosPedido.innerHTML = `
-                                <p>Nome do Produto: ${data.produtosPedido.nomeProduto}</p>
-                                <p>Quantidade: ${data.produtosPedido.quantidade}</p>
-                                <p>Valor: ${data.produtosPedido.valor}</p>
-                            `;
-                        } else {
-                            console.error('Erro ao obter detalhes do pedido.');
-                            // Adicione uma mensagem de erro na interface, se necessário
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro na solicitação AJAX:', error);
-                        // Adicione uma mensagem de erro na interface, se necessário
-                    });
-            } else {
-                console.error('ID do pedido não encontrado na URL.');
-                // Adicione uma mensagem de erro na interface, se necessário
-            }
-        });
+            // Preencha os detalhes de entrega
+            document.getElementById('dados-entrega').innerHTML = `
+                <p>Nome do Destinatário: ${pedido.nomePed}</p>
+                <p>Cep: ${pedido.endereco.cep}</p>
+                <p>Rua: ${pedido.endereco.rua}</p>
+                <p>Estado: ${pedido.endereco.estado}</p>
+                <p>Cidade: ${pedido.endereco.cidade}</p>
+            `;
+
+            // Preencha os detalhes dos produtos
+            const produtosHTML = pedido.itens.map(item => `
+                <p>Nome do Produto: ${item.nomeProd}</p>
+                <p>Quantidade: ${item.quantidade}</p>
+                <p>Valor: ${item.valorProd}</p>
+            `).join('');
+
+            document.getElementById('produtos-pedido').innerHTML = produtosHTML;
+        } else {
+            console.error('Erro ao obter detalhes do pedido:', data.error);
+        }
+    } catch (error) {
+        console.error('Erro ao fazer fetch:', error);
+    }
+});
+
+
     </script>
 </body>
 </html>

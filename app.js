@@ -1144,7 +1144,7 @@ app.get('/pagamento', (req, res) => {
           res.json({ message: 'Mini Pedido criado com sucesso', pedido /*,endereco, itensPedido */});
         } else {
           console.log('2')
-          const totalAPagar = await Promise.all(carrinho.map(async (produtoNoCarrinho) => {
+          const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoNoCarrinho) => {
             const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
             return produto.valorProd * produtoNoCarrinho.quantidade;
           })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
@@ -1159,7 +1159,7 @@ app.get('/pagamento', (req, res) => {
             //raio: produto.raioProd,
           });
     
-          const itensPedidoPromises = carrinho.map(async (produtoNoCarrinho) => {
+          const itensPedidoPromises = carrinhoQuebrado.map(async (produtoNoCarrinho) => {
             const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
             return ItensPedido.create({
               idPed: pedido.id,
@@ -1180,11 +1180,11 @@ app.get('/pagamento', (req, res) => {
             numero: enderecoDaSessao.numCad,
             complemento: enderecoDaSessao.compCad,
             bairro: enderecoDaSessao.bairroCad,
-            quantidade: carrinho.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
+            quantidade: carrinhoQuebrado.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
             celular: enderecoDaSessao.telefoneCad,
             estado: enderecoDaSessao.estadoCad,
             cuidados: enderecoDaSessao.cuidadosCad,
-            raio: carrinho.length > 0 ? carrinho[0].raioProd : 0,
+            raio: carrinhoQuebrado.length > 0 ? carrinhoQuebrado[0].raioProd : 0,
             produtos: enderecoDaSessao.produtosCad
           });
     
