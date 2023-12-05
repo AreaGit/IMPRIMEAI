@@ -786,6 +786,40 @@ app.get('/produto/:id', async (req, res) => {
   }
 }); 
 
+app.get('/detalhes-pedido/:idPedido', async (req, res) => {
+  try {
+    const idPed = req.params.idPedido;
+
+    // Buscar detalhes do pedido
+    const pedido = await Pedidos.findByPk(idPed, {
+      include: [
+        { model: ItensPedido },
+        { model: Enderecos },
+        // ... outras associações necessárias
+      ],
+    });
+
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido não encontrado' });
+    }
+
+    // Agora que temos o pedido, buscamos o usuário correspondente
+    const { idUserPed } = pedido;
+    const usuario = await User.findByPk(idUserPed);
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    // Respondendo com os detalhes do pedido e informações do usuário
+    res.json({ pedido, usuario });
+
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do pedido:', error);
+    res.status(500).json({ error: 'Erro ao buscar detalhes do pedido' });
+  }
+});
+
 app.get('/perfil', (req, res) => {
   const filePath = path.join(__dirname, 'html', 'perfil.html');
   res.sendFile(filePath);

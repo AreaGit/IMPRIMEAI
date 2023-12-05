@@ -1,6 +1,7 @@
-const Sequelize = require('sequelize')
-const db = require('./db')
-
+const Sequelize = require('sequelize');
+const db = require('./db');
+const ItensPedidos = require('./ItensPedido');
+const Enderecos = require('./Enderecos');
 
 const Pedidos = db.define('pedidos', {
     id: {
@@ -31,11 +32,12 @@ const Pedidos = db.define('pedidos', {
         type: Sequelize.FLOAT,
         allowNull: true,
     }
-})
+});
 
+//Pedidos.hasMany(ItensPedidos, { foreignKey: 'idPed'});
+//Pedidos.hasMany(Enderecos, { foreignKey: 'idPed'});
 
-
-Pedidos.sync({force:true})
+Pedidos.sync({force: true});
 //Pedidos.sync()
 
-module.exports = Pedidos
+module.exports = Pedidos;

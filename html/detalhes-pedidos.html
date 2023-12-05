@@ -12,24 +12,33 @@
     <link rel="stylesheet" href="../styles/medias.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        #dados-entrega {
-            height: 350px;
-            width: 45%;
-            position: relative;
-            left: 2%;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-            padding:10px;
-            border-radius: 5px;    
+        body {
+            color: #222529;
         }
-        #produtos-pedido {
-            height: 350px;
-            width: 45%;
+        #dados-entrega {
+            height: 148px;
+            width: 19%;
             position: relative;
-            left: 50%;
-            top: -350px;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-            padding:10px;
-            border-radius: 5px;    
+            left: 22%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #22252945;
+        }
+        div#endereco {
+            width: 19%;
+            position: relative;
+            left: 60%;
+            border: 1px solid #22252945;
+            top: -160px;
+        }
+        h2.infoPed {
+            position: relative;
+            left: -23%;
+            top: -61px;
+        }
+        p {
+            font-weight: normal;
+            padding: 5px;
         }
     </style>
 </head>
@@ -57,60 +66,56 @@
         </div>
     </header>
     <main>
+        <h2 class="infoPed">Informações do Pedido</h2>
         <div id="dados-entrega">
-            <p>Nome do Destinatário:</p>
-            <p>Cep:</p>
-            <p>Rua:</p>
-            <p>Estado:</p>
-            <p>Cidade:</p>
+            
         </div>
-        <div id="produtos-pedido">
-            <p>Nome do Produto:</p>
-            <p>Quantidade:</p>
-            <p>Valor:</p>
+        <div id="endereco">
+
         </div>
     </main>
     <script>
-document.addEventListener('DOMContentLoaded', async function () {
-    try {
-        // Obtenha o ID do pedido da URL
-        const urlSearchParams = new URLSearchParams(window.location.search);
-        const params = Object.fromEntries(urlSearchParams.entries());
-        const pedidoId = params.id;
+document.addEventListener('DOMContentLoaded', () => {
+  // Obtém o ID do pedido da URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const idPedido = urlParams.get('id');
 
-        // Substitua 'SEU_ENDPOINT' pela URL correta da sua API para obter detalhes do pedido
-        const response = await fetch(`/detalhes-pedido/${pedidoId}`);
-        const data = await response.json();
+  // Verifica se o ID do pedido está presente na URL
+  if (idPedido) {
+    // Faz a requisição para o servidor para obter os detalhes do pedido
+    fetch(`/detalhes-pedido/${idPedido}`)
+      .then(response => response.json())
+      .then(data => {
+        // Manipula os detalhes do pedido recebidos do servidor
+        const detalhesPedido = data.pedido;
+        const detalhesUsuario = data.usuario;
 
-        if (response.ok) {
-            const pedido = data.pedido;
-
-            // Preencha os detalhes de entrega
-            document.getElementById('dados-entrega').innerHTML = `
-                <p>Nome do Destinatário: ${pedido.nomePed}</p>
-                <p>Cep: ${pedido.endereco.cep}</p>
-                <p>Rua: ${pedido.endereco.rua}</p>
-                <p>Estado: ${pedido.endereco.estado}</p>
-                <p>Cidade: ${pedido.endereco.cidade}</p>
-            `;
-
-            // Preencha os detalhes dos produtos
-            const produtosHTML = pedido.itens.map(item => `
-                <p>Nome do Produto: ${item.nomeProd}</p>
-                <p>Quantidade: ${item.quantidade}</p>
-                <p>Valor: ${item.valorProd}</p>
-            `).join('');
-
-            document.getElementById('produtos-pedido').innerHTML = produtosHTML;
-        } else {
-            console.error('Erro ao obter detalhes do pedido:', data.error);
-        }
-    } catch (error) {
-        console.error('Erro ao fazer fetch:', error);
-    }
+        // Exibe os detalhes do pedido no HTML
+        const detalhesPedidoDiv = document.getElementById('dados-entrega');
+        detalhesPedidoDiv.innerHTML = `
+          <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
+          <!--<p><strong>Nome do Pedido:</strong> ${detalhesPedido.nomePed}</p>-->
+          <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.quantPed}</p>
+          <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed}</p>
+          <p class="nomeDest"><strong>Nome do Destinatário:</strong> ${detalhesUsuario.userCad}</p>
+          <!-- Adicione mais campos conforme necessário -->
+        `;
+        const enderecoPedidoDiv = document.getElementById('endereco');
+        enderecoPedidoDiv.innerHTML = `${detalhesPedido.enderecos
+            ? detalhesPedido.enderecos.map(endereco => `
+                <p class="vrEnd"><strong>Endereço:</strong> ${endereco.rua}, ${endereco.cep}, ${endereco.estado}</p>
+                <p class="endNum"><strong>Número da Residência:</strong> ${endereco.numero}</p>
+                <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
+                <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
+                <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
+              `).join('<br>')
+            : 'Sem endereços'}`
+      })
+      .catch(error => console.error('Erro ao obter detalhes do pedido:', error));
+  } else {
+    console.error('ID do Pedido não encontrado na URL');
+  }
 });
-
-
     </script>
 </body>
 </html>
