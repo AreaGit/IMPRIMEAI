@@ -76,12 +76,13 @@
     #logado {
       position: relative;
       top: -58px;
-      left: 90px;
+      left: 104px;
     }
     #sairBtn {
       position: relative;
-      top: -77px;
-      left: 77%;
+      top: -78px;
+      left: 86%;
+      font-size: 12px;
     }
     .menu ul >  li > a {
       font-size: 12px;
@@ -101,73 +102,109 @@
   }
 }
 
+@media screen and (min-width:380px) and (max-width:450px){
+  .search__input {
+    width: 350px;
+  }
+  #logado {
+    position: relative;
+    top: -58px;
+    left: 126px;
+  }
+  .content > .image1 {
+    width: 240px;
+    height: 240px;
+    position: relative;
+    top: 52%;
+    left: 115px;
+  }
+}
 
-@media screen and (min-width:481px) and (max-width:767px) {
+@media screen and (min-width:450px) and (max-width:480px) {
+  #logado {
+    position: relative;
+    top: -58px;
+    left: 147px;
+  }
+  .search__input {
+    width: 420px;
+  }
+  .content > .image1 {
+    width: 240px;
+    height: 240px;
+    position: relative;
+    top: 52%;
+    left: 135px;
+  }
+}
+
+@media screen and (min-width:481px) and (max-width:516px) {
+  footer {
+    position: absolute;
+    top: 289%;
+    height: 550px;
+    width: 105%;
+  }
   header>p {
     font-size: 12px;
     position: relative;
-    top: -3px;
+    top: 20px;
     left: -1px;
-  }
-  footer {
-    position: absolute;
-    top: 330%;
-    height: 550px;
-    width: 100%;
 }
-#formPesquisa {
-  position: absolute;
-  top: 44%;
-  left: 1%;
+.menu2 {
+  width: 37%;
 }
-#carrinho_compras {
-  position: absolute;
-  top: 52px;
-  left: 91%;
+.menu2 > a {
+  font-size: 12px;
+  padding: 5px;
+  position: relative;
+  top: -35px;
+  left: 0px;
 }
 .icons-header {
   position: relative;
-  left: -98px;
-  top: -31px;
-  width: fit-content; 
+  left: 71px;
+  width: max-content;
+  top: -37px;
 }
-  .menu2 {
-    width: 37%;
-  }
-  .menu2 > a {
-    font-size: 12px;
-    padding: 5px;
-    position: relative;
-    top: -35px;
-    left: -10px;
-  }
-  .icons-header {
-    position: relative;
-    left: 55px;
-    width: max-content;
-  }
+#formPesquisa {
+  position: absolute;
+  top: 21%;
+  left: 26%;
+}
+.search__input {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  width: 243px;
+  transition: all ease-in-out .5s;
+  margin-right: -2rem;
+}
+#carrinho_compras {
+  position: absolute;
+  top: 64px;
+  left: 94%;
+}
+.icons-header {
+  position: relative;
+  left: 80px;
+  width: max-content;
+}
   .logo-imprimeai {
     position: relative;
-    top: 8px;
-    left: 0px;
+    top: 44px;
+    left: 2px;
+    width: 24%;
   }
   .input-pesq {
     position: relative;
     top: 10px;
     left: 0%;
 }
-.search__input {
-    font-family: inherit;
-    font-size: inherit;
-    background-color: #f4f2f2;
-    border: none;
-    color: #646464;
-    padding: 1rem 2rem;
-    border-radius: 30px;
-    width: 318px;
-    transition: all ease-in-out .5s;
-    margin-right: -2rem;
-  }
   #conviteCad {
     position: relative;
     top: 32px;
@@ -175,13 +212,13 @@
   }
   #logado {
     position: relative;
-    top: 38px;
-    left: 70%;
+    top: 12px;
+    left: 78%;
   }
   #sairBtn {
     position: relative;
-    top: -15px;
-    left: 78%;
+    top: 32px;
+    left: 87%;
   }
   .menu > ul > li > a {
     padding: 0px;
@@ -244,8 +281,137 @@
     border-radius: 5px;
     color: white;
   }
+  .atend > h2, p {
+    font-size: 13px;
+    font-weight: bold;
+  }
 }
-@media screen and (min-width:580px) and (max-width:767px) {
+@media screen and (min-width:516px) and (max-width:579px) {
+  .slider-container {
+    display: none;
+  }
+  footer {
+    position: absolute;
+    top: 289%;
+    height: 550px;
+    width: 105%;
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 10px;
+    left: 0%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 25px;
+    left: 0%;
+  }
+  .menu > ul > li > a {
+    padding: 0px;
+    font-size: 12px;
+  }
+  .slider-container {
+    display: none;
+  }
+  .images-sec {
+    margin-top: 100px;
+    height: 700px;
+  }
+  .images-sec > h2 {
+    width: fit-content;
+    position: relative;
+    top: 50px;
+    left: 19%;
+    
+  }
+  .content {
+    position: relative;
+    top: 80px;
+    left: -1%;
+    height: 650px;
+    
+  }
+  .content > h2 {
+    width: fit-content;
+  }
+  .mini-banner {
+    height: 50px;
+    background-color: #EF4126;
+    width: 105%;
+}
+  header>p {
+    font-size: 12px;
+    position: relative;
+    top: 20px;
+    left: -1px;
+}
+.icons-header {
+  position: relative;
+  left: 80px;
+  width: max-content;
+  top: -25px;
+}
+.menu2 > a {
+  font-size: 12px;
+  padding: 5px;
+  position: relative;
+  top: -17px;
+  left: -5px;
+}
+#carrinho_compras {
+  position: absolute;
+  top: 64px;
+  left: 96%;
+}
+.logo-imprimeai {
+  position: relative;
+  top: 61px;
+  left: 2px;
+  width: 24%;
+}
+.search__input {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  width: 266px;
+  transition: all ease-in-out .5s;
+  margin-right: -2rem;
+}
+#logado {
+  position: relative;
+  top: 25px;
+  left: 78%;
+}
+#sairBtn {
+  position: relative;
+  top: 46px;
+  left: 87%;
+}
+#formPesquisa {
+  position: absolute;
+  top: 21%;
+  left: 26%;
+}
+}
+@media screen and (min-width:580px) and (max-width:660px) {
   .produtos {
     position: relative;
     left: -10%;
@@ -253,6 +419,271 @@
   .search__input {
     width: 400px;
   }
+  .slider-container {
+    display: none;
+  }
+  footer {
+    position: absolute;
+    top: 199%;
+    height: 550px;
+    width: 111%;
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 10px;
+    left: 0%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 25px;
+    left: 0%;
+  }
+  .menu > ul > li > a {
+    padding: 0px;
+    font-size: 12px;
+  }
+  .slider-container {
+    display: none;
+  }
+  .images-sec {
+    margin-top: 100px;
+    height: 700px;
+  }
+  .images-sec > h2 {
+    width: fit-content;
+    position: relative;
+    top: 50px;
+    left: 19%;
+    
+  }
+  .content {
+    position: relative;
+    top: 80px;
+    left: -1%;
+    height: 650px;
+    
+  }
+  .content > h2 {
+    width: fit-content;
+  }
+  .mini-banner {
+    height: 50px;
+    background-color: #EF4126;
+    width: 105%;
+}
+  header>p {
+    font-size: 12px;
+    position: relative;
+    top: 20px;
+    left: -1px;
+}
+.icons-header {
+  position: relative;
+  left: 80px;
+  width: max-content;
+  top: -25px;
+}
+.menu2 > a {
+  font-size: 12px;
+  padding: 5px;
+  position: relative;
+  top: -17px;
+  left: -5px;
+}
+#carrinho_compras {
+  position: absolute;
+  top: 64px;
+  left: 96%;
+}
+.logo-imprimeai {
+  position: relative;
+  top: 61px;
+  left: 2px;
+  width: 24%;
+}
+.search__input {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  width: 321px;
+  transition: all ease-in-out .5s;
+  margin-right: -2rem;
+}
+#logado {
+  position: relative;
+  top: 25px;
+  left: 83%;
+}
+#sairBtn {
+  position: relative;
+  top: 46px;
+  left: 91%;
+}
+#formPesquisa {
+  position: absolute;
+  top: 21%;
+  left: 26%;
+}
+.mini-banner {
+  height: 50px;
+  background-color: #EF4126;
+  width: 111%;
+}
+}
+@media screen and (min-width:660px) and (max-width:767px) {
+  .produtos {
+    position: relative;
+    left: -10%;
+  }
+  .search__input {
+    width: 400px;
+  }
+  .slider-container {
+    display: none;
+  }
+  footer {
+    position: absolute;
+    top: 199%;
+    height: 550px;
+    width: 111%;
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 10px;
+    left: 0%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    position: relative;
+    top: 25px;
+    left: 0%;
+  }
+  .menu > ul > li > a {
+    padding: 0px;
+    font-size: 12px;
+  }
+  .slider-container {
+    display: none;
+  }
+  .images-sec {
+    margin-top: 100px;
+    height: 700px;
+  }
+  .images-sec > h2 {
+    width: fit-content;
+    position: relative;
+    top: 50px;
+    left: 19%;
+    
+  }
+  .content {
+    position: relative;
+    top: 80px;
+    left: -1%;
+    height: 650px;
+    
+  }
+  .content > h2 {
+    width: fit-content;
+  }
+  .mini-banner {
+    height: 50px;
+    background-color: #EF4126;
+    width: 105%;
+}
+  header>p {
+    font-size: 12px;
+    position: relative;
+    top: 20px;
+    left: -1px;
+}
+.icons-header {
+  position: relative;
+  left: 80px;
+  width: max-content;
+  top: -25px;
+}
+.menu2 > a {
+  font-size: 12px;
+  padding: 5px;
+  position: relative;
+  top: -17px;
+  left: -5px;
+}
+#carrinho_compras {
+  position: absolute;
+  top: 64px;
+  left: 96%;
+}
+.logo-imprimeai {
+  position: relative;
+  top: 61px;
+  left: 2px;
+  width: 24%;
+}
+.search__input {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  width: 365px;
+  transition: all ease-in-out .5s;
+  margin-right: -2rem;
+}
+#logado {
+  position: relative;
+  top: 18px;
+  left: 84%;
+}
+#sairBtn {
+  position: relative;
+  top: 35px;
+  left: 91%;
+}
+#formPesquisa {
+  position: absolute;
+  top: 21%;
+  left: 26%;
+}
+.mini-banner {
+  height: 50px;
+  background-color: #EF4126;
+  width: 111%;
+}
 }
 @media screen and (min-width: 768px) and (max-width: 869px) {
   :root {
