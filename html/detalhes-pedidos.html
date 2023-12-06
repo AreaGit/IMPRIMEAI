@@ -19,17 +19,24 @@
             height: 148px;
             width: 19%;
             position: relative;
-            left: 22%;
+            left: 48%;
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #22252945;
+            top: -5%;
         }
         div#endereco {
             width: 19%;
             position: relative;
-            left: 60%;
+            left: 75%;
             border: 1px solid #22252945;
-            top: -160px;
+            top: -21%;
+            border-radius: 5px;
+        }
+        img#imagemProduto {
+            position: relative;
+            top: -1200px;
+            left: 21%;
         }
         h2.infoPed {
             position: relative;
@@ -73,12 +80,13 @@
         <div id="endereco">
 
         </div>
+        <img id="imagemProduto" alt="Imagem do Produto">
     </main>
     <script>
-document.addEventListener('DOMContentLoaded', () => {
+       document.addEventListener('DOMContentLoaded', () => {
   // Obtém o ID do pedido da URL
   const urlParams = new URLSearchParams(window.location.search);
-  const idPedido = urlParams.get('id');
+  const idPedido = urlParams.get('idPedido');
 
   // Verifica se o ID do pedido está presente na URL
   if (idPedido) {
@@ -116,6 +124,40 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('ID do Pedido não encontrado na URL');
   }
 });
-    </script>
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Obtém o ID do produto da URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const idProduto = urlParams.get('idProduto');
+
+  // Verifica se o ID do produto está presente na URL
+  if (idProduto) {
+    // Faz a requisição para o servidor para obter a imagem do produto
+    fetch(`/imagem-produto/${idProduto}`)
+      .then(response => {
+        // Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+          throw new Error(`Erro ao obter imagem do produto: ${response.statusText}`);
+        }
+        return response.blob(); // Converte a resposta para um blob (formato de imagem)
+      })
+      .then(blob => {
+        // Cria uma URL de dados que pode ser usada em uma tag <img>
+        const imagemURL = URL.createObjectURL(blob);
+        
+        // Atualiza a tag <img> com a URL da imagem após garantir que ela foi carregada
+        const imagemProduto = document.getElementById('imagemProduto');
+        imagemProduto.onload = () => {
+          URL.revokeObjectURL(imagemURL); // Libera a URL para evitar vazamentos de memória
+        };
+        imagemProduto.src = imagemURL;
+      })
+      .catch(error => console.error(error));
+  } else {
+    console.error('ID do Produto não encontrado na URL');
+  }
+});
+
+        </script>        
 </body>
 </html>

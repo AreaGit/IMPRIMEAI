@@ -793,7 +793,7 @@ app.get('/detalhes-pedido/:idPedido', async (req, res) => {
     // Buscar detalhes do pedido
     const pedido = await Pedidos.findByPk(idPed, {
       include: [
-        { model: ItensPedido },
+        { model: ItensPedido, include: [Produtos] },
         { model: Enderecos },
         // ... outras associações necessárias
       ],
@@ -817,6 +817,28 @@ app.get('/detalhes-pedido/:idPedido', async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar detalhes do pedido:', error);
     res.status(500).json({ error: 'Erro ao buscar detalhes do pedido' });
+  }
+});
+
+app.get('/imagem-produto/:id', async (req, res) => {
+  try {
+    const idProduto = req.params.id;
+    
+    // Busca o produto no banco de dados pelo ID
+    const produto = await Produtos.findByPk(idProduto);
+
+    if (!produto || !produto.imgProd) {
+      // Se o produto ou a imagem não existir, envie uma imagem padrão ou retorne um erro
+      return res.status(404).sendFile('caminho/para/imagem_padrao.jpg', { root: __dirname });
+    }
+
+    // Converte o BLOB para uma URL de imagem e envia como resposta
+    const imagemBuffer = Buffer.from(produto.imgProd, 'binary');
+    res.set('Content-Type', 'image/jpeg'); // Altere conforme o tipo de imagem que você está armazenando
+    res.send(imagemBuffer);
+  } catch (error) {
+    console.error('Erro ao buscar imagem do produto:', error);
+    res.status(500).send('Erro ao buscar imagem do produto');
   }
 });
 
@@ -1140,6 +1162,7 @@ app.get('/pagamento', (req, res) => {
             const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
             return ItensPedido.create({
               idPed: pedido.id,
+              idProduto: produtoQuebrado.produtoId,
               nomeProd: produto.nomeProd,
               quantidade: produtoQuebrado.quantidade,
               valorProd: produto.valorProd,
@@ -1197,6 +1220,7 @@ app.get('/pagamento', (req, res) => {
             const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
             return ItensPedido.create({
               idPed: pedido.id,
+              idProduto: produtoNoCarrinho.produtoId,
               nomeProd: produto.nomeProd,
               quantidade: produtoNoCarrinho.quantidade,
               valorProd: produto.valorProd,

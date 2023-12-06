@@ -139,12 +139,12 @@
                         <p class="ped-nome">${pedidos.nomeProd}</p>
                         <p class="ped-valor">${pedidos.valorProd}</p>
                         <p class="ped-quant">${pedidos.quantidade}</p>
-                        <a href="detalhes-pedidos.html?id=${pedidos.id}" id="verPed">Detalhes do Pedido</a>
+                        <a href="detalhes-pedidos.html?idPedido=${pedidos.idPed}&idProduto=${pedidos.idProduto}" id="verPed">Detalhes do Pedido</a>
                         <button class="ped-recusar">Recusar</button>
                         <button class="ped-aceitar">Aceitar</button>
                     `;
                     pedidosList.appendChild(li);
-
+                    console.log(pedidos.idProduto)
                 });
             })
             .catch(error => console.error('Erro ao buscar pedidos:', error));

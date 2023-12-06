@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('./db')
+const Produtos = require('./Produtos');
 
 
 const ItensPedidos = db.define('itenspedidos', {
@@ -9,6 +10,9 @@ const ItensPedidos = db.define('itenspedidos', {
         primaryKey: true
     },
     idPed: {
+        type: Sequelize.INTEGER,
+    },
+    idProduto: {
         type: Sequelize.INTEGER,
     },
     nomeProd: {
@@ -33,7 +37,8 @@ const ItensPedidos = db.define('itenspedidos', {
     },
 })
 
-ItensPedidos.sync({force:true})
-//ItensPedidos.sync()
+ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
+//ItensPedidos.sync({force:true})
+ItensPedidos.sync()
 
 module.exports = ItensPedidos

@@ -63,7 +63,7 @@ const Enderecos = db.define('enderecos', {
 
 //Criar Tabela
 
-//Enderecos.sync()
-Enderecos.sync({force:true})
+Enderecos.sync()
+//Enderecos.sync({force:true})
 
 module.exports = Enderecos
