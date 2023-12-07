@@ -10,6 +10,7 @@ const Graficas = require('./models/Graficas');
 const Pedidos = require('./models/Pedidos');
 const Enderecos = require('./models/Enderecos');
 const ItensPedido = require('./models/ItensPedido');
+const VariacoesProduto = require('./models/VariacoesProduto');
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
@@ -21,6 +22,7 @@ const session = require('express-session');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const XLSX = require('xlsx');
+const Sequelize = require('sequelize');
 
 
 app.use(session({
@@ -786,15 +788,34 @@ app.get('/produto/:id', async (req, res) => {
   }
 }); 
 
-app.get('/detalhes-pedido/:idPedido', async (req, res) => {
+app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
   try {
-    const idPed = req.params.idPedido;
+    const { idPedido, idProduto } = req.params;
 
     // Buscar detalhes do pedido
-    const pedido = await Pedidos.findByPk(idPed, {
+    const pedido = await Pedidos.findByPk(idPedido, {
       include: [
-        { model: ItensPedido, include: [Produtos] },
-        { model: Enderecos },
+        {
+          model: ItensPedido,
+          where: { idPed: idPedido, idProduto: idProduto },
+          include: [
+            {
+              model: Produtos,
+              attributes: ['id', 'nomeProd', 'descProd', 'valorProd', 'categProd', 'raioProd', 'imgProd'],
+            },
+          ],
+        },
+        {
+          model: Enderecos,
+          where: { idPed: idPedido, idProduto: idProduto },
+          include: [
+            {
+              model: Produtos,
+              attributes: ['id'], // Adicione outros atributos do Produto conforme necessário
+            },
+          ],
+          distinct: true, // Garante endereços distintos
+        },
         // ... outras associações necessárias
       ],
     });
@@ -819,6 +840,8 @@ app.get('/detalhes-pedido/:idPedido', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar detalhes do pedido' });
   }
 });
+
+
 
 app.get('/imagem-produto/:id', async (req, res) => {
   try {
@@ -1037,27 +1060,28 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
 
       // Quebrar produtos com base nos endereços salvos
       const carrinhoQuebrado = [];
-      let enderecoIndex = 0; // Índice para rastrear os endereços
+let enderecoIndex = 0; // Índice para rastrear os endereços
 
-      carrinho.forEach((produto) => {
-        const produtoId = produto.produtoId;
-        const quantidade = produto.quantidade;
+carrinho.forEach((produto, produtoIndex) => {
+  const produtoId = produto.produtoId;
+  const quantidade = produto.quantidade;
 
-        for (let i = 0; i < quantidade; i++) {
-          const endereco = enderecosSalvos[enderecoIndex];
-          enderecoIndex = (enderecoIndex + 1) % enderecosSalvos.length; // Avança para o próximo endereço
+  for (let i = 0; i < quantidade; i++) {
+    const endereco = enderecosSalvos[enderecoIndex];
+    enderecoIndex = (enderecoIndex + 1) % enderecosSalvos.length; // Avança para o próximo endereço
 
-          carrinhoQuebrado.push({
-            produtoId: produtoId,
-            nomeProd: produto.nomeProd,
-            quantidade: 1,
-            valorUnitario: produto.valorUnitario,
-            subtotal: produto.subtotal,
-            raioProd: produto.raioProd,
-            endereco: endereco,
-          });
-        }
-      });
+    carrinhoQuebrado.push({
+      // Adicionando sufixo único ao ID do produto
+      produtoId: `${produtoId}_${produtoIndex}_${i}`,
+      nomeProd: produto.nomeProd,
+      quantidade: 1,
+      valorUnitario: produto.valorUnitario,
+      subtotal: produto.subtotal,
+      raioProd: produto.raioProd,
+      endereco: endereco,
+    });
+  }
+});
 
       // Atualizar a sessão com o carrinho quebrado
       req.session.carrinho = carrinhoQuebrado;
@@ -1189,6 +1213,7 @@ app.get('/pagamento', (req, res) => {
               cuidados: produtoQuebrado.endereco.cuidadosCad,
               raio: produtoQuebrado.raioProd,
               produtos: produtoQuebrado.produtoId,
+              idProduto: produtoQuebrado.produtoId,
               // ... outros campos relevantes ...
             });
           });
@@ -1205,7 +1230,6 @@ app.get('/pagamento', (req, res) => {
             const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
             return produto.valorProd * produtoNoCarrinho.quantidade;
           })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
-    
           //const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
           const pedido = await Pedidos.create({
             idUserPed: req.cookies.userId,
@@ -1243,7 +1267,7 @@ app.get('/pagamento', (req, res) => {
             estado: enderecoDaSessao.estadoCad,
             cuidados: enderecoDaSessao.cuidadosCad,
             raio: carrinhoQuebrado.length > 0 ? carrinhoQuebrado[0].raioProd : 0,
-            produtos: enderecoDaSessao.produtosCad
+            idProduto: carrinhoQuebrado[0].produtoId,
           });
     
           req.session.carrinho = [];

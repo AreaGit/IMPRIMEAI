@@ -2,7 +2,6 @@ const Sequelize = require('sequelize')
 const db = require('./db')
 const Produtos = require('./Produtos');
 
-
 const ItensPedidos = db.define('itenspedidos', {
     id: {
         type: Sequelize.INTEGER, 
@@ -13,7 +12,8 @@ const ItensPedidos = db.define('itenspedidos', {
         type: Sequelize.INTEGER,
     },
     idProduto: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(255),
+        allowNull: true,
     },
     nomeProd: {
         type : Sequelize.STRING(255),

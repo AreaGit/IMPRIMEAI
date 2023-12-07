@@ -35,7 +35,7 @@
         }
         img#imagemProduto {
             position: relative;
-            top: -1200px;
+            top: -380px;
             left: 21%;
         }
         h2.infoPed {
@@ -83,49 +83,50 @@
         <img id="imagemProduto" alt="Imagem do Produto">
     </main>
     <script>
-       document.addEventListener('DOMContentLoaded', () => {
-  // Obtém o ID do pedido da URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const idPedido = urlParams.get('idPedido');
+     document.addEventListener('DOMContentLoaded', () => {
+    // Obtém o ID do pedido e do produto da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const idPedido = urlParams.get('idPedido');
+    const idProduto = urlParams.get('idProduto');
 
-  // Verifica se o ID do pedido está presente na URL
-  if (idPedido) {
-    // Faz a requisição para o servidor para obter os detalhes do pedido
-    fetch(`/detalhes-pedido/${idPedido}`)
-      .then(response => response.json())
-      .then(data => {
-        // Manipula os detalhes do pedido recebidos do servidor
-        const detalhesPedido = data.pedido;
-        const detalhesUsuario = data.usuario;
+    // Verifica se o ID do pedido e do produto estão presentes na URL
+    if (idPedido && idProduto) {
+      // Faz a requisição para o servidor para obter os detalhes do pedido
+      fetch(`/detalhes-pedido/${idPedido}/${idProduto}`)
+        .then(response => response.json())
+        .then(data => {
+          // Manipula os detalhes do pedido recebidos do servidor
+          const detalhesPedido = data.pedido;
+          const detalhesUsuario = data.usuario;
 
-        // Exibe os detalhes do pedido no HTML
-        const detalhesPedidoDiv = document.getElementById('dados-entrega');
-        detalhesPedidoDiv.innerHTML = `
-          <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
-          <!--<p><strong>Nome do Pedido:</strong> ${detalhesPedido.nomePed}</p>-->
-          <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.quantPed}</p>
-          <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed}</p>
-          <p class="nomeDest"><strong>Nome do Destinatário:</strong> ${detalhesUsuario.userCad}</p>
-          <!-- Adicione mais campos conforme necessário -->
-        `;
-        const enderecoPedidoDiv = document.getElementById('endereco');
-        enderecoPedidoDiv.innerHTML = `${detalhesPedido.enderecos
-            ? detalhesPedido.enderecos.map(endereco => `
-                <p class="vrEnd"><strong>Endereço:</strong> ${endereco.rua}, ${endereco.cep}, ${endereco.estado}</p>
-                <p class="endNum"><strong>Número da Residência:</strong> ${endereco.numero}</p>
-                <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
-                <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
-                <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
-              `).join('<br>')
-            : 'Sem endereços'}`
-      })
-      .catch(error => console.error('Erro ao obter detalhes do pedido:', error));
-  } else {
-    console.error('ID do Pedido não encontrado na URL');
-  }
-});
+          // Exibe os detalhes do pedido no HTML
+          const detalhesPedidoDiv = document.getElementById('dados-entrega');
+          detalhesPedidoDiv.innerHTML = `
+            <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
+            <!--<p><strong>Nome do Pedido:</strong> ${detalhesPedido.nomePed}</p>-->
+            <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.itenspedidos[0].quantidade}</p>
+            <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed}</p>
+            <p class="nomeDest"><strong>Nome do Destinatário:</strong> ${detalhesUsuario.userCad}</p>
+            <!-- Adicione mais campos conforme necessário -->
+          `;
+          const enderecoPedidoDiv = document.getElementById('endereco');
+          enderecoPedidoDiv.innerHTML = `${detalhesPedido.enderecos
+              ? detalhesPedido.enderecos.map(endereco => `
+                  <p class="vrEnd"><strong>Endereço:</strong> ${endereco.rua}, ${endereco.cep}, ${endereco.estado}</p>
+                  <p class="endNum"><strong>Número da Residência:</strong> ${endereco.numero}</p>
+                  <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
+                  <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
+                  <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
+                `).join('<br>')
+              : 'Sem endereços'}`
+        })
+        .catch(error => console.error('Erro ao obter detalhes do pedido:', error));
+    } else {
+      console.error('ID do Pedido ou ID do Produto não encontrado na URL');
+    }
+  });
 
-document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
   // Obtém o ID do produto da URL
   const urlParams = new URLSearchParams(window.location.search);
   const idProduto = urlParams.get('idProduto');
@@ -144,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(blob => {
         // Cria uma URL de dados que pode ser usada em uma tag <img>
         const imagemURL = URL.createObjectURL(blob);
-        
+
         // Atualiza a tag <img> com a URL da imagem após garantir que ela foi carregada
         const imagemProduto = document.getElementById('imagemProduto');
         imagemProduto.onload = () => {
@@ -157,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('ID do Produto não encontrado na URL');
   }
 });
-
-        </script>        
+</script>        
 </body>
 </html>

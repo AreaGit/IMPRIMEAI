@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('./db')
+const Produtos = require('./Produtos');
 
 const Enderecos = db.define('enderecos', {
     id: {
@@ -55,14 +56,14 @@ const Enderecos = db.define('enderecos', {
         type: Sequelize.FLOAT,
         allowNull: true,
     },
-    produtos: {
+    idProduto: {
         type: Sequelize.STRING(255),
         allowNull: true,
     },
 })
 
 //Criar Tabela
-
+Enderecos.belongsTo(Produtos, { foreignKey: 'idProduto' });
 Enderecos.sync()
 //Enderecos.sync({force:true})
 
