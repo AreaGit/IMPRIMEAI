@@ -27,6 +27,26 @@ const ItensPedidos = db.define('itenspedidos', {
         type: Sequelize.FLOAT, // Use FLOAT para valores decimais
         allowNull: false,
     },
+    acabamento: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+    },
+    cor: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+    },
+    enobrecimento: {
+        type: Sequelize.STRING(255),
+        allowNull: false
+    },
+    formato: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+    },
+    material: {
+        type: Sequelize.STRING(255),
+        allowNull: false
+    },
     raio: {
         type: Sequelize.FLOAT,
         allowNull: true,

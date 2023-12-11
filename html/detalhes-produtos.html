@@ -9,16 +9,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/style.css" media="all">
     <link rel="stylesheet" href="../styles/pag-prods.css">
-    <link rel="stylesheet" href="styles/medias.css">
+    <link rel="stylesheet" href="../styles/medias.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
+#downlArt {
+  border: 1px solid #00000061;
+    width: 11%;
+    position: relative;
+    left: 24%;
+    top: -69px;
+    height: 67px;
+}
+sub {
+    position: relative;
+    left: 23%;
+    top: 14px;
+}
   .container {
+    display: none;
   height: 300px;
   width: 300px;
   border-radius: 10px;
   box-shadow: 4px 4px 30px rgba(0, 0, 0, .2);
-  display: flex;
+  /*display: flex;*/
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
@@ -29,8 +43,12 @@
   left: 22%;
   top: -91px;
 }
-
+.secVar {
+  position: relative;
+  top: 460px;
+}
 .header {
+  display: none;
   flex: 1;
   width: 100%;
   border: 2px dashed royalblue;
@@ -51,6 +69,7 @@
 }
 
 .footer {
+  display: none;
   background-color: rgba(0, 110, 255, 0.075);
   width: 100%;
   height: 40px;
@@ -83,12 +102,85 @@
   display: none;
 }
 #imagemPreview {
+  display: none;
   position: relative;
     top: -378px;
     left: 433px;
     width: 276px;
     height: 226px;
     border-radius: 5px;
+}
+select#material {
+    padding: 8px 18px 8px 18px;
+    border: 1px solid #00000040;
+    border-radius: 2px;
+    font-size: 17px;
+}
+div#secaoMaterial {
+    position: relative;
+    left: 52%;
+    top: -860px;
+    width: fit-content;
+}
+div#secaoFormato {
+    position: relative;
+    left: 52%;
+    top: -795px;
+    width: fit-content;
+}
+select#formato {
+    padding: 8px 20px 8px 18px;
+    border: 1px solid #00000040;
+    border-radius: 2px;
+    font-size: 17px;
+}
+div#secaoCores {
+    position: relative;
+    left: 52%;
+    top: -731px;
+    width: fit-content;
+}
+select#cor {
+    padding: 8px 7px 8px 18px;
+    border: 1px solid #00000040;
+    border-radius: 2px;
+    font-size: 17px;
+}
+div#secaoEnobrecimento {
+    position: relative;
+    left: 52%;
+    top: -666px;
+    width: fit-content;
+}
+select#enobrecimento {
+    padding: 8px 7px 8px 18px;
+    border: 1px solid #00000040;
+    border-radius: 2px;
+    font-size: 17px;
+}
+div#secaoAcabamento {
+    position: relative;
+    left: 52%;
+    top: -601px;
+    width: fit-content;
+}
+select#acabamento {
+    padding: 8px 7px 8px 18px;
+    border: 1px solid #00000040;
+    border-radius: 2px;
+    font-size: 17px;
+}
+.icon-pdf {
+    width: 10%;
+    position: relative;
+    left: 46%;
+    top: 3px;
+}
+.pDownGab {
+    font-size: 13px;
+    font-weight: bold;
+    position: relative;
+    left: 16%;
 }
 @media screen and (min-width:320px) and (max-width:425px) {
         header > p{
@@ -443,7 +535,38 @@
               
             </div>
             <img id="imagemPreview" src="" alt="" />
-
+            <div id="downlArt">
+              <p class="pDownGab">Download do Gabarito</p>
+              <a href="#" download=""><img src="https://wbl.blob.core.windows.net/img/images/adobe-preto.svg" alt="..." class="icon-pdf"></a>
+              <sub>Adobe PDF</sub>
+            </div>
+            <div class="secVar">
+            <div id="secaoMaterial">
+              <!-- Select de Material será adicionado aqui -->
+              <img src="https://wbl.blob.core.windows.net/img/images/material.svg" alt="..." id="img-mat">
+              <label for="material" class="lbl-mat">Material</label>
+          </div>
+          <div id="secaoFormato">
+              <!-- Select de Formato será adicionado aqui -->
+              <img src="https://wbl.blob.core.windows.net/img/images/formato.svg" alt="..." id="img-fom">
+              <label for="formato" class="lbl-fom">Formato</label>
+          </div>
+          <div id="secaoCores">
+              <!-- Select de Cores será adicionado aqui -->
+              <img src="https://wbl.blob.core.windows.net/img/images/cores.svg" alt="..." id="img-cor">
+              <label for="cor" class="lbl-cor">Cores</label>
+          </div>
+          <div id="secaoEnobrecimento">
+              <!-- Select de Enobrecimento será adicionado aqui -->
+              <img src="https://wbl.blob.core.windows.net/img/images/enobrecimento.svg" alt="..." id="img-en">
+              <label for="enobrecimento" class="lbl-en">Enobrecimento</label>
+          </div>
+          <div id="secaoAcabamento">
+              <!-- Select de Acabamento será adicionado aqui -->
+              <img src="https://wbl.blob.core.windows.net/img/images/acabamento.svg" alt="..." id="img-ac">
+              <label for="acabamento" class="lbl-ac">Acabamento</label>
+          </div>
+          </div>
             <label for="inp-num" class="lb-num">Quantidade</label>
             <input type="number" name="inp-num" id="inp-num" min="1" max="99" value="1">
             <button id="adicionarCarrinho" class="addCart">Adicionar ao Carrinho</button>
@@ -455,7 +578,7 @@
     </main>
     <span id="voltar_ao_topo" class="material-icons">expand_less</span>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.4/fetch.min.js"></script>
-    <script src="../scripts/script.js"></script>
+    <!--<script src="../scripts/script.js"></script>-->
 
     <script>
 
@@ -501,7 +624,7 @@
                 });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
   const params = new URLSearchParams(window.location.search);
   const produtoId = params.get('id');
@@ -536,13 +659,33 @@
         return;
       }
 
+    const params = new URLSearchParams(window.location.search);
+    const produtoId = params.get('id');
+    const materialSelecionado = document.getElementById('material').value;
+    const formatoSelecionado = document.getElementById('formato').value;
+    const corSelecionada = document.getElementById('cor').value;
+    const enobrecimentoSelecionado = document.getElementById('enobrecimento').value;
+    const acabamentoSelecionado = document.getElementById('acabamento').value;
+
+    const variacoesSelecionadas = {
+      idProduto: produtoId,
+      material: materialSelecionado,
+      formato: formatoSelecionado,
+      cor: corSelecionada,
+      enobrecimento: enobrecimentoSelecionado,
+      acabamento: acabamentoSelecionado
+    };
+
+    console.log('Variações Selecionadas', variacoesSelecionadas);
+
+
       // Faça uma solicitação POST para adicionar o produto ao carrinho
       const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ quantidade })
+        body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
       });
 
       if (response.ok) {
@@ -560,7 +703,6 @@
     }
   });
 });
-
 
 // Seletor do elemento de entrada de arquivo
 const inputArquivo = document.getElementById('file');
@@ -625,64 +767,6 @@ inputArquivo.addEventListener('change', function() {
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  const formPesquisa = document.getElementById('formPesquisa');
-  const caixaPesq = document.getElementById('caixaPesq');
-  const resultadosPesquisa = document.getElementById('resultadosPesquisa');
-  const limparPesq = document.getElementById('limparPesq');
-  // Variável para armazenar o ID do timer de pesquisa
-  let searchTimer;
-
-  formPesquisa.addEventListener('input', async () => {
-    const query = caixaPesq.value.trim();
-
-    if (query === '') {
-      resultadosPesquisa.style.display = 'none';
-      resultadosPesquisa.innerHTML = '';
-      return;
-    }
-
-    // Cancelar pesquisas anteriores (se houver alguma)
-    if (searchTimer) {
-      clearTimeout(searchTimer);
-    }
-
-    // Agendar uma nova pesquisa após um pequeno atraso (por exemplo, 300ms)
-    searchTimer = setTimeout(async () => {
-      try {
-        const response = await fetch(`/pesquisar-produtos?query=${encodeURIComponent(query)}`);
-        const data = await response.json();
-
-        resultadosPesquisa.innerHTML = '';
-
-        if (data.produtos && data.produtos.length === 0) {
-          resultadosPesquisa.innerHTML = '<p>Nenhum produto encontrado.</p>';
-        } else if (data.produtos) {
-          data.produtos.forEach((produto) => {
-            const cardProduto = document.createElement('a');
-            cardProduto.setAttribute('style', 'text-decoration:none; color:black;')
-            cardProduto.href = `html/detalhes-produtos.html?id=${produto.id}`;
-            cardProduto.classList.add('product-card');
-  
-            cardProduto.innerHTML = `
-              <img src="/imagens/${produto.id}" alt="${produto.nomeProd}">
-              <h2>${produto.nomeProd}</h2>
-              <!--<p>${produto.descProd}</p>
-              <p>Valor: R$ ${parseFloat(produto.valorProd).toFixed(2)}</p>-->
-            `;
-  
-            resultadosPesquisa.appendChild(cardProduto);
-          });
-          resultadosPesquisa.style.display = 'block';
-        }
-      } catch (error) {
-        console.error('Erro na pesquisa de produtos:', error);
-        resultadosPesquisa.innerHTML = '<p>Erro na pesquisa de produtos.</p>';
-      }
-    }, 300); // Defina o tempo de atraso desejado (em milissegundos)
-  });
-});
-
 document.addEventListener('DOMContentLoaded', function () {
     // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
     const params = new URLSearchParams(window.location.search);
@@ -698,43 +782,171 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Lida com o clique no botão "Avançar"
     avancarBtn.addEventListener('click', async () => {
-        try {
-            // Obtenha a quantidade escolhida pelo usuário
-            const quantidade = parseInt(inputQuantidade.value);
-    
-            // Verifique se a quantidade é válida (maior que 0)
-            if (quantidade <= 0) {
-                alert('Por favor, escolha uma quantidade válida maior que 0.');
-                return;
-            }
-    
-            // Faça uma solicitação POST para adicionar o produto ao carrinho
-            const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantidade })
-            });
-    
-            if (response.ok) {
-                // Produto adicionado com sucesso ao carrinho
-                console.log(`Produto (ID ${produtoId}) adicionado ao carrinho com quantidade ${quantidade}.`);
-                // Limpe o campo de entrada de quantidade
-                inputQuantidade.value = '1';
-                window.location.href = 'carrinho.html'
-            } else {
-                // Trate qualquer erro de adição ao carrinho
-                alert('Erro ao adicionar o produto ao carrinho');
-            }
-        } catch (error) {
-            console.error('Erro ao adicionar o produto ao carrinho:', error);
-            alert('Erro ao adicionar o produto ao carrinho');
-        }
+            try {
+      // Obtenha a quantidade escolhida pelo usuário
+      const quantidade = parseInt(inputQuantidade.value);
+
+      // Verifique se a quantidade é válida (maior que 0)
+      if (quantidade <= 0) {
+        alert('Por favor, escolha uma quantidade válida maior que 0.');
+        return;
+      }
+
+    const params = new URLSearchParams(window.location.search);
+    const produtoId = params.get('id');
+    const materialSelecionado = document.getElementById('material').value;
+    const formatoSelecionado = document.getElementById('formato').value;
+    const corSelecionada = document.getElementById('cor').value;
+    const enobrecimentoSelecionado = document.getElementById('enobrecimento').value;
+    const acabamentoSelecionado = document.getElementById('acabamento').value;
+
+    const variacoesSelecionadas = {
+      idProduto: produtoId,
+      material: materialSelecionado,
+      formato: formatoSelecionado,
+      cor: corSelecionada,
+      enobrecimento: enobrecimentoSelecionado,
+      acabamento: acabamentoSelecionado
+    };
+
+    console.log('Variações Selecionadas', variacoesSelecionadas);
+
+
+      // Faça uma solicitação POST para adicionar o produto ao carrinho
+      const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
+      });
+
+      if (response.ok) {
+        // Produto adicionado com sucesso ao carrinho
+        console.log(`Produto (ID ${produtoId}) adicionado ao carrinho com quantidade ${quantidade}.`);
+        // Limpe o campo de entrada de quantidade
+        inputQuantidade.value = '1';
+        window.location.href = 'carrinho.html'
+      } else {
+        // Trate qualquer erro de adição ao carrinho
+        alert('Erro ao adicionar o produto ao carrinho');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar o produto ao carrinho:', error);
+      alert('Erro ao adicionar o produto ao carrinho');
+    }
     });
 });
+// Função para carregar as variações do produto
+async function carregarVariacoesDoProduto() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const produtoId = params.get('id');
+        
+        // Faça uma solicitação AJAX para obter as variações do produto com base no ID
+        const responseVar = await fetch(`/variacoes-produto/${produtoId}`);
+        const variacoes = await responseVar.json();
 
+        console.log('Variações do produto:', variacoes);
 
+        // Verifica se existem variações antes de continuar
+        if (variacoes && variacoes.length > 0) {
+            // Chame a função para criar os selects
+            criarSelect(variacoes, 'material', 'secaoMaterial');
+            criarSelect(variacoes, 'formato', 'secaoFormato');
+            criarSelect(variacoes, 'cor', 'secaoCores');
+            criarSelect(variacoes, 'enobrecimento', 'secaoEnobrecimento');
+            criarSelect(variacoes, 'acabamento', 'secaoAcabamento');
+        } else {
+            console.error('Nenhuma variação encontrada para o produto.');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar variações do produto:', error);
+    }
+}
+// Função para criar os selects
+// Função para criar os selects
+function criarSelect(variacoes, tipo, idSecao) {
+    // Obtém a seção onde o select será adicionado
+    const secao = document.getElementById(idSecao);
+
+    // Cria um select element
+    const select = document.createElement('select');
+    select.name = tipo;
+    select.id = tipo;
+
+    // Adiciona um option padrão
+    /*const optionPadrao = document.createElement('option');
+    optionPadrao.value = '';
+    optionPadrao.text = `Selecione ${tipo}`;
+    select.add(optionPadrao);*/
+
+    // Itera sobre as variações para criar os options
+    variacoes.forEach(variacao => {
+        try {
+            // Remove barras invertidas duplicadas e formata a string removendo colchetes e aspas
+            const valorFormatado = variacao[tipo].replace(/\\+/g, '').replace(/[\[\]"']/g, '');
+
+            // Quebra os valores de acordo com as vírgulas
+            const valoresQuebrados = valorFormatado.split(',');
+
+            // Adiciona cada valor quebrado como uma opção no formato correto
+            valoresQuebrados.forEach(valorQuebrado => {
+                const option = document.createElement('option');
+                option.value = valorQuebrado.trim(); // Remove espaços em branco adicionais
+                option.text = valorQuebrado.trim();
+                select.add(option);
+            });
+        } catch (error) {
+            console.error('Erro ao processar variação:', error);
+        }
+    });
+
+    // Adiciona o select à seção
+    secao.appendChild(select);
+}
+
+// Chame a função
+carregarVariacoesDoProduto();
+
+// Atualiza o preço com base na variação selecionada
+function atualizarPreco(variacoes, tipo, precoElement) {
+    // Obtém os selects atualizados
+    const selects = {
+        material: document.getElementById('material'),
+        formato: document.getElementById('formato'),
+        cor: document.getElementById('cor'),
+        enobrecimento: document.getElementById('enobrecimento'),
+        acabamento: document.getElementById('acabamento')
+    };
+
+    // Obtém os valores selecionados de cada select
+    const valoresSelecionados = Object.fromEntries(
+        Object.entries(selects).map(([tipo, select]) => [tipo, select.value])
+    );
+
+    // Encontra a variação correspondente com base nos valores selecionados
+    const variacaoCorrespondente = variacoes.find(variacao => {
+        const valoresVar = Object.fromEntries(
+            Object.entries(variacao).map(([tipo, valor]) => [tipo, valor.replace(/\\+/g, '').replace(/[\[\]"']/g, '')])
+        );
+        return JSON.stringify(valoresVar) === JSON.stringify(valoresSelecionados);
+    });
+
+    // Atualiza o preço com base na variação selecionada
+    if (variacaoCorrespondente) {
+        // Você precisará ajustar isso com base na sua estrutura de variações
+        const novoPreco = calcularNovoPreco(variacaoCorrespondente); // Implemente a lógica apropriada
+        precoElement.textContent = `Preço: R$ ${novoPreco.toFixed(2)}`;
+    }
+}
+
+// Função para calcular o novo preço com base na variação selecionada
+function calcularNovoPreco(variacao) {
+    // Adapte esta função conforme necessário com base na sua estrutura de variações
+    // Essa é apenas uma implementação de exemplo
+    return variacao.valorProd || 0; // Use a propriedade correta para o preço
+}
     </script>
 </body>
 </html>

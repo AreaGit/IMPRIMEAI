@@ -230,7 +230,7 @@ span {
     outline: none;
     margin-left: 5px;
     position: relative;
-    top: -85px;
+    top: -27px;
     left: 1395px;
 }
 .total>label {
@@ -259,7 +259,7 @@ span {
     color: #F37160;
     font-weight: bold;
     position: relative;
-    top: -20px;
+    top: 31px;
     left: 70%;
     cursor: pointer;
 }
@@ -269,13 +269,13 @@ span {
     color: green;
     padding: 14px 28px 14px 28px;
     position: relative;
-    top: -20px;
+    top: 32px;
     left: 70%;
 }
 .lb-num {
     position: relative;
     left: 73%;
-    top: -78px;
+    top: -25px;
     width: fit-content;
 }
 #valor {
@@ -283,21 +283,71 @@ span {
     font-size: 25px;
     position: relative;
     left: 84%;
-    top: 517px;
+    top: 565px;
 }
 .descProd {
     text-align: center;
     position: relative;
-    top: 30px;
+    top: 265px;
 }
 #desc {
     position: relative;
-    top: 844px;
-    left: 822px;
+    top: 964px;
+    left: 808px;
     width: fit-content;
 }
 #carrinho_compras {
     position: absolute;
     top: 178px;
     left: 69%;
+}
+.lbl-mat {
+    font-weight: normal;
+    position: relative;
+    left: 33px;
+    top: -10px;
+}
+img#img-mat {
+    position: relative;
+    top: 17px;
+}
+.lbl-fom {
+    font-weight: normal;
+    position: relative;
+    left: 33px;
+    top: -4px;
+}
+img#img-fom {
+    position: relative;
+    top: 17px;
+}
+.lbl-cor {
+    font-weight: normal;
+    position: relative;
+    left: 33px;
+    top: -10px;
+}
+img#img-cor {
+    position: relative;
+    top: 17px;
+}
+.lbl-en {
+    font-weight: normal;
+    position: relative;
+    left: 33px;
+    top: -10px;
+}
+img#img-en {
+    position: relative;
+    top: 17px;
+}
+.lbl-ac {
+    font-weight: normal;
+    position: relative;
+    left: 33px;
+    top: -10px;
+}
+img#img-ac {
+    position: relative;
+    top: 17px;
 }

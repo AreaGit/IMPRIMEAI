@@ -485,7 +485,7 @@ app.get('/cadastrar-produto', (req, res) => {
 });
 
 // Rota para processar o envio do formulário
-app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
+/*app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
   try {
     const { nomeProd, descProd, valorProd, categoriaProd, raioProd } = req.body;
     const imgProd = req.file; // O arquivo de imagem é acessado aqui
@@ -509,6 +509,64 @@ app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
   } catch (error) {
     console.error('Erro ao cadastrar o produto:', error);
     res.status(500).json({ error: 'Erro ao cadastrar o produto', message: error.message });
+  }
+});*/
+app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
+  try {
+    const {
+      nomeProd,
+      descProd,
+      valorProd,
+      categoriaProd,
+      raioProd,
+      material,
+      formato,
+      enobrecimento,
+      cor,
+      acabamento
+    } = req.body;
+    const imgProd = req.file;
+
+    // Insira os dados na tabela Produtos
+    const novoProduto = await Produtos.create({
+      nomeProd: nomeProd,
+      descProd: descProd,
+      valorProd: valorProd,
+      categProd: categoriaProd,
+      raioProd: raioProd,
+      imgProd: imgProd ? imgProd.buffer : null,
+    });
+
+    // Converte arrays para strings JSON
+    const materialJSON = JSON.stringify(material.split(','));
+    const formatoJSON = JSON.stringify(formato.split(','));
+    const enobrecimentoJSON = JSON.stringify(enobrecimento.split(','));
+    const corJSON = JSON.stringify(cor.split(','));
+    const acabamentoJSON = JSON.stringify(acabamento.split(','));
+
+    // Insira os dados na tabela de VariaçõesProduto
+    const variacoesProduto = await VariacoesProduto.create({
+      idProduto: novoProduto.id,
+      material: materialJSON,
+      formato: formatoJSON,
+      enobrecimento: enobrecimentoJSON,
+      cor: corJSON,
+      acabamento: acabamentoJSON,
+    });
+
+    const categoria = categoriaProd.toLowerCase().replace(/ /g, '-');
+    res.json({
+      message: 'Produto cadastrado com sucesso',
+      produto: novoProduto,
+      variacoes: variacoesProduto,
+      categoria: categoria,
+    });
+  } catch (error) {
+    console.error('Erro ao cadastrar o produto:', error);
+    res.status(500).json({
+      error: 'Erro ao cadastrar o produto',
+      message: error.message,
+    });
   }
 });
 
@@ -788,6 +846,22 @@ app.get('/produto/:id', async (req, res) => {
   }
 }); 
 
+app.get('/variacoes-produto/:id', async (req, res) => {
+  try {
+    const produtoId = parseInt(req.params.id);
+
+    // Buscar as variações do produto com base no ID do produto
+    const variacoes = await VariacoesProduto.findAll({
+      where: { idProduto: produtoId }
+    });
+
+    res.json(variacoes);
+  } catch (error) {
+    console.error('Erro ao buscar variações do produto:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+});
+
 app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
   try {
     const { idPedido, idProduto } = req.params;
@@ -874,7 +948,7 @@ app.get('/perfil', (req, res) => {
 app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   try {
     const produtoId = req.params.produtoId;
-    const { quantidade } = req.body; // A quantidade do produto a ser adicionada
+    const { quantidade, ...variacoesSelecionadas } = req.body; // A quantidade do produto a ser adicionada
 
     // Verifique se a quantidade é um número válido
     if (typeof quantidade !== 'number' || quantidade <= 0) {
@@ -909,7 +983,12 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
         quantidade: quantidade,
         valorUnitario: produto.valorProd,
         subtotal: quantidade * produto.valorProd,
-        raioProd: produto.raioProd
+        raioProd: produto.raioProd,
+        acabamento: variacoesSelecionadas.acabamento,
+        cor: variacoesSelecionadas.cor,
+        enobrecimento: variacoesSelecionadas.enobrecimento,
+        formato: variacoesSelecionadas.formato,
+        material: variacoesSelecionadas.material,
       });
     }
 
@@ -1191,6 +1270,11 @@ app.get('/pagamento', (req, res) => {
               quantidade: produtoQuebrado.quantidade,
               valorProd: produto.valorProd,
               raio: produto.raioProd,
+              acabamento: produtoQuebrado.acabamento,
+              cor: produtoQuebrado.cor,
+              enobrecimento: produtoQuebrado.enobrecimento,
+              formato: produtoQuebrado.formato,
+              material: produtoQuebrado.material,
               // ... outros campos relevantes ...
             });
           });
@@ -1249,6 +1333,11 @@ app.get('/pagamento', (req, res) => {
               quantidade: produtoNoCarrinho.quantidade,
               valorProd: produto.valorProd,
               raio: produto.raioProd,
+              acabamento: produtoNoCarrinho.acabamento,
+              cor: produtoNoCarrinho.cor,
+              enobrecimento: produtoNoCarrinho.enobrecimento,
+              formato: produtoNoCarrinho.formato,
+              material: produtoNoCarrinho.material,
             });
           });
     

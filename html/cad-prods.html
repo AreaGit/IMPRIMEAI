@@ -79,77 +79,118 @@
         </div>
 
         <h1>Cadastro de Produtos</h1>
-        <label for="nomeProd">Nome do Produto</label>
-        <input type="text" name="nomeProd" id="nomeProd" required>
-        <br>
-        <label for="descProd">Descrição do Produto</label>
-        <input type="text" name="descProd" id="descProd" required>
-        <br>
-        <label for="valorProd">Valor do Produto</label>
-        <input type="number" name="valorProd" id="valorProd" required step="0.1">
-        <br>
-        <label for="imgProd">Imagem do Produto</label>
-        <input type="file" name="imgProd" id="imgProd" required>
-        <br>
-        <label for="categoriaProd">Categoria do Produto</label>
-        <input type="text" name="categoriaProd" id="categoriaProd" required>
-        <br>
-        <label for="raioProd">Raio do Produto</label>
-        <input type="number" name="raioProd" id="raioProd" required>
-        <br>
-        <button type="submit" id="btnCadProd">Cadastrar Produto</button>
-    </form>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const nomeProd = document.getElementById('nomeProd');
-            const descProd = document.getElementById('descProd');
-            const valorProd = document.getElementById('valorProd');
-            const imgProd = document.getElementById('imgProd');
-            const categoriaProd = document.getElementById('categoriaProd');
-            const raioProd = document.getElementById('raioProd');
-            const btnCadProd = document.getElementById('btnCadProd');
+    <label for="nomeProd">Nome do Produto</label>
+    <input type="text" name="nomeProd" id="nomeProd" required>
+    <br>
+    <label for="descProd">Descrição do Produto</label>
+    <input type="text" name="descProd" id="descProd" required>
+    <br>
+    <label for="valorProd">Valor do Produto</label>
+    <input type="number" name="valorProd" id="valorProd" required step="0.1">
+    <br>
+    <label for="imgProd">Imagem do Produto</label>
+    <input type="file" name="imgProd" id="imgProd" required>
+    <br>
+    <label for="categoriaProd">Categoria do Produto</label>
+    <input type="text" name="categoriaProd" id="categoriaProd" required>
+    <br>
+    <label for="raioProd">Raio do Produto</label>
+    <input type="number" name="raioProd" id="raioProd" required>
+    <br>
+    <!-- Campos para variações -->
+    <label for="material">Material (separar por vírgulas)</label>
+    <input type="text" name="material" id="material" required>
+    
+    <label for="formato">Formato (separar por vírgulas)</label>
+    <input type="text" name="formato" id="formato" required>
+    
+    <label for="enobrecimento">Enobrecimento (separar por vírgulas)</label>
+    <input type="text" name="enobrecimento" id="enobrecimento" required>
+    
+    <label for="cor">Cor (separar por vírgulas)</label>
+    <input type="text" name="cor" id="cor" required>
+    
+    <label for="acabamento">Acabamento (separar por vírgulas)</label>
+    <input type="text" name="acabamento" id="acabamento" required>
+    
+    <button type="submit" id="btnCadProd">Cadastrar Produto</button>
+  </form>
 
-            btnCadProd.addEventListener('click', cadastrarProduto);
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const nomeProd = document.getElementById('nomeProd');
+    const descProd = document.getElementById('descProd');
+    const valorProd = document.getElementById('valorProd');
+    const imgProd = document.getElementById('imgProd');
+    const categoriaProd = document.getElementById('categoriaProd');
+    const raioProd = document.getElementById('raioProd');
+    const materialInput = document.getElementById('material');
+    const formatoInput = document.getElementById('formato');
+    const enobrecimentoInput = document.getElementById('enobrecimento');
+    const corInput = document.getElementById('cor');
+    const acabamentoInput = document.getElementById('acabamento');
+    const btnCadProd = document.getElementById('btnCadProd');
 
-            function cadastrarProduto(event) {
-                event.preventDefault(); // Evitar o comportamento padrão do formulário (recarregar a página)
+    btnCadProd.addEventListener('click', cadastrarProduto);
 
-                const produto = {
-                    nomeProd: nomeProd.value,
-                    descProd: descProd.value,
-                    valorProd: parseFloat(valorProd.value), // Converte para número decimal
-                    categoriaProd: categoriaProd.value,
-                    raioProd: parseInt(raioProd.value), // Converte para inteiro
-                    imgProd: imgProd.files[0], // O arquivo de imagem selecionado
-                };
+    function cadastrarProduto(event) {
+        event.preventDefault();
 
-                const formData = new FormData();
-                formData.append('nomeProd', produto.nomeProd);
-                formData.append('descProd', produto.descProd);
-                formData.append('valorProd', produto.valorProd);
-                formData.append('categoriaProd', produto.categoriaProd);
-                formData.append('raioProd', produto.raioProd)
-                formData.append('imgProd', produto.imgProd);
+        const produto = {
+            nomeProd: nomeProd.value,
+            descProd: descProd.value,
+            valorProd: parseFloat(valorProd.value),
+            categoriaProd: categoriaProd.value,
+            raioProd: parseInt(raioProd.value),
+            imgProd: imgProd.files[0],
+            // Coleta os valores dos campos de entrada
+            material: materialInput.value,
+            formato: formatoInput.value,
+            enobrecimento: enobrecimentoInput.value,
+            cor: corInput.value,
+            acabamento: acabamentoInput.value,
+        };
 
-                fetch('/cadastrar-produto', {
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Lidar com a resposta do servidor aqui, como exibir uma mensagem de sucesso.
-                        console.log(data);
-                        // Limpar os campos do formulário, se necessário
-                        nomeProd.value = '';
-                        descProd.value = '';
-                        valorProd.value = '';
-                        imgProd.value = '';
-                        categoriaProd.value = '';
-                        raioProd.value = '';
-                    })
-                    .catch((error) => console.error(error));
+        // Converte os valores em arrays
+        produto.material = produto.material.split(',').map(item => item.trim());
+        produto.formato = produto.formato.split(',').map(item => item.trim());
+        produto.enobrecimento = produto.enobrecimento.split(',').map(item => item.trim());
+        produto.cor = produto.cor.split(',').map(item => item.trim());
+        produto.acabamento = produto.acabamento.split(',').map(item => item.trim());
+
+        const formData = new FormData();
+        for (const key in produto) {
+            if (Array.isArray(produto[key])) {
+                // Converte arrays para strings JSON
+                formData.append(key, JSON.stringify(produto[key]));
+            } else {
+                formData.append(key, produto[key]);
             }
-        });
-    </script>
+        }
+
+        fetch('/cadastrar-produto', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Limpar os campos do formulário, se necessário
+            nomeProd.value = '';
+            descProd.value = '';
+            valorProd.value = '';
+            imgProd.value = '';
+            categoriaProd.value = '';
+            raioProd.value = '';
+            materialInput.value = '';
+            formatoInput.value = '';
+            enobrecimentoInput.value = '';
+            corInput.value = '';
+            acabamentoInput.value = '';
+        })
+        .catch(error => console.error(error));
+    }
+});
+  </script>
 </body>
 </html>

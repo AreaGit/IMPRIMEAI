@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('./db'); // Certifique-se de que o caminho para o arquivo de configuração do banco de dados esteja correto.
+const VariacoesProduto = require('./VariacoesProduto');
 
 const Produtos = db.define('produtos', {
   nomeProd: {
@@ -28,6 +29,7 @@ const Produtos = db.define('produtos', {
   },
 });
 
+Produtos.hasMany(VariacoesProduto, { foreignKey: 'idProduto' }); // Adicione esta linha para configurar a associação
 Produtos.sync() // Use isso para criar ou atualizar a tabela
 //Produtos.sync({ force: true }) // Use isso para recriar a tabela (cuidado, dados existentes serão apagados)
 
