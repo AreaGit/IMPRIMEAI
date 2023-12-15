@@ -47,6 +47,10 @@ const ItensPedidos = db.define('itenspedidos', {
         type: Sequelize.STRING(255),
         allowNull: false
     },
+    arquivo: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
     raio: {
         type: Sequelize.FLOAT,
         allowNull: true,

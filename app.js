@@ -47,7 +47,11 @@ app.use(express.json());
 app.use(express.static(__dirname));
 app.use(cookieParser());
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+//const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 20 * 1024 * 1024 * 1024 }, // Limite de 20GB (ajuste conforme necessário)
+});
 
 const geocodeBaseUrl = 'https://nominatim.openstreetmap.org/search';
 
@@ -1000,6 +1004,36 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
     res.status(500).json({ message: 'Erro ao adicionar o produto ao carrinho' });
   }
 });
+app.post('/api/salvarArquivo', upload.single('arquivo'), async (req, res) => {
+  try {
+    const produtoId = parseInt(req.body.produtoId, 10);
+    const { linkDownload } = req.body;
+
+    //console.log('Link de Download recebido no servidor:', linkDownload);
+
+    // Lógica para atualizar o produto no carrinho com o arquivo e o link de download recebidos
+    const produtoNoCarrinho = req.session.carrinho.find((item) => item.produtoId === produtoId);
+
+    if (produtoNoCarrinho) {
+      // Atualize o produto com as informações do arquivo e link de download
+      //produtoNoCarrinho.arquivo = req.file.originalname;
+      produtoNoCarrinho.arquivo = linkDownload;
+
+      console.log(`Arquivo  e link de download salvos para o produto com o id ${produtoId}`);
+
+      // Imprima o carrinho no console após a atualização
+      console.log('Carrinho após salvar o arquivo e link de download:', req.session.carrinho);
+
+      res.status(200).json({ nomeArquivo: linkDownload });
+    } else {
+      console.error(`Produto com o id ${produtoId} não encontrado no carrinho.`);
+      res.status(404).send('Produto não encontrado no carrinho.');
+    }
+  } catch (error) {
+    console.error('Erro ao salvar arquivo e link de download:', error);
+    res.status(500).send('Erro interno ao salvar o arquivo e link de download.');
+  }
+});
 app.get('/carrinho', (req, res) => {
   try {
     // Se a sessão tiver o carrinho, envie os detalhes
@@ -1275,6 +1309,7 @@ app.get('/pagamento', (req, res) => {
               enobrecimento: produtoQuebrado.enobrecimento,
               formato: produtoQuebrado.formato,
               material: produtoQuebrado.material,
+              arquivo: produtoQuebrado.arquivo,
               // ... outros campos relevantes ...
             });
           });
@@ -1338,6 +1373,7 @@ app.get('/pagamento', (req, res) => {
               enobrecimento: produtoNoCarrinho.enobrecimento,
               formato: produtoNoCarrinho.formato,
               material: produtoNoCarrinho.material,
+              arquivo: produtoNoCarrinho.arquivo,
             });
           });
     
