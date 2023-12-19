@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.37",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
     "axios": "^1.5.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
@@ -22,6 +23,7 @@
     "express-session": "^1.17.3",
     "fs": "^0.0.1-security",
     "geolib": "^3.3.4",
+    "googleapis": "^129.0.0",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "middleware": "^1.0.0",

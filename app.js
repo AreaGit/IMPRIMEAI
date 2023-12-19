@@ -23,14 +23,14 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const XLSX = require('xlsx');
 const Sequelize = require('sequelize');
-
+const msGraph = require('@microsoft/microsoft-graph-client');
+const cors = require('cors')
 
 app.use(session({
   secret: 'seuSegredoDeSessao', // Substitua com um segredo seguro
   resave: false,
   saveUninitialized: true
 }));
-
 
 // Configurar o mecanismo de template EJS
 app.set('view engine', 'ejs');
@@ -47,11 +47,7 @@ app.use(express.json());
 app.use(express.static(__dirname));
 app.use(cookieParser());
 const storage = multer.memoryStorage();
-//const upload = multer({ storage: storage });
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 20 * 1024 * 1024 * 1024 }, // Limite de 20GB (ajuste conforme necessário)
-});
+const upload = multer({ storage: storage });
 
 const geocodeBaseUrl = 'https://nominatim.openstreetmap.org/search';
 
@@ -95,6 +91,33 @@ app.get("/local-entrega", (req, res) => {
 
 app.get("/detalhes-pedidos", (req, res) => {
   res.sendFile(__dirname + "html", "detalhes-pedidos.html"); // Verifique o caminho do arquivo
+});
+
+app.post('/upload-to-dropbox', async (req, res) => {
+  const { file, accessToken } = req.body;
+
+  try {
+    const uploadResponse = await fetch('https://content.dropboxapi.com/2/files/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/octet-stream',
+        'Dropbox-API-Arg': JSON.stringify({
+          path: '/' + file.name,
+          mode: 'add',
+          autorename: true,
+          mute: false,
+        }),
+      },
+      body: file,
+    });
+
+    const uploadData = await uploadResponse.json();
+    res.json(uploadData);
+  } catch (error) {
+    console.error('Erro no upload para o Dropbox:', error);
+    res.status(500).json({ error: 'Erro no upload para o Dropbox' });
+  }
 });
 
 app.post("/cadastro-graficas", async (req, res) => { 
@@ -1004,6 +1027,7 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
     res.status(500).json({ message: 'Erro ao adicionar o produto ao carrinho' });
   }
 });
+app.use(cors());
 app.post('/api/salvarArquivo', upload.single('arquivo'), async (req, res) => {
   try {
     const produtoId = parseInt(req.body.produtoId, 10);

@@ -1,481 +1,74 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../styles/style.css" media="all">
-<link rel="stylesheet" href="../styles/pag-prods.css">
-<link rel="stylesheet" href="styles/medias.css">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload e Download de Arquivos no Dropbox</title>
 </head>
-<style>
-    .carrinho-vazio {
-        width: fit-content;
-        position: absolute;
-        left: 40%;
-
-    }
-    .carrinho-vazio > h1 {
-        font-size: 16px;
-        color: #D9D9D9;
-        text-align: center;
-    }
-    .carrinho-vazio > p {
-        font-size: 12px;
-        color: #D9D9D9;
-        text-align: center;
-    }
-    .carrinho-vazio > a {
-        border: 1px solid #F37160;
-        padding: 0.7em 1.2em;
-        text-decoration: none;
-        color: #EF4126;
-        border-radius: 5px;
-        position: absolute;
-        top: 102%;
-        left: 34%;
-    }
-    .produto-carrinho {
-        color: #212529;
-        height: 230px;
-        margin: 72px;
-        position: relative;
-        top: -169px;
-        
-        width: 55%;
-        border-radius: 5px;
-        box-shadow: 0px 0px 7px black;
-    }
-    .produto-carrinho:hover {
-        transition: 1s;
-        box-shadow: 3px 2px 19px #ef412693;
-    }
-    .produto-carrinho > img {
-        width: 16%;
-        position: relative;
-        left: -2%;
-        top: -52px;
-    }
-    .produto-carrinho > h2 {
-        font-size: 20px;
-        width: fit-content;
-        position: relative;
-        top: -225px;
-        left: 22%;
-    }
-    .produto-carrinho > .qnt {
-        font-size: 14px;
-        width: fit-content;
-        position: relative;
-        top: -150px;
-        left: 14%;
-    }
-    .produto-carrinho > .vlr {
-        font-size: 14px;
-        width: fit-content;
-        position: relative;
-        top: -145px;
-        left: 14%;
-    }
-    .produto-carrinho > .sub {
-        font-size: 14px;
-        width: fit-content;
-        position: relative;
-        top: -140px;
-        left: 14%;
-    }
-    .produto-carrinho > .remover-produto {
-        background-color: white;
-        border: none;
-        font-size: 13px;
-        cursor: pointer;
-        color: #EF4126;
-        position: relative;
-        top: -270px;
-        left: 29%;
-    }
-    .produto-carrinho > .remover-produto:hover {
-        text-decoration: underline;
-    }
-    #resumo-compra {
-        width: 20%;
-        color: #222529;
-        height: 20%;
-        position: relative;
-        left: 76%;
-    }
-    #resumo-compra > h2 {
-        font-size: 25px;
-        font-weight: normal;
-    }
-    #resumo-compra > p,span,a {
-        font-size: 14px;
-        font-weight: normal;
-        margin: 20px 0px 20px 0px;
-    }
-    #resumo-compra > a {
-        padding: 8px 28px 8px 28px;
-    }
-    .lnk-volt {
-        border: 1px solid #EF4126;
-        color: #F37160;
-        text-decoration: none;
-    }
-.lnk-av {
-    background-color: #EF4126;
-    color: white;
-    text-decoration: none;
-    position: fixed;
-    bottom: 50px;
-    right: 6%;
-    cursor: pointer;
-    padding: 18px 28px 18px 28px;
-    border: none;
-    font-weight: bold;
-}
-li {
-    list-style: none;
-}
-.logo-imprimeai {
-    position: relative;
-    top: -39px;
-    left: 41%;
-    width: fit-content;
-}
-header > h1 {
-    position: relative;
-    top: -110px;
-    left: 41%;
-    width: fit-content;
-}
-.escLocBtn {
-    background-color: #EF4126;
-    color: white;
-    text-decoration: none;
-    padding: 8px 28px 8px 28px;
-    position: relative;
-    top: -180px;
-    left: 30%;
-}
-form#dados-entrega {
-    width: 733px;
-    position: absolute;
-    top: 107px;
-    left: 50%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-}
-form.formulario-entrega {
-    position: relative;
-    top: -607px;
-    left: 109px;
-    margin-bottom: -27px;
-}
-.input-container > input {
-    width: 580px;
-    height: 60px;
-    text-indent: 20px;
-    margin: 10px;
-    position: relative;
-    left: -9px;
-}
-h1#formH1 {
-    font-size: 27px;
-}
-div#conteudo {
-    position: relative;
-    left: 30%;
-    width: 61%;
-}
-img {
-    position: relative;
-    left: -33%;
-    top: 300px;
-    width: 17%;
-    margin: 72px;
-}
-header > p {
-    position: relative;
-    top: -93px;
-    left: 41%;
-    font-size: 14px;
-    letter-spacing: 0.4px;
-    width: fit-content;
-    font-weight: normal;
-}
-.input-container {
-    width: 61%;
-}
-input[type='file'] {
-    display: none;
-}
-label {
-    padding: 20px 10px;
-    width: 160px;
-    color: #fff;
-    text-transform: uppercase;
-    display: block;
-    margin-top: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: .5s;
-    font-size: 42px;
-    position: relative;
-    left: 50%;
-    top: -295px;
-}
-.lbl-EnvArt:hover {
-    background-color: #f3716088;
-    border-radius: 5px;
-}
-.pEnvArt {
-    width: fit-content;
-    font-weight: normal;
-    font-size: 12px;
-    position: relative;
-    left: 568px;
-    top: -326px;
-}
-input[type="checkbox"] {
-    display: none;
-}
-#lbl-EnvArtDep {
-    padding: 20px 10px;
-    width: 160px;
-    color: #fff;
-    text-transform: uppercase;
-    display: block;
-    margin-top: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: .5s;
-    font-size: 42px;
-    position: relative;
-    left: 67%;
-    top: -420px;
-}
-.pEnvArtDep {
-    width: fit-content;
-    font-weight: normal;
-    font-size: 12px;
-    position: relative;
-    left: 744px;
-    top: -455px;
-}
-.lbl-EnvArtDep.checked {
-    background-color: #f3716088; /* Cor de fundo quando checked */
-    border-radius: 5px;
-}
-label.lbl-EnvArtDep {
-    position: relative;
-    left: 67%;
-    top: -423px;
-}
-</style>
 <body>
-    <header>
-        <img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="...">
-        <h1>Upload de Arquivos</h1>
-        <p>Faça o upload de arquivo ou envie mais tarde</p>
-    </header>
-    <main>
-        <div id="carrinhoProdutos"></div>
-        <div id="resumo-compra" style="display: none;"></div>
-        <div id="conteudo"></div>
-        <button id="btnSalvaTodos" class="lnk-av">Salvar Todos</button>
-    </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', carregarProdutosCarrinho);
-      
-        async function carregarProdutosCarrinho() {
-          try {
-            const response = await fetch('/api/carrinho');
-      
-            if (!response.ok) {
-              throw new Error('Erro ao obter os dados do carrinho');
-            }
-      
-            const produtos = await response.json();
-            const carrinhoProdutos = document.getElementById('carrinhoProdutos');
-      
-            carrinhoProdutos.innerHTML = '';
-      
-            if (produtos.length === 0) {
-              carrinhoProdutos.innerHTML = `
-                <div class="carrinho-vazio">
-                  <img src="../images/CARRINHO VAZIO.png" alt="...">
-                  <h1>Seu Carrinho está Vazio</h1>
-                  <p>Adicione mais Produto ao Carrinho</p>
-                  <a href="../index.html">Ir para Loja</a>
-                </div>
-              `;
-            } else {
-              produtos.forEach((produto, index) => {
-                const produtoElement = document.createElement('div');
-                produtoElement.classList.add('produto-carrinho');
-      
-                produtoElement.innerHTML = `
-                  <img src="/imagens/${produto.produtoId}" alt="Imagem do Produto">
-                  <h2>${produto.nomeProd}</h2>
-                  <label for="envArt_${index}" class="lbl-EnvArt">
-                    <svg id="svgEnvArt" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                      <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                      <style>svg{fill:#7d7d7d}</style>
-                      <path d="M288 109.3V352c0 17.7-14.3 32-32 32s-32-14.3-32-32V109.3l-73.4 73.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l128-128c12.5-12.5 32.8-12.5 45.3 0l128 128c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352H192c0 35.3 28.7 64 64 64s64-28.7 64-64H448c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V416c0-35.3 28.7-64 64-64zM432 456a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/>
-                    </svg>
-                  </label>
-                  <p class="pEnvArt">Enviar Arquivo</p>
-                  <input type="file" name="envArt_${index}" id="envArt_${index}" data-produto-id="${produto.produtoId}">
-                  <div id="artDep">
-                  <label for="envArtDep_${index}" class="lbl-EnvArtDep">
-                    <svg id="svgDep" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512">
-                      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
-                      <path fill="#989898" d="M0 336c0 79.5 64.5 144 144 144H512c70.7 0    128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z"/>
-                    </svg>
-                  </label>
-                  <p class="pEnvArtDep">Enviar Depois</p>
-                  <input type="checkbox" name="envArtDep_${index}" id="envArtDep_${index}" onchange="toggleCheckbox(${index}, ${produto.produtoId})">
-                  </div>
-                `;
-      
-                carrinhoProdutos.appendChild(produtoElement);
-      
-                // Adiciona um ouvinte de evento para o evento "change" no input file
-                const inputFile = produtoElement.querySelector(`#envArt_${index}`);
-                const paragrafo = produtoElement.querySelector(`p.pEnvArt`);
-                const inputCheck = produtoElement.querySelector(`#artDep`);
-                const svgEnvArt = produtoElement.querySelector(`#svgEnvArt`)
-                const inputCheckbox = produtoElement.querySelector(`#envArtDep_${index}`)
-                const produtoId = produto.produtoId;
-      
-                inputFile.addEventListener('change', function () {
-                  const isChecked = inputCheck.querySelector('input[type="checkbox"]').checked;
-                  if (inputFile.files.length > 0) {
-                    console.log(`${inputFile.files[0].name}`);
-                    paragrafo.textContent = `${inputFile.files[0].name}`;
-                    paragrafo.setAttribute('style', 'position:relative; left:536px');
-                    inputCheck.setAttribute('style', 'display:none;'); // esconde o checkbox
-                    inputCheck.querySelector('input[type="checkbox"]').disabled = true;
-                    svgEnvArt.querySelector('path').setAttribute('d', 'M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z');
-                    // Adiciona o produtoId ao atributo data-produto-id do input file
-                    inputFile.setAttribute('data-produto-id', produtoId);
-                  } else {
-                    console.log('Erro');
-                    paragrafo.textContent = 'Enviar Arquivo';
-                  }
-                });
-              });
-            }
-          } catch (error) {
-            console.error('Erro ao carregar produtos do carrinho:', error);
-          }
-        }
-      
-        function toggleCheckbox(index, produtoId) {
-          const envArtDep = document.getElementById(`envArtDep_${index}`);
-          const lblEnvArtDep = document.querySelector(`label[for=envArtDep_${index}]`);
-          const inputFile = document.getElementById(`envArt_${index}`);
-          const paragrafo = document.querySelector(`#carrinhoProdutos .produto-carrinho:nth-child(${index + 1}) p.pEnvArt`);
-      
-          if (envArtDep.checked) {
-            lblEnvArtDep.classList.add("checked");
-          } else {
-            lblEnvArtDep.classList.remove("checked");
-          }
-      
-          // Atualiza o parágrafo com o nome do arquivo quando um arquivo é selecionado
-          inputFile.addEventListener('change', function () {
-            if (inputFile.files.length > 0) {
-              console.log(`Arquivo Selecionado: ${inputFile.files[0].name}`);
-              paragrafo.textContent = `Arquivo Selecionado: ${inputFile.files[0].name}`;
-            } else {
-              console.log('Erro');
-              paragrafo.textContent = 'Enviar Arquivo';
-            }
+  <input type="file" id="fileInput">
+  <button id="uploadButton">Enviar para o Dropbox</button>
+
+  <script>
+    document.getElementById('uploadButton').addEventListener('click', async () => {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (file) {
+        try {
+          // Substitua 'SEU_TOKEN_DE_ACESSO_REAL' pelo seu token de acesso do Dropbox
+          const accessToken = 'sl.BsAWIuXggtSRT1Pq9Y8VAeFvhOIL2jxxYjdUplY8cW18t7wnu9kPLSO5oPOTjo4UuLyQxxpdntViDGWdRq4k48vF6llc7b7HYuYwt_1Qe5vSpY8-CJri1YH5RmKTtXxlfuhULphtD0poTBhqEwLY9cw';
+
+          // Passo 1: Faça o upload do arquivo para o Dropbox
+          const uploadResponse = await fetch('https://content.dropboxapi.com/2/files/upload', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/octet-stream',
+              'Dropbox-API-Arg': JSON.stringify({
+                path: '/' + file.name,
+                mode: 'add',
+                autorename: true,
+                mute: false,
+              }),
+            },
+            body: file,
           });
+
+          if (!uploadResponse.ok) {
+            throw new Error('Erro ao fazer upload do arquivo para o Dropbox');
+          }
+
+          // Passo 2: Obtenha o link de compartilhamento do arquivo no Dropbox
+          const shareResponse = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              path: '/' + file.name,
+            }),
+          });
+
+          if (!shareResponse.ok) {
+            throw new Error('Erro ao obter o link de compartilhamento do Dropbox');
+          }
+
+          const linkInfo = await shareResponse.json();
+          const downloadLink = linkInfo.url;
+
+          console.log('Link de Download (Dropbox):', downloadLink);
+          alert('Arquivo enviado com sucesso! Link de download: ' + downloadLink);
+
+        } catch (error) {
+          console.error('Erro ao enviar arquivo:', error.message);
+          alert('Erro ao enviar arquivo para o Dropbox. Verifique o console para mais detalhes.');
         }
-        const linksDeDownload = [];
-
-async function salvarTodos(index, produtoId) {
-  const inputFile = document.getElementById(`envArt_${index}`);
-
-  if (inputFile.files.length > 0) {
-    const formData = new FormData();
-    formData.append('arquivo', inputFile.files[0]);
-    formData.append('produtoIndex', index);
-    formData.append('produtoId', produtoId);
-
-    try {
-      // Enviar arquivo para o servidor
-      const response = await fetch('/api/salvarArquivo', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao salvar arquivo no servidor');
+      } else {
+        alert('Por favor, selecione um arquivo para enviar.');
       }
-
-      // Obter o nome do arquivo retornado pelo servidor
-      const nomeArquivo = await response.text();
-      console.log(`Arquivo ${nomeArquivo} salvo com sucesso para o produto com o id ${produtoId}`);
-
-      // Chamar o File.io para obter o link de download
-      const fileIoResponse = await fetch('https://file.io/', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!fileIoResponse.ok) {
-        throw new Error('Erro ao enviar arquivo para o File.io');
-      }
-
-      const fileIoData = await fileIoResponse.json();
-      const linkDownload = fileIoData.link;
-
-      console.log('Link de Download (File.io):', linkDownload);
-
-      // Adicionar o nome do arquivo e link de download ao array
-      linksDeDownload.push({ nomeArquivo, linkDownload });
-
-      // Agora, incluir o link de download na chamada para o servidor
-      const responseSalvarArquivo = await fetch('/api/salvarArquivo', {
-        method: 'POST',
-        body: JSON.stringify({ produtoId, linkDownload }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!responseSalvarArquivo.ok) {
-        throw new Error('Erro ao salvar link de download no servidor');
-      }
-    } catch (error) {
-      console.error('Erro ao salvar arquivo:', error.message);
-      // Adicione lógica para informar ao usuário sobre o erro, se necessário
-    }
-  }
-}
-
-const btnSalvarTodos = document.getElementById('btnSalvaTodos');
-btnSalvarTodos.addEventListener('click', async () => {
-  const produtos = document.querySelectorAll('.produto-carrinho');
-
-  for (let i = 0; i < produtos.length; i++) {
-    const inputFile = produtos[i].querySelector(`#envArt_${i}`);
-    const produtoId = inputFile.getAttribute('data-produto-id');
-
-    if (inputFile.files.length > 0) {
-      await salvarTodos(i, produtoId);
-    }
-  }
-});
-
-      </script>
+    });
+  </script>
 </body>
 </html>

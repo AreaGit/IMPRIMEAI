@@ -1343,8 +1343,8 @@
   }
   #carrinho_compras {
     position: absolute;
-    top: 19%;
-    left: 79%;
+    top: 20%;
+    left: 87%;
   }
   #totalItens {
     position: absolute;
@@ -1354,7 +1354,7 @@
   #formPesquisa {
     width: fit-content;
     position: absolute;
-    top: 25%;
+    top: 19%;
     left: 26%;
 }
   .slider-container {
@@ -1396,48 +1396,155 @@
   #logado {
     position: relative;
     top: -3px;
-    left: 66%;
+    left: 68%;
 }
   #sairBtn {
     position: relative;
     top: 12px;
+    left: 72%;
   }
 }
-@media screen and (min-width: 1280px) and (max-width: 1360px) {
-  * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-  }
-  .icons-header {
-    width: max-content;
+@media screen and (min-width:1601px) and (max-width:1800px){
+  .logo-imprimeai {
     position: relative;
-    left: 80%;
+    left: 15%;
   }
-  .slider-container {
-    position: relative;
-    left: 50px;
+  .search__input {
+    width: 600px;
   }
   #carrinho_compras {
-    position: relative;
-    top: -95px;
-    left: 80%;
+    position: absolute;
+    top: 20%;
+    left: 87%;
   }
   #totalItens {
+    position: absolute;
+    top: 16%;
+    left: 86%;
+  }
+  #formPesquisa {
+    width: fit-content;
+    position: absolute;
+    top: 19%;
+    left: 26%;
+}
+  .slider-container {
     position: relative;
-    left: 84%;
-    top: -125px;
+    left: 10%;
+  }
+  .produtos {
+    position: relative;
+    left: -10%;
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width:  496px;
+    height: 496px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width:  496px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -496px;
+    left: 35%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width:  496px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -480px;
+    left: 35%;
+  }
+  #voltar_ao_topo {
+    position: fixed;
+    right: 81px;
   }
   #logado {
     position: relative;
-    top: -50px;
-    left: 62%;
-  }
+    top: -3px;
+    left: 68%;
+}
   #sairBtn {
     position: relative;
-    top: -40px;
-    left: 65%;
+    top: 12px;
+    left: 72%;
   }
+}
+@media screen and (min-width: 1280px) and (max-width: 1360px) {
+  .logo-imprimeai {
+    position: relative;
+    left: 10%;
+  }
+  .search__input {
+    width: 600px;
+  }
+  #carrinho_compras {
+    position: absolute;
+    top: 31%;
+    left: 95%;
+}
+  #totalItens {
+    position: absolute;
+    top: 16%;
+    left: 86%;
+  }
+  #formPesquisa {
+    width: fit-content;
+    position: absolute;
+    top: 29%;
+    left: 26%;
+}
+  .slider-container {
+    position: relative;
+    left: 0%;
+  }
+  .produtos {
+    position: relative;
+    left: -10%;
+  }
+  .content > .image1 {
+    border: 1px solid black;
+    width:  496px;
+    height: 496px;
+    margin: auto;
+  }
+  .content > .image2 {
+    border: 1px solid black;
+    width:  496px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -496px;
+    left: 39%;
+  }
+  .content > .image3 {
+    border: 1px solid black;
+    width:  496px;
+    height: 240px;
+    margin: auto;
+    position: relative;
+    top: -480px;
+    left: 39%;
+  }
+  #voltar_ao_topo {
+    position: fixed;
+    right: 81px;
+  }
+  #logado {
+    position: relative;
+    top: 26px;
+    left: 75%;
+}
+#sairBtn {
+  position: relative;
+  top: 35px;
+  left: 78%;
+}
   ::-webkit-scrollbar {
     display: none;
   }
