@@ -31,7 +31,10 @@ const Pedidos = db.define('pedidos', {
     raio: {
         type: Sequelize.FLOAT,
         allowNull: true,
-    }
+    },
+    graficaAtend: {
+        type: Sequelize.STRING(255),
+    },
 });
 
 Pedidos.hasMany(ItensPedidos, { foreignKey: 'idPed'});

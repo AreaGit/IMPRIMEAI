@@ -67,27 +67,27 @@
     .ped-nome {
         font-weight: normal;
         position: relative;
-        left: 24%;
+        left: 27%;
         width: fit-content;
         top: -20px;
     }
     .ped-valor {
         font-weight: normal;
         position: relative;
-        left: 37%;
+        left: 46%;
         width: fit-content;
         top: -42px;
     }
     .ped-quant {
         font-weight: normal;
         position: relative;
-        left: 47%;
+        left: 60%;
         width: fit-content;
         top: -64px;
     }
     a#verPed {
-        left: 52%;
-        top: -102px;
+        left: 67%;
+        top: -84px;
         width: fit-content;
         position: relative;
     }
@@ -101,7 +101,8 @@
         <nav>
             <ul class='menu2'>
                 <a href="#">Meus Pedidos</a>
-                <a href="#">Central de Ajuda</a>
+                <a href="pedAceitosGraf.html">Pedidos Aceitos</a>
+                <a href="pedFinalizadosGraf.html">Pedidos Finalizados</a>
             </ul>
             <div class="icons-header">
                 <img class="icons" src="../images/facebook-icon.png" alt="...">
@@ -140,8 +141,8 @@
                         <p class="ped-valor">${pedidos.valorProd}</p>
                         <p class="ped-quant">${pedidos.quantidade}</p>
                         <a href="detalhes-pedidos.html?idPedido=${pedidos.idPed}&idProduto=${pedidos.idProduto}" id="verPed">Detalhes do Pedido</a>
-                        <button class="ped-recusar">Recusar</button>
-                        <button class="ped-aceitar">Aceitar</button>
+                        <!--<button class="ped-recusar">Recusar</button>
+                        <button class="ped-aceitar">Aceitar</button>-->
                     `;
                     pedidosList.appendChild(li);
                     console.log(pedidos.idProduto)

@@ -47,6 +47,23 @@
             font-weight: normal;
             padding: 5px;
         }
+        button#btnAceitarPedido {
+          position: fixed;
+          right: 4%;
+          bottom: 4%;
+          padding: 10px 28px 10px 28px;
+          background-color: #EF4126;
+          border: none;
+          color: white;
+          cursor: pointer;
+      }
+        @media screen and (min-width:1280px) and (max-width:1360px) {
+          img#imagemProduto {
+            position: relative;
+            top: -645px;
+            left: 15%;
+          }
+        }
     </style>
 </head>
 <body>
@@ -58,7 +75,8 @@
         <nav>
             <ul class='menu2'>
                 <a href="#">Meus Pedidos</a>
-                <a href="#">Central de Ajuda</a>
+                <a href="pedAceitosGraf.html">Pedidos Aceitos</a>
+                <a href="pedFinalizadosGraf.html">Pedidos Finalizados</a>
             </ul>
             <div class="icons-header">
                 <img class="icons" src="../images/facebook-icon.png" alt="...">
@@ -81,6 +99,7 @@
 
         </div>
         <img id="imagemProduto" alt="Imagem do Produto">
+        <button id="btnAceitarPedido" class="aceitPed">Aceitar Pedido</button>
     </main>
     <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -176,6 +195,58 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.error('ID do Produto não encontrado na URL');
   }
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnAceitarPedido = document.getElementById('btnAceitarPedido');
+
+  btnAceitarPedido.addEventListener('click', async () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const idPedido = urlParams.get('idPedido');
+      const novoStatus = 'Pedido Aceito Pela Gráfica';
+
+      // Envia uma requisição para o servidor para atualizar o status
+      const response = await fetch('/atualizar-status-pedido', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pedidoId: idPedido,
+          novoStatus: novoStatus,
+        }),
+      });
+
+      // Verifica se a atualização foi bem-sucedida
+      if (!response.ok) {
+        throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
+      }
+
+      // Exibe uma mensagem ou realiza outras ações conforme necessário
+      const data = await response.json();
+      if (data.success) {
+        console.log('Pedido aceito com sucesso!');
+        setTimeout
+        window.location.href = 'pedAceitosGraf.html';
+
+        // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
+        if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+          // Redireciona o usuário para a nova página
+           // Substitua '/pagina-nova' pela rota desejada
+        } else {
+          // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
+        }
+
+      } else {
+        console.error('Erro ao aceitar pedido:', data.message);
+      }
+
+    } catch (error) {
+      console.error('Erro ao aceitar pedido:', error);
+    }
+  });
 });
 </script>        
 </body>

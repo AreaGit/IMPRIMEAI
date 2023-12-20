@@ -38,6 +38,7 @@ app.set('views', __dirname + '/views');
 const cookieParser = require('cookie-parser');
 const { text } = require('body-parser');
 const { error } = require('console');
+const ItensPedidos = require('./models/ItensPedido');
 
 
 const PORT = 8080;
@@ -92,6 +93,80 @@ app.get("/local-entrega", (req, res) => {
 app.get("/detalhes-pedidos", (req, res) => {
   res.sendFile(__dirname + "html", "detalhes-pedidos.html"); // Verifique o caminho do arquivo
 });
+
+app.get("/pedAceitosGraf", (req,res) => {
+  res.sendFile(__dirname + "html", "pedAceitosGraf.html")
+})
+
+app.get("/pedFinalizadosGraf", (req,res) => {
+  res.sendFile(__dirname+ "html","pedFinalizadosGraf.html")
+})
+
+app.get('/pedidos-aceitos-grafica', async (req, res) => {
+  try {
+    const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
+
+    if (!graficaId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+    // Query the database for orders with status "Pedido Aceito Pela Gráfica" and associated data
+    const pedidosAceitos = await Pedidos.findAll({
+      where: {
+        statusPed: 'Pedido Aceito Pela Gráfica',
+        graficaAtend: graficaId, // Filter by the ID of the graphics company
+      },
+      include: [
+        {
+          model: Enderecos,
+          attributes: ['rua', 'cep', 'estado', 'numero', 'complemento', 'bairro', 'cidade'],
+        },
+        {
+          model: ItensPedido,
+          attributes: ['idPed', 'idProduto', 'nomeProd', 'quantidade', 'valorProd', 'acabamento', 'cor', 'enobrecimento', 'formato', 'material', 'arquivo', 'raio', 'statusPed'],
+        },
+      ],
+    });
+
+    // Return the filtered orders with associated data as JSON
+    return res.json({ success: true, pedidos: pedidosAceitos });
+  } catch (error) {
+    console.error('Erro ao obter pedidos aceitos:', error);
+    return res.json({ success: false, message: 'Erro ao obter pedidos aceitos.' });
+  }
+});
+
+app.get('/pedidos-finalizados-grafica', async (req,res) => {
+  try {
+    const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
+
+    if (!graficaId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+    // Query the database for orders with status "Pedido Aceito Pela Gráfica" and associated data
+    const pedidosAceitos = await Pedidos.findAll({
+      where: {
+        statusPed: 'Finalizado',
+        graficaAtend: graficaId, // Filter by the ID of the graphics company
+      },
+      include: [
+        {
+          model: Enderecos,
+          attributes: ['rua', 'cep', 'estado', 'numero', 'complemento', 'bairro', 'cidade'],
+        },
+        {
+          model: ItensPedido,
+          attributes: ['idPed', 'idProduto', 'nomeProd', 'quantidade', 'valorProd', 'acabamento', 'cor', 'enobrecimento', 'formato', 'material', 'arquivo', 'raio', 'statusPed'],
+        },
+      ],
+    });
+
+    // Return the filtered orders with associated data as JSON
+    return res.json({ success: true, pedidos: pedidosAceitos });
+  } catch (error) {
+    console.error('Erro ao obter pedidos aceitos:', error);
+    return res.json({ success: false, message: 'Erro ao obter pedidos aceitos.' });
+  }
+})
 
 app.post('/upload-to-dropbox', async (req, res) => {
   const { file, accessToken } = req.body;
@@ -256,7 +331,11 @@ app.get('/pedidos-cadastrados', async (req, res) => {
     console.log('Latitude da gráfica:', coordinates.latitude);
     console.log('Longitude da gráfica:', coordinates.longitude);
 
-    const pedidosCadastrados = await ItensPedido.findAll();
+    const pedidosCadastrados = await ItensPedido.findAll({
+      where: {
+        statusPed: 'Aguardando',
+      },
+    });
     const enderecosPedCadastrados = await Enderecos.findAll();
 
     // Mapeamento de endereços por idPed para otimizar a busca
@@ -1334,6 +1413,7 @@ app.get('/pagamento', (req, res) => {
               formato: produtoQuebrado.formato,
               material: produtoQuebrado.material,
               arquivo: produtoQuebrado.arquivo,
+              statusPed: 'Aguardando',
               // ... outros campos relevantes ...
             });
           });
@@ -1398,6 +1478,7 @@ app.get('/pagamento', (req, res) => {
               formato: produtoNoCarrinho.formato,
               material: produtoNoCarrinho.material,
               arquivo: produtoNoCarrinho.arquivo,
+              statusPed: 'Aguardando',
             });
           });
     
@@ -1431,25 +1512,33 @@ app.get('/pagamento', (req, res) => {
     });
   
 // Exemplo de rota no servidor Node.js    console.log('Sessão do Carrinho:', req.session.carrinho);
+
 app.post('/atualizar-status-pedido', async (req, res) => {
   try {
-      const { pedidoId, novoStatus } = req.body;
+    const { pedidoId, novoStatus } = req.body;
 
-      // Atualize o status do pedido no banco de dados
-      const graficaAtend = req.cookies.userCad
-      const pedido = await Pedidos.findByPk(pedidoId);
-      if (!pedido) {
-          return res.json({ success: false, message: 'Pedido não encontrado.' });
-      }
+    // Atualize o status do pedido na tabela Pedidos
+    const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
+    console.log(graficaId)
+    const pedido = await Pedidos.findByPk(pedidoId);
+    if (!pedido) {
+      return res.json({ success: false, message: 'Pedido não encontrado.' });
+    }
 
-      pedido.statusPed = novoStatus;
-      pedido.graficaatend = graficaAtend
-      await pedido.save();
+    pedido.statusPed = novoStatus;
+    pedido.graficaAtend = graficaId; // Save the graphics company's ID
+    await pedido.save();
 
-      return res.json({ success: true, graficaAtend });
+    // Atualize o status do pedido na tabela ItensPedidos
+    const itensPedidos = await ItensPedido.update(
+      { statusPed: novoStatus },
+      { where: { idPed: pedidoId } }
+    );
+
+    return res.json({ success: true, graficaAtend: graficaId, itensPedidos });
   } catch (error) {
-      console.error('Erro ao atualizar o status do pedido:', error);
-      return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });
+    console.error('Erro ao atualizar o status do pedido:', error);
+    return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });
   }
 });
 
