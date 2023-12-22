@@ -13,6 +13,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <style>
+    .divAtiva {
+        background-color: white; /* Cor desejada quando o checkbox está ativo */
+    }
     button:hover {
         transform: none;
         transition: none;
@@ -275,7 +278,7 @@
     a#btnRet {
         position: relative;
         top: 25px;
-        left: -2%;
+        left: 3%;
         color: #F37160;
         font-size: 18px;
         text-decoration: none;
@@ -1381,9 +1384,10 @@
                 </form>
             </div>
             <div id="locRet">
+                <input style="display: none;" type="checkbox" name="inpLocRet" id="inpLocRet">
                 <img id="imgRet" src="../images/shop-icone.PNG" alt="...">
-                <a href="#" id="btnRet">Local de Retirada</a>
-            </div>
+                <a id="btnRet">Local de Retirada</a>
+            </div>              
         </div>
         <div id="multEnd">
             <img src="../images/globo-icon.png" id="globo-icon" alt="...">
@@ -1409,6 +1413,7 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+const inpLocRet = document.getElementById('inpLocRet');
 const unEnd = document.getElementById('unEnd');
 const endCad = document.getElementById('endCad');
 const novoEnd = document.getElementById('novoEnd');
@@ -1444,7 +1449,8 @@ const baixarPl = document.getElementById('baixarPl');
 const enviarPl = document.getElementById('enviarPl')
 const btnMult = document.getElementById('btnMult')
 const avisoMult = document.getElementById('avisoMult');
-const locRet = document.getElementById('locRet');
+
+
 
 rua.addEventListener('keyup', () => {
     if(rua.value.length <= 5) {
@@ -1665,6 +1671,71 @@ fetch('/perfil/dados') // Substitua pela URL correta da sua rota do servidor
       const telefoneCad = data.telefoneCad;
       const estadoCad = data.estadoCad
       endP.innerText = `${data.endereçoCad} ${data.numCad}, ${data.compCad}, ${data.bairroCad}, ${data.cidadeCad}, ${data.estadoCad}, ${data.cepCad}`;
+  const divLocRet = document.getElementById('locRet');
+
+  divLocRet.addEventListener('click', async () => {
+    // Adiciona ou remove a classe 'divAtiva' para estilização
+    divLocRet.classList.toggle('divAtiva');
+
+    // Adiciona ou remove o box-shadow com base na classe
+    try {
+      divLocRet.style.boxShadow = divLocRet.classList.contains('divAtiva') ? '1px 1px 6px #EF4126' : '1px 1px 6px rgba(0, 0, 0, 0.473)';
+    } catch (error) {
+      console.error('Erro ao aplicar o box-shadow:', error);
+      msg.innerHTML = `<strong>Erro ao ativar o box-shadow: ${error.message}</strong>`;
+      msg.style.color = 'red';
+      return;
+    }
+
+    // Verifica se o checkbox está marcado
+    if (divLocRet.classList.contains('divAtiva')) {
+      // Cria o objeto com os dados do endereço
+      const enderecoData = {
+        endereçoCad:endereçoCad ,
+        compCad: compCad,
+        bairroCad: bairroCad,
+        cepCad: cepCad,
+        cidadeCad: cidadeCad,
+        numCad: numCad,
+        telefoneCad: telefoneCad,
+        estadoCad: estadoCad,
+      };
+
+      try {
+        // Envia os dados do novo endereço para o servidor usando fetch
+        const response = await fetch('/salvar-endereco-retirada-no-carrinho', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ enderecoData }),
+        });
+
+        // Verifica se a resposta foi bem-sucedida
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.success) {
+            msg.innerHTML = '<strong>Endereço de Retirada Salvo com Sucesso</strong>';
+            msg.style.color = 'green';
+
+            setTimeout(() => {
+              window.location.href = 'pagamento.html';
+            }, 3000);
+          } else {
+            msg.innerHTML = `<strong>Erro ao Salvar Endereço de Retirada: ${data.error}</strong>`;
+            msg.style.color = 'red';
+          }
+        } else {
+          throw new Error(`Erro ao fazer a solicitação: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error('Erro ao fazer a solicitação:', error);
+        msg.innerHTML = `<strong>Erro ao Salvar Endereço de Retirada: ${error.message}</strong>`;
+        msg.style.color = 'red';
+      }
+    }
+  });
 
       console.log(`${endereçoCad}, ${numCad}, ${compCad}, ${bairroCad}, ${cepCad}, ${cidadeCad}`);
 

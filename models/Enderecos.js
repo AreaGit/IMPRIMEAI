@@ -60,6 +60,9 @@ const Enderecos = db.define('enderecos', {
         type: Sequelize.STRING(255),
         allowNull: true,
     },
+    tipoEntrega: {
+        type: Sequelize.STRING(255),
+    }
 })
 
 //Criar Tabela

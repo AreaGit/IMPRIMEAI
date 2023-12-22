@@ -25,6 +25,8 @@ const XLSX = require('xlsx');
 const Sequelize = require('sequelize');
 const msGraph = require('@microsoft/microsoft-graph-client');
 const cors = require('cors')
+app.use(cors());
+
 
 app.use(session({
   secret: 'seuSegredoDeSessao', // Substitua com um segredo seguro
@@ -194,7 +196,55 @@ app.post('/upload-to-dropbox', async (req, res) => {
     res.status(500).json({ error: 'Erro no upload para o Dropbox' });
   }
 });
+app.post('/atualizar-endereco-entrega', async (req, res) => {
+  const idPedido = req.body.pedidoId;
+  const idGrafica = req.cookies.userId;
 
+  try {
+    // Verificar se o pedido existe
+    const pedido = await Pedidos.findByPk(idPedido);
+
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido não encontrado' });
+    }
+
+    // Verificar se o pedido pertence à gráfica que está realizando a requisição
+    if (pedido.idGrafica !== idGrafica) {
+      return res.status(403).json({ error: 'Acesso não autorizado para este pedido' });
+    }
+
+    // Verificar se o endereço do pedido indica "Entrega a Retirar na Loja"
+    if (pedido.endereco.tipoEntrega === 'Entrega a Retirar na Loja') {
+      // Buscar a gráfica no banco de dados usando o idGrafica
+      const grafica = await Graficas.findByPk(idGrafica);
+
+      if (!grafica) {
+        return res.status(404).json({ error: 'Gráfica não encontrada' });
+      }
+
+      // Atualizar o endereço do pedido com os dados da gráfica
+      pedido.endereco = {
+        rua: grafica.enderecoCad,
+        cidade: grafica.cidadeCad,
+        estado: grafica.estadoCad,
+        cep: grafica.cepCad,
+        tipoEntrega: 'Entrega a Retirar na Loja',
+      };
+
+      // Salvar as alterações no banco de dados
+      await pedido.save();
+
+      // Retornar uma resposta de sucesso
+      res.json({ success: true, message: 'Endereço de entrega atualizado com sucesso' });
+    } else {
+      // Se o endereço não for "Entrega a Retirar na Loja", retornar uma mensagem indicando que não é necessário atualizar
+      res.json({ success: false, message: 'Endereço de entrega já está atualizado' });
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar o endereço de entrega:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
 app.post("/cadastro-graficas", async (req, res) => { 
  
   try {
@@ -1174,7 +1224,8 @@ app.post('/salvar-endereco-no-carrinho', (req, res) => {
     cepCad: cepCad,
     cidadeCad: cidadeCad,
     telefoneCad: telefoneCad,
-    estadoCad: estadoCad
+    estadoCad: estadoCad,
+    tipoEntrega: 'Único Endereço'
   };
 
   // Salve o endereço na sessão
@@ -1213,7 +1264,8 @@ app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
     cepCad: cep,
     cidadeCad: cidade,
     telefoneCad: telefone,
-    estadoCad: estado
+    estadoCad: estado,
+    tipoEntrega: 'Único Endereço'
   };
 
   // Salve o endereço na sessão
@@ -1226,6 +1278,47 @@ app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
     });
 
   console.log('Endereço Salvo na Sessão:', endereco);
+
+  res.json({ success: true });
+});
+
+app.post('/salvar-endereco-retirada-no-carrinho', (req, res) => {
+  const {
+    enderecoData: {
+      endereçoCad,
+      numCad,
+      compCad,
+      bairroCad,
+      cepCad,
+      cidadeCad,
+      telefoneCad,
+      estadoCad
+    }
+  } = req.body;
+
+  const endereco = {
+    enderecoCad: endereçoCad,
+    numCad: numCad,
+    compCad: compCad,
+    bairroCad: bairroCad,
+    cepCad: cepCad,
+    cidadeCad: cidadeCad,
+    telefoneCad:telefoneCad,
+    estadoCad: estadoCad,
+    tipoEntrega: 'Entrega a Retirar na Loja'
+  };
+
+  // Salve o endereço na sessão
+  req.session.endereco = endereco;
+   // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
+   req.session.carrinho = req.session.carrinho || [];
+   req.session.carrinho.forEach(produto => {
+     produto.endereco = endereco;
+   });
+
+  console.log('Endereço Salvo na Sessão:', endereco);
+
+  console.log('Conteúdo da Sessão:', req.session);
 
   res.json({ success: true });
 });
@@ -1437,6 +1530,7 @@ app.get('/pagamento', (req, res) => {
               raio: produtoQuebrado.raioProd,
               produtos: produtoQuebrado.produtoId,
               idProduto: produtoQuebrado.produtoId,
+              tipoEntrega: produtoQuebrado.endereco.tipoEntrega,
               // ... outros campos relevantes ...
             });
           });
@@ -1498,6 +1592,7 @@ app.get('/pagamento', (req, res) => {
             cuidados: enderecoDaSessao.cuidadosCad,
             raio: carrinhoQuebrado.length > 0 ? carrinhoQuebrado[0].raioProd : 0,
             idProduto: carrinhoQuebrado[0].produtoId,
+            tipoEntrega: enderecoDaSessao.tipoEntrega,
           });
     
           req.session.carrinho = [];

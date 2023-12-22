@@ -57,6 +57,14 @@
           color: white;
           cursor: pointer;
       }
+      .menu2 {
+        display: flex;
+        list-style: none;
+        width: max-content;
+        position: fixed;
+        top: 7%;
+        left: 56%;
+      }
         @media screen and (min-width:1280px) and (max-width:1360px) {
           img#imagemProduto {
             position: relative;
@@ -102,7 +110,9 @@
         <button id="btnAceitarPedido" class="aceitPed">Aceitar Pedido</button>
     </main>
     <script>
+      let tipoEntrega;
 document.addEventListener('DOMContentLoaded', () => {
+
   // Obtém o ID do pedido e do produto da URL
   const urlParams = new URLSearchParams(window.location.search);
   const idPedido = urlParams.get('idPedido');
@@ -120,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Exibe os detalhes do pedido no console.log do HTML
         console.log('Detalhes do Pedido:', detalhesPedido);
-        
         // Exibe as variações do produto no console.log do HTML
         if (detalhesPedido.itenspedidos && detalhesPedido.itenspedidos.length > 0) {
           const variacoesProduto = detalhesPedido.itenspedidos[0];
@@ -130,7 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const variacoesProduto = detalhesPedido.itenspedidos[0]
-        
+        tipoEntrega = detalhesPedido.enderecos[0].tipoEntrega;
+
+        if(tipoEntrega === 'Entrega a Retirar na Loja') {
+          console.log(1)
+        }else {
+          console.log(2)
+        }
+
         // Restante do código para exibir os detalhes do pedido no HTML
         const detalhesPedidoDiv = document.getElementById('dados-entrega');
         detalhesPedidoDiv.innerHTML = `
@@ -145,18 +161,31 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class=""><strong>Cor:</strong> ${variacoesProduto.cor}</p>
           <p class=""><strong>Enobrecimento:</strong> ${variacoesProduto.enobrecimento}</p>
           <p class=""><strong>Arte do Produto:</strong> <a href="${detalhesPedido.itenspedidos[0].arquivo}">Clique Aqui para Baixar</a></p>
-          <!-- Adicione mais campos conforme necessário -->
         `;
         const enderecoPedidoDiv = document.getElementById('endereco');
-        enderecoPedidoDiv.innerHTML = `${detalhesPedido.enderecos
-          ? detalhesPedido.enderecos.map(endereco => `
+        // Adiciona a lógica para verificar se o tipo de entrega é "Entrega a Retirar na Loja"
+        if (detalhesPedido.enderecos && detalhesPedido.enderecos.length > 0) {
+          const tipoEntrega = detalhesPedido.enderecos[0].tipoEntrega;
+          if (tipoEntrega === 'Entrega a Retirar na Loja') {
+            enderecoPedidoDiv.innerHTML = detalhesPedido.enderecos.map(endereco => `
+              <p class="vrEnd"><strong>Endereço:</strong>Entrega a Retirar na Loja</p>
+              <p class="endNum"><strong>Número da Residência:</strong>Entrega a Retirar na Loja</p>
+              <p class="endComp"><strong>Complemento:</strongEntrega a Retirar na Loja></p>
+              <p class="endBairro"><strong>Bairro:</strong>Entrega a Retirar na Loja</p>
+              <p class="endCid"><strong>Cidade:</strong>Entrega a Retirar na Loja</p>
+            `).join('<br>');
+          } else {
+            enderecoPedidoDiv.innerHTML = detalhesPedido.enderecos.map(endereco => `
               <p class="vrEnd"><strong>Endereço:</strong> ${endereco.rua}, ${endereco.cep}, ${endereco.estado}</p>
               <p class="endNum"><strong>Número da Residência:</strong> ${endereco.numero}</p>
               <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
               <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
               <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
-            `).join('<br>')
-          : 'Sem endereços'}`
+            `).join('<br>');
+          }
+        } else {
+          console.error('Endereço não encontrado no pedido.');
+        }
       })
       .catch(error => console.error('Erro ao obter detalhes do pedido:', error));
   } else {
@@ -196,8 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('ID do Produto não encontrado na URL');
   }
 });
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const btnAceitarPedido = document.getElementById('btnAceitarPedido');
 
