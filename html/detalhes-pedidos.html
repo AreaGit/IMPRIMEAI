@@ -58,13 +58,13 @@
           cursor: pointer;
       }
       .menu2 {
-        display: flex;
-        list-style: none;
-        width: max-content;
-        position: fixed;
-        top: 7%;
-        left: 56%;
-      }
+    display: flex;
+    list-style: none;
+    width: max-content;
+    position: relative;
+    top: 7%;
+    left: 49%;
+}
         @media screen and (min-width:1280px) and (max-width:1360px) {
           img#imagemProduto {
             position: relative;
@@ -81,11 +81,12 @@
         </div>
         <p>Tá com pressa? <strong>ImprimeAí</strong></p>
         <nav>
-            <ul class='menu2'>
-                <a href="#">Meus Pedidos</a>
-                <a href="pedAceitosGraf.html">Pedidos Aceitos</a>
-                <a href="pedFinalizadosGraf.html">Pedidos Finalizados</a>
-            </ul>
+          <ul class='menu2'>
+            <a href="pedidos-grafica.html">Meus Pedidos</a>
+            <a href="pedAceitosGraf.html">Pedidos Aceitos</a>
+            <a href="pedFinalizadosGraf.html">Pedidos Finalizados</a>
+            <a href="pedEnviadosGraf.html">Pedidos Enviados</a>
+        </ul>
             <div class="icons-header">
                 <img class="icons" src="../images/facebook-icon.png" alt="...">
                 <img class="icons" src="../images/youtube-icon.png" alt="...">
@@ -143,8 +144,122 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if(tipoEntrega === 'Entrega a Retirar na Loja') {
           console.log(1)
+            const btnAceitarPedido = document.getElementById('btnAceitarPedido') 
+            btnAceitarPedido.addEventListener('click', async () => {
+              console.log('ATUALIZANDO ENDERECO DE ENTREGA')
+              const urlParams = new URLSearchParams(window.location.search);
+              const idPedido = urlParams.get('idPedido');
+              const idProduto = urlParams.get('idProduto');
+              const responseEndereco = await fetch('/atualizar-endereco-entrega', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  pedidoId: idPedido
+                })
+              })
+              try {
+                if (!responseEndereco.ok) {
+                  throw new Error(`Erro ao enviar: ${responseEndereco.statusText}`);
+                }else {
+                  console.log('BOM')
+                }
+                } catch (error) {
+                  console.log('RUIM')
+                  throw new Error(`Erro ao enviar: ${responseEndereco.statusText}`);
+                }
+                try {
+                  console.log('ACEITANDO PEDIDO');
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const idPedido = urlParams.get('idPedido');
+                  const novoStatus = 'Pedido Aceito Pela Gráfica';
+                // Envia uma requisição para o servidor para atualizar o status
+                  const response = await fetch('/atualizar-status-pedido', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      pedidoId: idPedido,
+                      novoStatus: novoStatus,
+                    }),
+                  });
+                // Verifica se a atualização foi bem-sucedida
+                  if (!response.ok) {
+                    throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
+                  }
+                  // Exibe uma mensagem ou realiza outras ações conforme necessário
+                  const data = await response.json();
+                  if (data.success) {
+                    console.log('Pedido aceito com sucesso!');
+                    setTimeout( () =>{
+                      window.location.href = 'pedAceitosGraf.html';
+                    },3000)
+
+                  // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
+                  if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+                  // Redireciona o usuário para a nova página
+                  // Substitua '/pagina-nova' pela rota desejada
+                  } else {
+                  // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
+                  }
+                  } else {
+                    console.error('Erro ao aceitar pedido:', data.message);
+                  }
+              } catch (error) {
+                console.error('Erro ao aceitar pedido:', error);
+              }
+            })
         }else {
           console.log(2)
+  const btnAceitarPedido = document.getElementById('btnAceitarPedido');
+
+  btnAceitarPedido.addEventListener('click', async () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const idPedido = urlParams.get('idPedido');
+      const novoStatus = 'Pedido Aceito Pela Gráfica';
+
+      // Envia uma requisição para o servidor para atualizar o status
+      const response = await fetch('/atualizar-status-pedido', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pedidoId: idPedido,
+          novoStatus: novoStatus,
+        }),
+      });
+
+      // Verifica se a atualização foi bem-sucedida
+      if (!response.ok) {
+        throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
+      }
+
+      // Exibe uma mensagem ou realiza outras ações conforme necessário
+      const data = await response.json();
+      if (data.success) {
+        console.log('Pedido aceito com sucesso!');
+        window.location.href = 'pedAceitosGraf.html';
+
+        // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
+        if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+          // Redireciona o usuário para a nova página
+           // Substitua '/pagina-nova' pela rota desejada
+        } else {
+          // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
+        }
+
+      } else {
+        console.error('Erro ao aceitar pedido:', data.message);
+      }
+
+    } catch (error) {
+      console.error('Erro ao aceitar pedido:', error);
+    }
+  });
         }
 
         // Restante do código para exibir os detalhes do pedido no HTML
@@ -224,56 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.error('ID do Produto não encontrado na URL');
   }
-});
-document.addEventListener('DOMContentLoaded', () => {
-  const btnAceitarPedido = document.getElementById('btnAceitarPedido');
-
-  btnAceitarPedido.addEventListener('click', async () => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const idPedido = urlParams.get('idPedido');
-      const novoStatus = 'Pedido Aceito Pela Gráfica';
-
-      // Envia uma requisição para o servidor para atualizar o status
-      const response = await fetch('/atualizar-status-pedido', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          pedidoId: idPedido,
-          novoStatus: novoStatus,
-        }),
-      });
-
-      // Verifica se a atualização foi bem-sucedida
-      if (!response.ok) {
-        throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
-      }
-
-      // Exibe uma mensagem ou realiza outras ações conforme necessário
-      const data = await response.json();
-      if (data.success) {
-        console.log('Pedido aceito com sucesso!');
-        setTimeout
-        window.location.href = 'pedAceitosGraf.html';
-
-        // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-        if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
-          // Redireciona o usuário para a nova página
-           // Substitua '/pagina-nova' pela rota desejada
-        } else {
-          // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
-        }
-
-      } else {
-        console.error('Erro ao aceitar pedido:', data.message);
-      }
-
-    } catch (error) {
-      console.error('Erro ao aceitar pedido:', error);
-    }
-  });
 });
 </script>        
 </body>

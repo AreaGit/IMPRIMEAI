@@ -58,39 +58,39 @@
         top: 30px;
     }
     .ped-id {
-        font-weight: normal;
-        position: relative;
-        left: 18%;
-        width: fit-content;
-    }
+    font-weight: normal;
+    position: relative;
+    left: 18%;
+    width: fit-content;
+}
     .ped-nome {
-      font-weight: normal;
-      position: fixed;
-      left: 26%;
-      width: fit-content;
-      top: 52%;
-    }
+    font-weight: normal;
+    position: relative;
+    left: 23%;
+    width: fit-content;
+    top: -20px;
+}
     .ped-valor {
-      font-weight: normal;
-      position: fixed;
-      left: 37%;
-      width: fit-content;
-      top: 52%;
-    }
+    font-weight: normal;
+    position: relative;
+    left: 37%;
+    width: fit-content;
+    top: -42px;
+}
     .ped-quant {
-      font-weight: normal;
-      position: fixed;
-      left: 47%;
-      width: fit-content;
-      top: 52%;
-    }
+    font-weight: normal;
+    position: relative;
+    left: 47%;
+    width: fit-content;
+    top: -63px;
+}
     a#verPed {
-        left: 65%;
-        top: -84px;
-        width: fit-content;
-        position: relative;
-    }
-    button.btnFinalizarPedido {
+    position: relative;
+    left: 57%;
+    top: -85px;
+    width: fit-content;
+}
+    button.btnEnviarPedido {
       position: fixed;
       top: 50%;
       left: 55%;
@@ -102,9 +102,9 @@
     display: flex;
     list-style: none;
     width: max-content;
-    position: fixed;
+    position: relative;
     top: 7%;
-    left: 56%;
+    left: 49%;
 }
 </style>
 <body>
@@ -114,11 +114,12 @@
       </div>
       <p>Tá com pressa? <strong>ImprimeAí</strong></p>
       <nav>
-          <ul class='menu2'>
-              <a href="pedidos-grafica.html">Meus Pedidos</a>
-              <a href="pedAceitosGraf.html">Pedidos Aceitos</a>
-              <a href="pedFinalizadosGraf.html">Pedidos Finalizados</a>
-          </ul>
+        <ul class='menu2'>
+          <a href="pedidos-grafica.html">Meus Pedidos</a>
+          <a href="pedAceitosGraf.html">Pedidos Aceitos</a>
+          <a href="pedFinalizadosGraf.html">Pedidos Finalizados</a>
+          <a href="pedEnviadosGraf.html">Pedidos Enviados</a>
+      </ul>
           <div class="icons-header">
               <img class="icons" src="../images/facebook-icon.png" alt="...">
               <img class="icons" src="../images/youtube-icon.png" alt="...">
@@ -142,39 +143,71 @@
   </ul> 
   </main>
   <script>
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    // Fetch the orders with status "Aceitos Pela Gráfica"
-    const response = await fetch('/pedidos-finalizados-grafica');
-    
-    if (!response.ok) {
-      throw new Error(`Erro ao obter pedidos aceitos: ${response.statusText}`);
-    }
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Fetch the orders with status "Aceitos Pela Gráfica"
+        const response = await fetch('/pedidos-finalizados-grafica');
+  
+        if (!response.ok) {
+          throw new Error(`Erro ao obter pedidos finalizados: ${response.statusText}`);
+        }
+  
+        const data = await response.json();
+        const pedidosFinalizados = data.pedidos;
+  
+        // Create HTML elements for each finalized order and append them to the container
+        const pedidosContainer = document.getElementById('pedidosContainer');
+        pedidosFinalizados.forEach(pedido => {
+          pedido.itenspedidos.forEach(item => {
+            const pedidoDiv = document.createElement('li');
+            pedidoDiv.innerHTML = `
+              <p class="ped-id">${pedido.id}</p>
+              <p class="ped-nome">${item.nomeProd}</p>
+              <p class="ped-valor">${item.valorProd}</p>
+              <p class="ped-quant">${item.quantidade}</p>
+              <button class="btnEnviarPedido" data-pedido-id="${pedido.id}">Enviar Pedido</button>
+            `;
+            pedidosContainer.appendChild(pedidoDiv);
+          });
+        });
+  
+        const btnEnviarPedidos = document.querySelectorAll('.btnEnviarPedido');
+      btnEnviarPedidos.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          try {
+            const idPedido = btn.dataset.pedidoId;
+            const novoStatus = 'Pedido Enviado pela Gráfica';
 
-    const data = await response.json();
-    const pedidosAceitos = data.pedidos;
+            const response = await fetch('/atualizar-status-pedido', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pedidoId: idPedido,
+                novoStatus: novoStatus,
+              }),
+            });
 
-    // Create HTML elements for each accepted order and append them to the container
-    const pedidosContainer = document.getElementById('pedidosContainer');
-    pedidosAceitos.forEach(pedido => {
-      pedido.itenspedidos.forEach(item => {
-        const pedidoDiv = document.createElement('li');
-        pedidoDiv.innerHTML = `
-          <p class="ped-id">${pedido.id}</p>
-          <p class="ped-nome">${item.nomeProd}</p>
-          <p class="ped-valor">${item.valorProd}</p>
-          <p class="ped-quant">${item.quantidade}</p>
-          <button class="btnFinalizarPedido" data-pedido-id="${pedido.id}">Entregar Pedido</button>
-        `;
-        pedidosContainer.appendChild(pedidoDiv);
+            if (!response.ok) {
+              throw new Error(`Erro ao enviar pedido: ${response.statusText}`);
+            }
+
+            // Redirect to pedEnviadosGraf.html after updating the order status
+            window.location.href = 'pedEnviadosGraf.html';
+
+          } catch (error) {
+            console.error('Erro ao enviar pedido:', error);
+          }
+        });
       });
-    });
-  } catch (error) {
-    console.error('Erro ao obter pedidos aceitos:', error);
-  }
-});
 
-</script>
+  
+      } catch (error) {
+        console.error('Erro ao obter pedidos finalizados:', error);
+      }
+    });
+  </script>
   
   </body>
   </html>

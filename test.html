@@ -1,74 +1,57 @@
+<!-- Adicione este trecho ao seu arquivo HTML -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload e Download de Arquivos no Dropbox</title>
+  <title>Exemplo de Pedidos</title>
 </head>
 <body>
-  <input type="file" id="fileInput">
-  <button id="uploadButton">Enviar para o Dropbox</button>
 
-  <script>
-    document.getElementById('uploadButton').addEventListener('click', async () => {
-      const fileInput = document.getElementById('fileInput');
-      const file = fileInput.files[0];
+<div id="pedidos-container">
+  <!-- Os pedidos serão exibidos aqui -->
+</div>
 
-      if (file) {
-        try {
-          // Substitua 'SEU_TOKEN_DE_ACESSO_REAL' pelo seu token de acesso do Dropbox
-          const accessToken = 'sl.BsAWIuXggtSRT1Pq9Y8VAeFvhOIL2jxxYjdUplY8cW18t7wnu9kPLSO5oPOTjo4UuLyQxxpdntViDGWdRq4k48vF6llc7b7HYuYwt_1Qe5vSpY8-CJri1YH5RmKTtXxlfuhULphtD0poTBhqEwLY9cw';
-
-          // Passo 1: Faça o upload do arquivo para o Dropbox
-          const uploadResponse = await fetch('https://content.dropboxapi.com/2/files/upload', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/octet-stream',
-              'Dropbox-API-Arg': JSON.stringify({
-                path: '/' + file.name,
-                mode: 'add',
-                autorename: true,
-                mute: false,
-              }),
-            },
-            body: file,
-          });
-
-          if (!uploadResponse.ok) {
-            throw new Error('Erro ao fazer upload do arquivo para o Dropbox');
-          }
-
-          // Passo 2: Obtenha o link de compartilhamento do arquivo no Dropbox
-          const shareResponse = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              path: '/' + file.name,
-            }),
-          });
-
-          if (!shareResponse.ok) {
-            throw new Error('Erro ao obter o link de compartilhamento do Dropbox');
-          }
-
-          const linkInfo = await shareResponse.json();
-          const downloadLink = linkInfo.url;
-
-          console.log('Link de Download (Dropbox):', downloadLink);
-          alert('Arquivo enviado com sucesso! Link de download: ' + downloadLink);
-
-        } catch (error) {
-          console.error('Erro ao enviar arquivo:', error.message);
-          alert('Erro ao enviar arquivo para o Dropbox. Verifique o console para mais detalhes.');
-        }
-      } else {
-        alert('Por favor, selecione um arquivo para enviar.');
-      }
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch('/pedidos-cadastrados', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Adicione qualquer configuração adicional necessária, como headers de autenticação
     });
-  </script>
+
+    const data = await response.json();
+
+    if (response.ok) {
+      const pedidosContainer = document.getElementById('pedidos-container');
+
+      if (data.pedidos && data.pedidos.length > 0) {
+        // Exibir pedidos
+        const pedidosList = document.createElement('ul');
+        data.pedidos.forEach(pedido => {
+          const pedidoItem = document.createElement('li');
+          pedidoItem.textContent = `Pedido ID: ${pedido.idPed} - Gráfica ID: ${pedido.graficaId}`;
+          pedidosList.appendChild(pedidoItem);
+        });
+        pedidosContainer.appendChild(pedidosList);
+      } else {
+        // Nenhum pedido encontrado
+        const mensagem = document.createElement('p');
+        mensagem.textContent = 'Nenhum pedido encontrado dentro dos raios permitidos.';
+        pedidosContainer.appendChild(mensagem);
+      }
+    } else {
+      // Tratar erro de resposta
+      console.error('Erro na resposta da API:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('Erro ao buscar pedidos:', error.message);
+  }
+});
+</script>
+
 </body>
 </html>

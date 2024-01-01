@@ -26,7 +26,23 @@ const Sequelize = require('sequelize');
 const msGraph = require('@microsoft/microsoft-graph-client');
 const cors = require('cors')
 app.use(cors());
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+const io = socketIo(server);
 
+io.on('connection', (socket) => {
+  console.log('Cliente conectado');
+
+  // Evento para notificar o cliente sobre novos pedidos
+  socket.on('novoPedido', (pedido) => {
+    io.emit('novoPedido', pedido); // Emitir para todos os clientes conectados
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Cliente desconectado');
+  });
+});
 
 app.use(session({
   secret: 'seuSegredoDeSessao', // Substitua com um segredo seguro
@@ -104,6 +120,35 @@ app.get("/pedFinalizadosGraf", (req,res) => {
   res.sendFile(__dirname+ "html","pedFinalizadosGraf.html")
 })
 
+app.get("/painelAdm", (req,res) => {
+  res.sendFile(__dirname + "html", "painelAdm.html")
+});
+
+app.get("/pedEnviadosGraf", (req,res) => {
+  res.sendFile(__dirname + "html", "pedEnviadosGraf.html")
+})
+
+app.get("/adm", async (req, res) => {
+  try {
+    // Lógica para obter os dados do banco de dados (substitua com sua implementação)
+    const graficas = await Graficas.findAll();
+    const pedidos = await Pedidos.findAll();
+    const itensPedidos = await ItensPedido.findAll();
+    const produtos = await Produtos.findAll();
+
+    // Formate os dados como necessário
+
+    // Envie a resposta como JSON
+    res.json({ graficas, pedidos, itensPedidos, produtos });
+  } catch (error) {
+    console.error("Erro no servidor:", error);
+
+    // Envie uma resposta de erro com código 500 e uma mensagem
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+
 app.get('/pedidos-aceitos-grafica', async (req, res) => {
   try {
     const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
@@ -170,6 +215,38 @@ app.get('/pedidos-finalizados-grafica', async (req,res) => {
   }
 })
 
+app.get('/pedidos-enviados-grafica', async (req, res) => {
+  try {
+    const graficaId = req.cookies.userId;
+
+    if (!graficaId) {
+      return res.status(401).json({ message: 'Usuário não autenticado' });
+    }
+
+    const pedidosEnviados = await Pedidos.findAll({
+      where: {
+        statusPed: 'Pedido Enviado pela Gráfica',
+        graficaatend: graficaId,
+      },
+      include: [
+        {
+          model: Enderecos,
+          attributes: ['rua', 'cep', 'estado', 'numero', 'complemento', 'bairro', 'cidade'],
+        },
+        {
+          model: ItensPedido,
+          attributes: ['idPed', 'idProduto', 'nomeProd', 'quantidade', 'valorProd', 'acabamento', 'cor', 'enobrecimento', 'formato', 'material', 'arquivo', 'raio', 'statusPed'],
+        },
+      ],
+    });
+
+    res.json({ success: true, pedidos: pedidosEnviados });
+  } catch (error) {
+    console.error('Erro ao obter pedidos enviados:', error);
+    res.status(500).json({ success: false, message: 'Erro ao obter pedidos enviados.' });
+  }
+});
+
 app.post('/upload-to-dropbox', async (req, res) => {
   const { file, accessToken } = req.body;
 
@@ -203,18 +280,14 @@ app.post('/atualizar-endereco-entrega', async (req, res) => {
   try {
     // Verificar se o pedido existe
     const pedido = await Pedidos.findByPk(idPedido);
+    const enderecoPedido = await Enderecos.findByPk(idPedido);
 
-    if (!pedido) {
+    if (!pedido || !enderecoPedido) {
       return res.status(404).json({ error: 'Pedido não encontrado' });
     }
 
-    // Verificar se o pedido pertence à gráfica que está realizando a requisição
-    if (pedido.idGrafica !== idGrafica) {
-      return res.status(403).json({ error: 'Acesso não autorizado para este pedido' });
-    }
-
     // Verificar se o endereço do pedido indica "Entrega a Retirar na Loja"
-    if (pedido.endereco.tipoEntrega === 'Entrega a Retirar na Loja') {
+    if (enderecoPedido.tipoEntrega === 'Entrega a Retirar na Loja') {
       // Buscar a gráfica no banco de dados usando o idGrafica
       const grafica = await Graficas.findByPk(idGrafica);
 
@@ -223,16 +296,14 @@ app.post('/atualizar-endereco-entrega', async (req, res) => {
       }
 
       // Atualizar o endereço do pedido com os dados da gráfica
-      pedido.endereco = {
-        rua: grafica.enderecoCad,
-        cidade: grafica.cidadeCad,
-        estado: grafica.estadoCad,
-        cep: grafica.cepCad,
-        tipoEntrega: 'Entrega a Retirar na Loja',
-      };
+      enderecoPedido.rua = grafica.endereçoCad;
+      enderecoPedido.cidade = grafica.cidadeCad;
+      enderecoPedido.estado = grafica.estadoCad;
+      enderecoPedido.cep = grafica.cepCad;
+      enderecoPedido.tipoEntrega = 'Entrega a Retirar na Loja';
 
       // Salvar as alterações no banco de dados
-      await pedido.save();
+      await enderecoPedido.save();
 
       // Retornar uma resposta de sucesso
       res.json({ success: true, message: 'Endereço de entrega atualizado com sucesso' });
@@ -351,7 +422,7 @@ app.get('/cartoes-cadastrados', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar cartões cadastrados', message: error.message });
   }
 });
-app.get('/pedidos-cadastrados', async (req, res) => {
+/*app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     const graficaId = req.cookies.userId;
 
@@ -446,10 +517,9 @@ app.get('/pedidos-cadastrados', async (req, res) => {
     console.error('Erro ao buscar pedidos cadastrados:', error);
     res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
   }
-});
-
+});*/
 // Função para calcular a distância haversine entre duas coordenadas geográficas
-function haversineDistance(lat1, lon1, lat2, lon2) {
+/*function haversineDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Raio da Terra em quilômetros
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -488,8 +558,7 @@ async function getCoordinatesFromAddress(graficaInfo, apiKey) {
     console.error('Erro ao obter coordenadas de geocodificação:', error.message);
     return { latitude: null, longitude: null, errorMessage: error.message };
   }
-}
-
+}*/
 async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   const {rua, cep, estado, cidade} = enderecoEntregaInfo;
   const formattedAddressEnd = `${rua}, ${cep}, ${cidade}, ${estado}`;
@@ -516,6 +585,171 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     return { latitude: null, longitude: null, errorMessage: error.message };
   }
 }
+
+// Função para obter coordenadas geográficas (latitude e longitude) a partir do endereço usando a API de Geocodificação do Bing Maps
+async function getCoordinatesFromAddress(addressInfo, apiKey) {
+  const { endereco, cep, cidade, estado } = addressInfo;
+  const formattedAddress = `${endereco}, ${cep}, ${cidade}, ${estado}`;
+  const geocodingUrl = `https://dev.virtualearth.net/REST/v1/Locations/${encodeURIComponent(formattedAddress)}?o=json&key=${apiKey}`;
+
+  try {
+    const response = await fetch(geocodingUrl);
+
+    if (!response.ok) {
+      throw new Error(`Erro na resposta da API: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+      const coordinates = data.resourceSets[0].resources[0].point.coordinates;
+      return { latitude: coordinates[0], longitude: coordinates[1] };
+    } else {
+      console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddress);
+      return { latitude: null, longitude: null };
+    }
+  } catch (error) {
+    console.error('Erro ao obter coordenadas de geocodificação:', error.message);
+    return { latitude: null, longitude: null, errorMessage: error.message };
+  }
+}
+
+// Função para calcular a distância haversine entre duas coordenadas geográficas
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  // Fórmula haversine
+  const R = 6371; // Raio médio da Terra em quilômetros
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+
+  return distance;
+}
+
+app.get('/pedidos-cadastrados', async (req, res) => {
+  try {
+    const graficaId = req.cookies.userId;
+
+    if (!graficaId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const grafica = await Graficas.findByPk(graficaId);
+
+    if (!grafica) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+
+    const pedidosCadastrados = await ItensPedido.findAll({
+      where: {
+        statusPed: 'Aguardando',
+      },
+    });
+
+    let found = false;
+    let pedidosProximos = [];
+
+    for (let pedido of pedidosCadastrados) {
+      const enderecoPedido = await Enderecos.findOne({
+        where: {
+          idPed: pedido.idPed,
+        },
+      });
+
+      if (!enderecoPedido) {
+        console.log(`Endereço não encontrado para o pedido com Id: ${pedido.idPed}`);
+        continue;
+      }
+
+      const enderecoEntregaInfo = {
+        endereco: enderecoPedido.rua,
+        cep: enderecoPedido.cep,
+        cidade: enderecoPedido.cidade,
+        estado: enderecoPedido.estado,
+      };
+
+      console.log(`Verificando pedido com o Id: ${pedido.idPed}`);
+      console.log(`Endereço de Entrega do pedido com o Id: ${pedido.idPed}`, enderecoEntregaInfo);
+
+      const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
+
+      if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+        console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
+        console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
+
+        const graficas = await Graficas.findAll();
+
+        let distanciaMinima = Infinity;
+        let graficaMaisProxima = null;
+
+        for (let graficaAtual of graficas) {
+          const graficaCoordinates = await getCoordinatesFromAddress({
+            endereco: graficaAtual.enderecoCad,
+            cep: graficaAtual.cepCad,
+            cidade: graficaAtual.cidadeCad,
+            estado: graficaAtual.estadoCad,
+          }, apiKey);
+
+          const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+
+          if (distanceToGrafica < distanciaMinima) {
+            distanciaMinima = distanceToGrafica;
+            graficaMaisProxima = graficaAtual;
+          }
+        }
+
+        const raioEndereco = enderecoPedido.raio;
+
+        if (distanciaMinima <= raioEndereco) {
+          console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raioEndereco} km):`, distanciaMinima, 'km');
+
+          // Atribuir o pedido à gráfica mais próxima
+          const pedidoAssociado = {
+            ...pedido.dataValues,
+            graficaId: graficaMaisProxima.id,
+          };
+
+          // Adicionar o pedido ao array se a gráfica associada for a mesma que está logada
+          if (pedidoAssociado.graficaId === grafica.id) {
+            pedidosProximos.push(pedidoAssociado);
+          }
+
+          found = true;
+        }
+      } else {
+        console.log(`Coordenadas nulas para o Endereço de Entrega.`);
+      }
+    }
+
+    if (found) {
+      console.log('Pedidos próximos à gráfica:', pedidosProximos);
+      res.json({ pedidos: pedidosProximos });
+    } else {
+      console.log('Nenhum pedido encontrado dentro dos raios permitidos.');
+      res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos.' });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar pedidos cadastrados:', error);
+
+    if (error.response) {
+      console.error('Detalhes do erro de resposta:', error.response.status, error.response.statusText);
+
+      try {
+        const errorData = await error.response.json();
+        console.error('Detalhes adicionais do erro:', errorData);
+      } catch (jsonError) {
+        console.error('Erro ao analisar o corpo JSON da resposta:', jsonError.message);
+      }
+    }
+
+    res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
+  }
+});
 
 app.get('/pedidos-usuario/:userId', async (req, res) => {
   const userId = req.cookies.userId;
@@ -640,33 +874,6 @@ app.get('/cadastrar-produto', (req, res) => {
   res.sendFile(filePath);
 });
 
-// Rota para processar o envio do formulário
-/*app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
-  try {
-    const { nomeProd, descProd, valorProd, categoriaProd, raioProd } = req.body;
-    const imgProd = req.file; // O arquivo de imagem é acessado aqui
-
-    // Insira os dados na tabela Produtos
-    const novoProduto = await Produtos.create({
-      nomeProd: nomeProd,
-      descProd: descProd,
-      valorProd: valorProd,
-      categProd: categoriaProd,
-      raioProd: raioProd,
-      imgProd: imgProd ? imgProd.buffer : null, // Armazena a imagem como buffer
-    });
-
-    const categoria = categoriaProd.toLowerCase().replace(/ /g, '-'); // Transforma a categoria em formato de URL
-    res.json({
-      message: 'Produto cadastrado com sucesso',
-      produto: novoProduto,
-      categoria: categoria,// Envie a categoria de volta como parte da resposta
-    });
-  } catch (error) {
-    console.error('Erro ao cadastrar o produto:', error);
-    res.status(500).json({ error: 'Erro ao cadastrar o produto', message: error.message });
-  }
-});*/
 app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
   try {
     const {
@@ -1071,8 +1278,6 @@ app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
   }
 });
 
-
-
 app.get('/imagem-produto/:id', async (req, res) => {
   try {
     const idProduto = req.params.id;
@@ -1407,7 +1612,6 @@ carrinho.forEach((produto, produtoIndex) => {
   }
 });
 // Adicione esta rota no seu código existente
-
 app.get('/api/carrinho', (req, res) => {
   try {
     // Obtenha os dados do carrinho da sessão

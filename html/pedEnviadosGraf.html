@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/style.css" media="all">
+    <link rel="stylesheet" href="../styles/pag-prods.css">
+    <link rel="stylesheet" href="../styles/medias.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<style>
+        main > h2 {
+        position: relative;
+        left: 15%;
+        width: fit-content;
+        text-align: left;
+        font-weight: normal;
+    }
+    ul {
+        position: relative;
+        top: 75px;
+    }
+    li {
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+    button {
+        padding: 18px 28px 18px 28px;
+        text-transform: uppercase;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        position: relative;
+        left: 70%;
+    }
+    .ped-recusar {
+        border: 1px solid #EF4126;
+        color: #F37160;
+        text-decoration: none;
+        background-color: white;
+    }
+    .ped-aceitar {
+        background-color: #EF4126;
+        color: white;
+        text-decoration: none;
+        border: none;
+    }
+    h3 {
+        display: inline;
+        padding: 20px;
+        font-weight: normal;
+        position: relative;
+        left: 14%;
+        top: 30px;
+    }
+    .ped-id {
+    font-weight: normal;
+    position: relative;
+    left: 18%;
+    width: fit-content;
+}
+    .ped-nome {
+    font-weight: normal;
+    position: relative;
+    left: 23%;
+    width: fit-content;
+    top: -20px;
+}
+    .ped-valor {
+    font-weight: normal;
+    position: relative;
+    left: 37%;
+    width: fit-content;
+    top: -42px;
+}
+    .ped-quant {
+    font-weight: normal;
+    position: relative;
+    left: 47%;
+    width: fit-content;
+    top: -63px;
+}
+    a#verPed {
+    position: relative;
+    left: 57%;
+    top: -85px;
+    width: fit-content;
+}
+    button.btnPedidoEntregue {
+      position: fixed;
+      top: 50%;
+      left: 55%;
+      background-color: #EF4126;
+      border: none;
+      color: white;
+    }
+    .menu2 {
+    display: flex;
+    list-style: none;
+    width: max-content;
+    position: relative;
+    top: 7%;
+    left: 49%;
+}
+</style>
+<body>
+  <header>
+      <div class="mini-banner">
+          <!-- IMAGEM <img src="image.jpg" alt="...">-->
+      </div>
+      <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+      <nav>
+          <ul class='menu2'>
+              <a href="pedidos-grafica.html">Meus Pedidos</a>
+              <a href="pedAceitosGraf.html">Pedidos Aceitos</a>
+              <a href="pedFinalizadosGraf.html">Pedidos Finalizados</a>
+              <a href="pedEnviadosGraf.html">Pedidos Enviados</a>
+          </ul>
+          <div class="icons-header">
+              <img class="icons" src="../images/facebook-icon.png" alt="...">
+              <img class="icons" src="../images/youtube-icon.png" alt="...">
+              <img class="icons" src="../images/instagram-icon.png" alt="...">
+          </div>
+      </nav>
+      <div class="elem1">
+         <a href="pedidos-grafica.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+          <div id="logado"></div>
+          <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
+      </div>
+  </header>
+  <main>
+      <h2 class="infoPed">Pedidos Enviados</h2>
+      <h3>ID do Pedido</h3>
+      <h3>Nome do Produto</h3>
+      <h3>Valor do Pedido</h3>
+      <h3>Quantidade</h3>
+  <ul id="pedidosContainer">
+      
+  </ul> 
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Fetch the orders with status "Pedido Enviado pela Gráfica"
+        const response = await fetch('/pedidos-enviados-grafica');
+        
+        if (!response.ok) {
+          throw new Error(`Erro ao obter pedidos enviados: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const pedidosEnviados = data.pedidos;
+
+        // Create HTML elements for each order and append them to the container
+        const pedidosContainer = document.getElementById('pedidosContainer');
+        pedidosEnviados.forEach(pedido => {
+          pedido.itenspedidos.forEach(item => {
+            const pedidoDiv = document.createElement('li');
+            pedidoDiv.innerHTML = `
+              <p class="ped-id">${pedido.id}</p>
+              <p class="ped-nome">${item.nomeProd}</p>
+              <p class="ped-valor">${item.valorProd}</p>
+              <p class="ped-quant">${item.quantidade}</p>
+              <button class="btnPedidoEntregue" data-pedido-id="${pedido.id}">Pedido Entregue</button>
+            `;
+            pedidosContainer.appendChild(pedidoDiv);
+          });
+        });
+
+        const btnPedidoEntregue = document.querySelectorAll('.btnPedidoEntregue');
+      btnPedidoEntregue.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          try {
+            const idPedido = btn.dataset.pedidoId;
+            const novoStatus = 'Pedido Entregue pela Gráfica';
+
+            const response = await fetch('/atualizar-status-pedido', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pedidoId: idPedido,
+                novoStatus: novoStatus,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Erro ao enviar pedido: ${response.statusText}`);
+            }
+
+            // Redirect to after updating the order status
+            window.location.reload()
+           
+
+          } catch (error) {
+            console.error('Erro ao enviar pedido:', error);
+          }
+        });
+      });
+
+      } catch (error) {
+        console.error('Erro ao obter pedidos enviados:', error);
+      }
+    });
+  </script>
+  </body>
+  </html>

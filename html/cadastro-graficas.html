@@ -220,6 +220,8 @@
         <br>
         <input type="text" name="agencia" id="agencia" placeholder="Digite a sua Agencia..." autocomplete="name" minlength="3" required>
         <br>
+        <input type="text" name="produtos" id="produtos" autocomplete="off" required placeholder="Digite os Produtos...">
+        <br>
         <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required minlength="3">
         <br>
         <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" minlength="8" required>
@@ -263,6 +265,8 @@ const agencia = document.getElementById('agencia')
 let validAgencia = false
 const conta = document.getElementById('conta')
 let validConta = false
+const produtos = document.getElementById('produtos');
+let validProdutos = false
             usuario.addEventListener('keyup', () => {
     const usuarioValue = usuario.value.trim(); // Remove espaços em branco do início e do fim
     if (usuarioValue.length <= 5 || usuarioValue.includes(' ')) {
@@ -395,6 +399,15 @@ conta.addEventListener('keyup', () => {
     } else {
         conta.setAttribute('style', 'color: black; border-color: green;')
         validConta = true
+    }
+})
+produtos.addEventListener('keyup', () => {
+    if(produtos.value.length  <= 3) {
+        produtos.setAttribute('style', 'color: red; border-color: red;')
+        validProdutos = false
+    }else {
+        produtos.setAttribute('style', 'color: black; border-color: green;')
+        validProdutos = true
     }
 })
 email.addEventListener('keyup', () => {

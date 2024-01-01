@@ -315,6 +315,7 @@ document.getElementById('finalizarCompraBtn').addEventListener('click', function
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
   const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+  const metodPag = 'Pix';
 
   // Crie um objeto XMLHttpRequest
   const xhr = new XMLHttpRequest();
@@ -367,6 +368,7 @@ document.getElementById('finalizarCompraBtn2').addEventListener('click', functio
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
   const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+  const metodPag = 'Boleto';
 
   // Crie um objeto XMLHttpRequest
   const xhr = new XMLHttpRequest();
@@ -418,6 +420,7 @@ document.getElementById('finalizarCompraBtn3').addEventListener('click', functio
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
   const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+  const metodPag = 'Cartão de Crédito';
 
   // Crie um objeto XMLHttpRequest
   const xhr = new XMLHttpRequest();
