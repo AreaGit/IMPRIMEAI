@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/style.css" media="all">
+    <link rel="stylesheet" href="../styles/pag-prods.css">
+    <link rel="stylesheet" href="../styles/medias.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<style>
+    .logo-imprimeai {
+        position: relative;
+        top:80px;
+        left: 45%;
+    }
+    .elem1 > h1 {
+        position: relative;
+        top: 87px;
+        left: 43%;
+        width: fit-content;
+    }
+    p#msg {
+        position: relative;
+        left: 42.9%;
+        width: fit-content;
+        top: 90px;
+    }
+    input {
+        padding: 15px;
+        width: 17vw;
+        margin: 10px 0px 10px 0px;
+    }
+    div#editarProdutoForm {
+        width: fit-content;
+        position: relative;
+        left: 43%;
+    }
+    button {
+        width: 16vw;
+        height: 40px;
+        margin: 10px;
+        font-size: 13px;
+        font-weight: bold;
+        background-color: #EF4126;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    #imagemProduto {
+        width: 18%;
+        position: relative;
+        top: -590px;
+        left: 20%;
+    }
+</style>
+<body>
+    <header>
+        <div class="mini-banner">
+            <!-- IMAGEM <img src="image.jpg" alt="...">-->
+        </div>
+        <!--<p>Tá com pressa? <strong>ImprimeAí</strong></p>-->
+        <nav>
+          <ul class='menu2'>
+            <a href="cad-prods.html">Cadastrar Produtos</a>
+            <a href="lista-produtos.html">Editar Produtos</a>
+            <a href="cadastro-graficas.html">Cadastrar Gráficas</a>
+            <a href="lista-graficas.html">Editar Gráficas</a>
+        </ul>
+        </nav>
+        <div class="elem1">
+           <a href="painelAdm.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+           <h1>Editar Produto</h1>
+           <p id="msg"></p>
+        </div>
+    </header>
+    <main>
+        <div id="editarProdutoForm"></div>
+        <img id="imagemProduto" src="" alt="...">
+    </main>
+    <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const produtoId = urlParams.get('id');
+            const editarProdutoForm = document.getElementById('editarProdutoForm');
+            const msg = document.getElementById('msg');
+            console.log(produtoId)
+         function salvarEdicao() {
+                // Obter os dados do formulário
+                const form = document.getElementById('formEditarProduto');
+                const formData = new FormData(form);
+
+                // Enviar os dados para a rota de edição
+                fetch(`/editar-produto/${produtoId}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro ao salvar as edições: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    // Exibir uma mensagem de sucesso ou redirecionar para outra página
+                    //editarProdutoForm.innerHTML = `<p>${result.message}</p>`;
+                    msg.textContent = `${result.message}`;
+                    msg.setAttribute('style', 'color:green;');
+                    setTimeout(()=>{
+                        window.location.reload();
+                    }, 5000)
+                })
+                .catch(error => {
+                    console.error(error);
+                    //editarProdutoForm.innerHTML = `<p>Erro: ${error.message}</p>`;
+                    /*msg.textContent = `Erro: ${error.message}`;
+                    msg.style.color = 'green';*/
+                    alert(`Erro: ${error.message}`)
+                    setTimeout(()=>{
+                        window.location.reload();
+                    }, 5000)
+                });
+            }
+        document.addEventListener('DOMContentLoaded', () => {
+            const editarProdutoForm = document.getElementById('editarProdutoForm');
+            
+            // Obter o ID do produto da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const produtoId = urlParams.get('id');
+            
+            // Verificar se o ID do produto está presente
+            if (!produtoId) {
+                editarProdutoForm.innerHTML = '<p>ID do produto não encontrado na URL.</p>';
+                return;
+            }
+            
+            // Fazer uma solicitação para obter as informações do produto
+            fetch(`/obter-produto/${produtoId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro ao obter informações do produto: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(produto => {
+                    // Preencher o formulário com as informações do produto
+                    editarProdutoForm.innerHTML = `
+                        <form id="formEditarProduto">
+                            <label for="nomeProd">Nome do Produto</label>
+                            <input type="text" name="nomeProd" value="${produto.nomeProd}" required>
+                            <br>
+                            <label for="descProd">Descrição do Produto</label>
+                            <input type="text" name="descProd" value="${produto.descProd}" required>
+                            <br>
+                            <label for="valorProd">Valor do Produto</label>
+                            <input type="number" name="valorProd" value="${produto.valorProd}" step="0.1" required>
+                            <br>
+                            <label for="categoriaProd">Categoria do Produto</label>
+                            <input type="text" name="categoriaProd" value="${produto.categProd}" required>
+                            <br>
+                            <label for="raioProd">Raio do Produto</label>
+                            <input type="number" name="raioProd" value="${produto.raioProd}" step="0.1" required>
+                            <br>
+                            <button type="button" onclick="salvarEdicao()">Salvar Edição</button>
+                        </form>
+                    `;
+                })
+                .catch(error => {
+                    console.error(error);
+                    editarProdutoForm.innerHTML = `<p>Erro: ${error.message}</p>`;
+                });
+
+  // Verifica se o ID do produto está presente na URL
+  if (produtoId) {
+    // Faz a requisição para o servidor para obter a imagem do produto
+    fetch(`/imagem-produto/${produtoId}`)
+      .then(response => {
+        // Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+          throw new Error(`Erro ao obter imagem do produto: ${response.statusText}`);
+        }
+        return response.blob(); // Converte a resposta para um blob (formato de imagem)
+      })
+      .then(blob => {
+        // Cria uma URL de dados que pode ser usada em uma tag <img>
+        const imagemURL = URL.createObjectURL(blob);
+
+        // Atualiza a tag <img> com a URL da imagem após garantir que ela foi carregada
+        const imagemProduto = document.getElementById('imagemProduto');
+        imagemProduto.onload = () => {
+          URL.revokeObjectURL(imagemURL); // Libera a URL para evitar vazamentos de memória
+        };
+        imagemProduto.src = imagemURL;
+      })
+      .catch(error => console.error(error));
+  } else {
+    console.error('ID do Produto não encontrado na URL');
+  }
+});
+    </script>
+</body>
+</html>

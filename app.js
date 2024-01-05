@@ -126,7 +126,23 @@ app.get("/painelAdm", (req,res) => {
 
 app.get("/pedEnviadosGraf", (req,res) => {
   res.sendFile(__dirname + "html", "pedEnviadosGraf.html")
-})
+});
+
+app.get("/listaProdutos", (req,res) => {
+  res.sendFile(__dirname + "html", "lista-produtos.html")
+});
+
+app.get("/editarProdutos", (req,res) => {
+  res.sendFile(__dirname + "html", "editar-produtos.html")
+});
+
+app.get("/listarGraficas", (req,res) => {
+  res.sendFile(__dirname + "html", "lista-graficas.html")
+});
+
+app.get("/editarGraficas", (req,res) => {
+  res.sendFile(__dirname + "html", "editar-graficas.html")
+});
 
 app.get("/adm", async (req, res) => {
   try {
@@ -148,6 +164,75 @@ app.get("/adm", async (req, res) => {
   }
 });
 
+app.get('/listar-graficas', async (req, res) => {
+  try {
+      const graficas = await Graficas.findAll();
+      res.json(graficas);
+  } catch (error) {
+      console.error('Erro ao obter a lista de gráficas:', error);
+      res.status(500).json({
+          error: 'Erro ao obter a lista de gráficas',
+          message: error.message,
+      });
+  }
+});
+
+app.get('/obter-grafica/:id', async (req, res) => {
+  try {
+      const grafica = await Graficas.findByPk(req.params.id);
+      if (!grafica) {
+          return res.status(404).json({ error: 'Gráfica não encontrada' });
+      }
+      res.json(grafica);
+  } catch (error) {
+      console.error('Erro ao obter informações da gráfica:', error);
+      res.status(500).json({
+          error: 'Erro ao obter informações da gráfica',
+          message: error.message,
+      });
+  }
+});
+
+app.post('/editar-grafica/:id', upload.none(), async (req, res) => {
+  try {
+      const { userCad, enderecoCad, cepCad, cidadeCad, estadoCad, telefoneCad, cnpjCad, inscricaoEstadualCad, bancoCad, agenciaCad, contaCorrenteCad, produtos, emailCad } = req.body;
+      console.log(req.body);
+
+      // Validação dos dados (adicione conforme necessário)
+      if (!userCad || !enderecoCad || !cepCad || !cidadeCad || !estadoCad || !telefoneCad || !cnpjCad || !inscricaoEstadualCad || !bancoCad || !agenciaCad || !contaCorrenteCad || !produtos || !emailCad) {
+          return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+      }
+
+      // Busca a gráfica pelo ID
+      const grafica = await Graficas.findByPk(req.params.id);
+
+      // Atualiza os dados da gráfica
+      grafica.userCad = userCad;
+      grafica.enderecoCad = enderecoCad;
+      grafica.cepCad = cepCad;
+      grafica.cidadeCad = cidadeCad;
+      grafica.estadoCad = estadoCad;
+      grafica.telefoneCad = telefoneCad;
+      grafica.cnpjCad = cnpjCad;
+      grafica.inscricaoEstadualCad = inscricaoEstadualCad;
+      grafica.bancoCad = bancoCad;
+      grafica.agenciaCad = agenciaCad;
+      grafica.contaCorrenteCad = contaCorrenteCad;
+      grafica.produtos = req.body.produtos
+      grafica.emailCad = emailCad;
+
+      // Salva as alterações no banco de dados
+      await grafica.save();
+
+      res.json({ message: 'Informações da gráfica atualizadas com sucesso' });
+  } catch (error) {
+      console.error('Erro ao editar informações da gráfica:', error);
+      res.status(500).json({
+          error: 'Erro ao editar informações da gráfica',
+          message: error.message,
+      });
+  }
+});
 
 app.get('/pedidos-aceitos-grafica', async (req, res) => {
   try {
@@ -319,7 +404,7 @@ app.post('/atualizar-endereco-entrega', async (req, res) => {
 app.post("/cadastro-graficas", async (req, res) => { 
  
   try {
-      const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, emailCad, passCad } = req.body;
+      const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad,produtos, emailCad, passCad } = req.body;
       const hashedPassword = await bcrypt.hash(passCad, 10);
 
       const existingGrafica = await Graficas.findOne({
@@ -339,7 +424,7 @@ app.post("/cadastro-graficas", async (req, res) => {
       const newGrafica = await Graficas.create({
           userCad: userCad,
           cnpjCad: cnpjCad,
-          endereçoCad: endereçoCad,
+          enderecoCad: endereçoCad,
           cepCad: cepCad,
           cidadeCad: cidadeCad,
           estadoCad: estadoCad,
@@ -348,6 +433,7 @@ app.post("/cadastro-graficas", async (req, res) => {
           bancoCad: bancoCad,
           agenciaCad: agenciaCad,
           contaCorrenteCad: contaCorrenteCad,
+          produtos: produtos,
           emailCad: emailCad,
           passCad: hashedPassword
       });
@@ -928,6 +1014,80 @@ app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
     console.error('Erro ao cadastrar o produto:', error);
     res.status(500).json({
       error: 'Erro ao cadastrar o produto',
+      message: error.message,
+    });
+  }
+});
+
+app.get('/listar-produtos', async (req, res) => {
+  try {
+    const produtos = await Produtos.findAll({ include: VariacoesProduto });
+
+    // Adicione a propriedade imgBase64 aos produtos
+    const produtosComImgBase64 = produtos.map(produto => {
+      return {
+        ...produto.get(),
+        imgBase64: produto.imgProd ? produto.imgProd.toString('base64') : null,
+      };
+    });
+
+    res.json(produtosComImgBase64);
+  } catch (error) {
+    console.error('Erro ao obter a lista de produtos:', error);
+    res.status(500).json({
+      error: 'Erro ao obter a lista de produtos',
+      message: error.message,
+    });
+  }
+});
+
+app.get('/obter-produto/:id', async (req, res) => {
+  try {
+    const produto = await Produtos.findByPk(req.params.id);
+    if (!produto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+    res.json(produto);
+  } catch (error) {
+    console.error('Erro ao obter informações do produto:', error);
+    res.status(500).json({
+      error: 'Erro ao obter informações do produto',
+      message: error.message,
+    });
+  }
+});
+
+app.post('/editar-produto/:id', upload.none(), async (req, res) => {
+  try {
+    const { nomeProd, descProd, valorProd, categoriaProd, raioProd } = req.body;
+
+    // Validação dos dados (adicione conforme necessário)
+    if (!nomeProd || !descProd || !valorProd || !categoriaProd || !raioProd) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+    }
+
+    // Busca o produto pelo ID
+    const produto = await Produtos.findByPk(req.params.id);
+
+    if (!produto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    // Atualiza os dados do produto
+    produto.nomeProd = nomeProd;
+    produto.descProd = descProd;
+    produto.valorProd = valorProd;
+    produto.categoriaProd = categoriaProd;
+    produto.raioProd = raioProd;
+
+    // Salva as alterações no banco de dados
+    await produto.save();
+
+    res.json({ message: 'Produto atualizado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao editar o produto:', error);
+    res.status(500).json({
+      error: 'Erro ao editar o produto',
       message: error.message,
     });
   }

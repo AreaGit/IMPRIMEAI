@@ -12,7 +12,7 @@ const Graficas = db.define('graficas', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
-    endereçoCad: {
+    enderecoCad: {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
@@ -51,6 +51,10 @@ const Graficas = db.define('graficas', {
     contaCorrenteCad: {
         type : Sequelize.STRING(255),
         allowNull: true,
+    },
+    produtos: {
+        type: Sequelize.JSON,
+        allowNull: false, // Certifique-se de que não seja nulo
     },
     emailCad: {
         type: Sequelize.STRING(255),

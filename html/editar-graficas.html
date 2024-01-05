@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/style.css" media="all">
+    <link rel="stylesheet" href="../styles/pag-prods.css">
+    <link rel="stylesheet" href="../styles/medias.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<style>
+    .logo-imprimeai {
+        position: relative;
+        top:80px;
+        left: 45%;
+    }
+    .elem1 > h1 {
+        position: relative;
+        top: 87px;
+        left: 43%;
+        width: fit-content;
+    }
+    p#msg {
+        position: relative;
+        left: 38.9%;
+        width: fit-content;
+        top: 90px;
+    }
+    input {
+        padding: 15px;
+        width: 17vw;
+        margin: 10px 0px 10px 0px;
+    }
+    div#editarGraficaForm {
+        width: fit-content;
+        position: relative;
+        left: 43%;
+    }
+    button {
+        width: 16vw;
+        height: 40px;
+        margin: 10px;
+        font-size: 13px;
+        font-weight: bold;
+        background-color: #EF4126;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+<body>
+    <header>
+        <div class="mini-banner">
+            <!-- IMAGEM <img src="image.jpg" alt="...">-->
+        </div>
+        <!--<p>Tá com pressa? <strong>ImprimeAí</strong></p>-->
+        <nav>
+          <ul class='menu2'>
+            <a href="cad-prods.html">Cadastrar Produtos</a>
+            <a href="lista-produtos.html">Editar Produtos</a>
+            <a href="cadastro-graficas.html">Cadastrar Gráficas</a>
+            <a href="lista-graficas.html">Editar Gráficas</a>
+        </ul>
+        </nav>
+        <div class="elem1">
+           <a href="painelAdm.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+           <h1>Editar Grafica</h1>
+           <p id="msg"></p>
+        </div>
+    </header>
+    <main>
+        <div id="editarGraficaForm"></div>
+    </main>
+    <script>
+        const msg = document.getElementById('msg');
+        let mensagemElement;
+        document.addEventListener('DOMContentLoaded', () => {
+            const editarGraficaForm = document.getElementById('editarGraficaForm');
+            const mensagemElement = document.getElementById('msg');
+    
+            // Obter o ID da gráfica da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const graficaId = urlParams.get('id');
+            // Verificar se o ID da gráfica está presente
+            if (!graficaId) {
+                mensagemElement.textContent = 'ID da gráfica não encontrado na URL.';
+                return;
+            }
+    
+            // Fazer uma solicitação para obter as informações da gráfica
+            fetch(`/obter-grafica/${graficaId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro ao obter informações da gráfica: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(grafica => {
+                    const produtosObj = JSON.parse(grafica.produtos);
+                    const produtosArray = Object.keys(produtosObj).map(Number).sort((a, b) => a - b);
+                    const produtosText = produtosArray.join(', ').replace(/_/g, ' ');
+                    // Preencher o formulário com as informações da gráfica
+                    editarGraficaForm.innerHTML = `
+                        <form id="formEditarGrafica">
+                            <label for="userCad">Nome do Usuário</label>
+                            <input type="text" name="userCad" value="${grafica.userCad}" required>
+                            <br>
+                            <label for="enderecoCad">Endereço</label>
+                            <input type="text" name="enderecoCad" value="${grafica.enderecoCad}" required>
+                            <br>
+                            <label for="cepCad">CEP</label>
+                            <input type="text" name="cepCad" value="${grafica.cepCad}" required>
+                            <br>
+                            <label for="cidadeCad">Cidade</label>
+                            <input type="text" name="cidadeCad" value="${grafica.cidadeCad}" required>
+                            <br>
+                            <label for="estadoCad">Estado</label>
+                            <input type="text" name="estadoCad" value="${grafica.estadoCad}" required>
+                            <br>
+                            <label for="telefoneCad">Telefone</label>
+                            <input type="text" name="telefoneCad" value="${grafica.telefoneCad}" required>
+                            <br>
+                            <label for="cnpjCad">Cnpj</label>
+                            <input type="text" name="cnpjCad" value="${grafica.cnpjCad}" required>
+                            <br>
+                            <label for="inscricaoEstadualCad">Inscricao Estadual</label>
+                            <input type="text" name="inscricaoEstadualCad" value="${grafica.inscricaoEstadualCad}" required>
+                            <br>
+                            <label for="bancoCad">Banco</label>
+                            <input type="text" name="bancoCad" value="${grafica.bancoCad}" required>
+                            <br>
+                            <label for="agenciaCad">Agencia</label>
+                            <input type="text" name="agenciaCad" value="${grafica.agenciaCad}" required>
+                            <br>
+                            <label for="contaCorrenteCad">Conta Corrente</label>
+                            <input type="text" name="contaCorrenteCad" value="${grafica.contaCorrenteCad}" required>
+                            <br>
+                            <label for="produtos">Produtos(<strong>Separar por Vírgulas</strong>)</label>
+                            <input type="text" name="produtos" value="${Object.keys(JSON.parse(grafica.produtos)).join(', ')}"" required>
+                            <br>
+                            <label for="emailCad">E-mail</label>
+                            <input type="email" name="emailCad" value="${grafica.emailCad}" required>
+                            <br>
+                            <button type="button" onclick="salvarEdicao()">Salvar Edição</button>
+                        </form>
+                    `;
+                })
+                .catch(error => {
+                    console.error(error);
+                    mensagemElement.textContent = `Erro: ${error.message}`;
+                });
+        });
+    
+        const urlParams = new URLSearchParams(window.location.search);
+        const graficaId = urlParams.get('id');
+function salvarEdicao() {
+    // Obter os dados do formulário
+    const form = document.getElementById('formEditarGrafica');
+    const formData = new FormData(form);
+    const produtosTexto = formData.get('produtos');
+    const produtosArray = produtosTexto.split(',').map(produto => produto.trim());
+    
+    const produtos = {};
+    produtosArray.forEach(produto => {
+        produtos[produto] = true;
+    });
+
+    formData.set('produtos', JSON.stringify(produtos));
+
+    // Enviar os dados para a rota de edição
+    fetch(`/editar-grafica/${graficaId}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erro ao salvar as edições: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        // Exibir uma mensagem de sucesso ou redirecionar para outra página
+        msg.textContent = result.message || 'Edições salvas com sucesso';
+        msg.setAttribute('style', 'color:green;');
+            setTimeout(()=>{
+                window.location.reload();
+            }, 5000)
+    })
+    .catch(error => {
+        console.error(error);
+        msg.textContent = `Erro: ${error.message || 'Erro desconhecido'}`;
+        alert(`Erro: ${error.message}`)
+            setTimeout(()=>{
+                window.location.reload();
+            }, 5000)
+    });
+}
+    </script>    
+</body>
+</html>

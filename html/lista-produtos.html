@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/style.css" media="all">
+    <link rel="stylesheet" href="../styles/pag-prods.css">
+    <link rel="stylesheet" href="../styles/medias.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<style>
+    .logo-imprimeai {
+        position: relative;
+        top:80px;
+        left: 45%;
+    }
+    .elem1 > h1 {
+        position: relative;
+        top: 87px;
+        left: 42%;
+        width: fit-content;
+    }
+    #imgProd {
+        width: 15%;
+        position: relative;
+        left: 5%;
+        top: 2px;
+    }
+    #listaProdutos > div {
+        box-shadow: -1px -1px 8px black;
+        width: 50%;
+        border-radius: 5px;
+        margin: 15px;
+        position: relative;
+        left: 5%;
+        height: 200px;
+    }
+    #listaProdutos > div:hover {
+        transition: 1s;
+        box-shadow: 1px 1px 6px #ef412693;
+    }
+    #listaProdutos > div > h2 {
+        position: relative;
+        left: 25%;
+        top: -80px;
+    }
+    #listaProdutos > div > p {
+        position: relative;
+        left: 25%;
+        top: -77px;
+        font-weight: normal;
+    }
+    #btnEditProd {
+        border: none;
+        color: #EF4126;
+        background-color: transparent;
+        font-size: 16px;
+        font-weight: lighter;
+        text-decoration: underline;
+        position: relative;
+        left: 105%;
+        top: -250px;
+        cursor: pointer;
+    }
+</style>
+<body>
+    <header>
+        <div class="mini-banner">
+            <!-- IMAGEM <img src="image.jpg" alt="...">-->
+        </div>
+        <!--<p>Tá com pressa? <strong>ImprimeAí</strong></p>-->
+        <nav>
+          <ul class='menu2'>
+            <a href="cad-prods.html">Cadastrar Produtos</a>
+            <a href="lista-produtos.html">Editar Produtos</a>
+            <a href="cadastro-graficas.html">Cadastrar Gráficas</a>
+            <a href="lista-graficas.html">Editar Gráficas</a>
+        </ul>
+        </nav>
+        <div class="elem1">
+           <a href="painelAdm.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+           <h1>Lista de Produtos</h1>
+        </div>
+    </header>
+    <main>
+        <div id="listaProdutos"></div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const listaProdutos = document.getElementById('listaProdutos');
+          const erroListaProdutos = document.getElementById('erroListaProdutos');
+      
+          fetch('/listar-produtos')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`Erro ao obter a lista de produtos: ${response.statusText}`);
+              }
+              return response.json();
+            })
+            .then(produtos => {
+              produtos.forEach(produto => {
+                const produtoDiv = document.createElement('div');
+      
+                // Verifica se há dados base64 da imagem
+                const imagemProduto = produto.imgBase64 ? `data:image/jpeg;base64,${produto.imgBase64}` : '';
+      
+                produtoDiv.innerHTML = `
+                  <img id="imgProd" src="${imagemProduto}" alt="${produto.nomeProd}">
+                  <h2>${produto.nomeProd}</h2>
+                  <p>${produto.descProd}</p>
+                  <p>R$ ${produto.valorProd}</p>
+                  <p>Categoria: ${produto.categProd}</p>
+                  <p>Raio: ${produto.raioProd}</p>
+                  <a id="btnEditProd" href="editar-produtos.html?id=${produto.id}">Editar Produto</a>
+                `;
+      
+                listaProdutos.appendChild(produtoDiv);
+              });
+            })
+            .catch(error => {
+              console.error(error);
+              erroListaProdutos.textContent = `Erro: ${error.message}`;
+            });
+        });
+      </script>      
+</body>
+</html>

@@ -24,6 +24,138 @@
         left: 40%;
         width: fit-content;
     }
+    .status-container {
+        position: relative;
+        left: -4%;
+    }
+    .status-box {
+        border-radius: 5px;
+        width: 200px;
+        height: 200px;
+        box-shadow: -1px -1px 8px black;
+    }
+    .status-box:hover {
+        transition: 1s;
+        box-shadow: 1px 1px 6px #ef412693;
+    }
+    #aguardandoBox {
+        position: relative;
+        left: 25%;
+        top: 30px;
+    }
+    .h2PedAguard {
+        width: fit-content;
+        font-weight: normal;
+        position: relative;
+        left: 24.4%;
+        top: 35px;
+    }
+    #spanAguard {
+        font-size: 36px;
+        position: relative;
+        left: 35%;
+        top: 80px;
+    }
+    #aceitosBox {
+        position: relative;
+        left: 40%;
+        top: -202px;
+    }
+    .h2PedAceit {
+        width: fit-content;
+        font-weight: normal;
+        position: relative;
+        left: 41%;
+        top: -198px;
+    }
+    #spanAceit {
+        font-size: 36px;
+        position: relative;
+        left: 35%;
+        top: 80px;
+    }
+    #finalizadosBox {
+        position: relative;
+        left: 55%;
+        top: -435px;
+    }
+    .h2PedFin {
+        width: fit-content;
+        font-weight: normal;
+        position: relative;
+        left: 55%;
+        top: -430px;
+    }
+    #spanFin {
+        font-size: 36px;
+        position: relative;
+        left: 35%;
+        top: 80px;
+    }
+    #entreguesBox {
+        position: relative;
+        left: 70%;
+        top: -669px;
+    }
+    .h2PedEnt {
+        width: fit-content;
+        font-weight: normal;
+        position: relative;
+        left: 70%;
+        top: -663px;
+    }
+    #spanEnt {
+        font-size: 36px;
+        position: relative;
+        left: 35%;
+        top: 80px;
+    }
+    .total-box {
+        border-radius: 5px;
+        width: 200px;
+        height: 200px;
+        box-shadow: -1px -1px 8px black;
+    }
+    .total-box:hover {
+        transition: 1s;
+        box-shadow: 1px 1px 6px #ef412693;
+    }
+    #totalProdutosBox {
+        position: relative;
+        left: 36%;
+        top: -610px;
+    }
+    #spanTotalProdutos {
+        font-size: 36px;
+        position: relative;
+        left: 35%;
+        top: 80px;
+    }
+    .h2TotalProdutos {
+        width: fit-content;
+        font-weight: normal;
+        position: relative;
+        left: 35%;
+        top: -605px;
+    }
+    #totalGraficasBox {
+        position: relative;
+        left: 51%;
+        top: -842px;
+    }
+    #spanTotalGraficas {
+        font-size: 36px;
+        position: relative;
+        left: 35%;
+        top: 80px;
+    }
+    .h2TotalGraficas {
+        width: fit-content;
+        font-weight: normal;
+        position: relative;
+        left: 50%;
+        top: -838px;
+    }
 </style>
 <body>
     <header>
@@ -34,6 +166,9 @@
         <nav>
           <ul class='menu2'>
             <a href="cad-prods.html">Cadastrar Produtos</a>
+            <a href="lista-produtos.html">Editar Produtos</a>
+            <a href="cadastro-graficas.html">Cadastrar Gráficas</a>
+            <a href="lista-graficas.html">Editar Gráficas</a>
         </ul>
         </nav>
         <div class="elem1">
@@ -43,152 +178,100 @@
     </header>
     <main>
         <div class="grafico-container">
-          <!-- Gráfico de Pedidos -->
-          <canvas id="pedidosChart" width="400" height="200"></canvas>
-        </div>
-      
-        <div class="grafico-container">
-          <!-- Gráfico de Produtos -->
-          <canvas id="produtosChart" width="400" height="200"></canvas>
-        </div>
-
-        <div class="grafico-container">
-            <!-- Gráfico de Gráficas -->
-            <canvas id="graficasChart" width="400" height="200"></canvas>
-          </div>
-        
-          <div class="grafico-container">
-            <!-- Gráfico de ItensPedidos -->
-            <canvas id="itensPedidosChart" width="400" height="200"></canvas>
-          </div>
+                
+            </div>
+    
+            <!-- Status dos Pedidos -->
+            <div class="status-container">
+                <div id="aguardandoBox" class="status-box"><span id="spanAguard"></span></div>
+                <h2 class="h2PedAguard">Pedidos Aguardando</h2>
+                <div id="aceitosBox" class="status-box"><span id="spanAceit"></span></div>
+                <h2 class="h2PedAceit">Pedidos Aceitos</h2>
+                <div id="finalizadosBox" class="status-box"><span id="spanFin"></span></div>
+                <h2 class="h2PedFin">Pedidos Finalizados</h2>
+                <div id="entreguesBox" class="status-box"><span id="spanEnt"></span></div>
+                <h2 class="h2PedEnt">Pedidos Entregues</h2>
+            </div>
+            <div class="total-info">
+                <div id="totalProdutosBox" class="total-box"><span id="spanTotalProdutos"></span></div>
+                <h2 class="h2TotalProdutos">Produtos Cadastrados</h2>
+                <div id="totalGraficasBox" class="total-box"><span id="spanTotalGraficas"></span></div>
+                <h2 class="h2TotalGraficas">Gráficas Cadastradas</h2>
+            </div>
       </main>   
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', async () => {
-        try {
-          const response = await fetch('/adm');
-          const data = await response.json();
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/adm');
+                const data = await response.json();
   
-          const pedidos = data.pedidos;
-          const produtos = data.produtos;
-          const graficas = data.graficas;
-          const itensPedidos = data.itensPedidos;
+                const pedidos = data.pedidos;
   
-          const pedidosData = processPedidosData(pedidos);
-          const produtosData = processProdutosData(produtos);
-          const graficasData = processGraficasData(graficas);
-          const itensPedidosData = processItensPedidosData(itensPedidos);
+                // Filtrar pedidos com diferentes status
+                const pedidosAguardando = pedidos.filter(pedido => pedido.statusPed === 'Aguardando');
+                const pedidosAceitos = pedidos.filter(pedido => pedido.statusPed === 'Pedido Aceito Pela Gráfica');
+                const pedidosFinalizados = pedidos.filter(pedido => pedido.statusPed === 'Finalizado');
+                const pedidosEntregues = pedidos.filter(pedido => pedido.statusPed === 'Pedido Entregue pela Gráfica');
   
-          const options = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              x: { grid: { display: false } },
-              y: { grid: { display: false } }
-            },
-            plugins: {
-              legend: { display: true },
+                const pedidosDataAguardando = processPedidosData(pedidosAguardando);
+                const pedidosDataAceitos = processPedidosData(pedidosAceitos);
+                const pedidosDataFinalizados = processPedidosData(pedidosFinalizados);
+                const pedidosDataEntregues = processPedidosData(pedidosEntregues);
+
+                // Exibir o número de pedidos para cada status
+                const aguardandoBox = document.getElementById('aguardandoBox');
+                const spanAguard = document.getElementById('spanAguard');
+                spanAguard.textContent = `${pedidosDataAguardando.total}`
+                //aguardandoBox.textContent = `${pedidosDataAguardando.total}`;
+
+                const aceitosBox = document.getElementById('aceitosBox');
+                const spanAceit = document.getElementById('spanAceit');
+                spanAceit.textContent = `${pedidosDataAceitos.total}`
+                //aceitosBox.textContent = `Pedidos Aceitos: ${pedidosDataAceitos.total}`;
+
+                const finalizadosBox = document.getElementById('finalizadosBox');
+                const spanFin = document.getElementById('spanFin');
+                spanFin.textContent = `${pedidosDataFinalizados.total}`;
+                //finalizadosBox.textContent = `Pedidos Finalizados: ${pedidosDataFinalizados.total}`;
+
+                const entreguesBox = document.getElementById('entreguesBox');
+                const spanEnt = document.getElementById('spanEnt');
+                spanEnt.textContent = `${pedidosDataEntregues.total}`
+                //entreguesBox.textContent = `Pedidos Entregues: ${pedidosDataEntregues.total}`;
+
+                const produtos = data.produtos;
+                const produtosData = processProdutosData(produtos);
+                const totalProdutosBox = document.getElementById('totalProdutosBox');
+                const spanTotalProdutos = document.getElementById('spanTotalProdutos');
+                spanTotalProdutos.textContent = `${produtosData.total}`;
+
+                // Processar dados de gráficas
+                const graficas = data.graficas;
+                const graficasData = processGraficasData(graficas);
+                const totalGraficasBox = document.getElementById('totalGraficasBox');
+                const spanTotalGraficas = document.getElementById('spanTotalGraficas');
+                spanTotalGraficas.textContent = `${graficasData.total}`;
+
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
             }
-          };
-  
-          const pedidosChart = new Chart(document.getElementById('pedidosChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-              labels: [''],
-              datasets: [{
-                label: 'Quantidade Total de Pedidos',
-                data: [pedidosData.total],
-                backgroundColor: 'rgba(75, 192, 192, 0.8)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-              }]
-            },
-            options: options
-          });
-  
-          const produtosChart = new Chart(document.getElementById('produtosChart').getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: [''],
-            datasets: [{
-              label: 'Quantidade Total de Produtos Cadastrados',
-              data: [produtosData.total],
-              backgroundColor: 'rgba(255, 99, 132, 0.8)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1
-            }]
-          },
-          options: options
         });
-  
-        const graficasChart = new Chart(document.getElementById('graficasChart').getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: [''],
-            datasets: [{
-              label: 'Quantidade Total de Gráficas Cadastradas',
-              data: [graficasData.total],
-              backgroundColor: 'rgba(255, 206, 86, 0.8)',
-              borderColor: 'rgba(255, 206, 86, 1)',
-              borderWidth: 1
-            }]
-          },
-          options: options
-        });
-  
-        const itensPedidosChart = new Chart(document.getElementById('itensPedidosChart').getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: itensPedidosData.labels,
-            datasets: [{
-              label: 'Total de Produtos Vendidos',
-              data: itensPedidosData.values,
-              backgroundColor: 'rgba(153, 102, 255, 0.8)',
-              borderColor: 'rgba(153, 102, 255, 1)',
-              borderWidth: 1
-            }]
-          },
-          options: options
-        });
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-      }
-    });
-  
-      function processPedidosData(pedidos) {
-        const total = pedidos.reduce((acc, pedido) => acc + parseInt(pedido.quantPed), 0);
-        return { total };
-      }
-  
-      function processProdutosData(produtos) {
-      const total = produtos.length;
-      return { total };
-    }
-  
-    function processGraficasData(graficas) {
-      const total = graficas.length;
-      return { total };
-    }
-  
-    function processItensPedidosData(itensPedidos) {
-      const productMap = new Map();
 
-      itensPedidos.forEach(item => {
-        const productName = item.nomeProd;
-        const quantity = parseInt(item.quantidade);
-
-        if (productMap.has(productName)) {
-          productMap.set(productName, productMap.get(productName) + quantity);
-        } else {
-          productMap.set(productName, quantity);
+        function processPedidosData(pedidos) {
+            const total = pedidos.reduce((acc, pedido) => acc + 1, 0); // Contar o número de pedidos
+            return { total };
         }
-      });
 
-      const labels = Array.from(productMap.keys());
-      const values = Array.from(productMap.values());
+        function processProdutosData(produtos) {
+            const total = produtos.length; // Total de produtos
+            return { total };
+        }
 
-      return { labels, values };
-    }
-    </script>
+        function processGraficasData(graficas) {
+            const total = graficas.length; // Total de gráficas
+            return { total };
+        }
+    </script>  
 </body>
 </html>
