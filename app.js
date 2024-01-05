@@ -1752,6 +1752,13 @@ carrinho.forEach((produto, produtoIndex) => {
       valorUnitario: produto.valorUnitario,
       subtotal: produto.subtotal,
       raioProd: produto.raioProd,
+      acabamento: produto.acabamento,
+      cor: produto.cor,
+      enobrecimento: produto.enobrecimento,
+      formato: produto.formato,
+      material: produto.material,
+      arquivo: produto.arquivo,
+      tipoEntrega: 'Múltiplos Enderecos',
       endereco: endereco,
     });
   }
@@ -1838,7 +1845,7 @@ app.get('/pagamento', (req, res) => {
       console.log('1')
       const carrinhoQuebrado = req.session.carrinho || [];
       const enderecoDaSessao = req.session.endereco;
-        if (carrinhoQuebrado.length > 1) {
+        if (/*carrinhoQuebrado.length > 1*/ carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {
           const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoQuebrado) => {
             const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
             return produto.valorProd * produtoQuebrado.quantidade;
