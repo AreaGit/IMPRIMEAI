@@ -1845,22 +1845,33 @@ header > p {
     transition: all ease-in-out .5s;
     margin-right: -2rem;
 }
-    #logado {
-      font-size: 18px;
-      position: relative;
-      top: -50px;
-      left: 58%;
-    }
-    #sairBtn {
-      position: relative;
-      top: -40px;
-      left: 60%;
-    }
-    #carrinho_compras {
-      position: relative;
-      left: 78%;
-      top: -108px;
-      font-size: 36px;
+#logado {
+  font-size: 18px;
+  position: relative;
+  top: -65px;
+  left: 62%;
+}
+#sairBtn {
+  position: relative;
+  top: -40px;
+  left: 65%;
+}
+#carrinho_compras {
+  position: relative;
+  left: 78%;
+  top: -121px;
+  font-size: 36px;
+}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 102%;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid rgba(48, 47, 47, 0.63);
+    height: 260px;
   }
   .menu {
     position: relative;

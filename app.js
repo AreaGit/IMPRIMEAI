@@ -508,143 +508,6 @@ app.get('/cartoes-cadastrados', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar cartões cadastrados', message: error.message });
   }
 });
-/*app.get('/pedidos-cadastrados', async (req, res) => {
-  try {
-    const graficaId = req.cookies.userId;
-
-    if (!graficaId) {
-      return res.status(401).json({ message: "Usuário não autenticado" });
-    }
-
-    const grafica = await Graficas.findByPk(graficaId);
-
-    if (!grafica) {
-      return res.status(404).json({ message: "Usuário não encontrado" });
-    }
-
-    const graficaInfo = {
-      cepCad: grafica.cepCad,
-      cidadeCad: grafica.cidadeCad,
-      estadoCad: grafica.estadoCad,
-      enderecoCad: grafica.endereçoCad,
-    };
-
-    console.log('Informações da Gráfica:', graficaInfo);
-
-    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-
-    const coordinates = await getCoordinatesFromAddress(graficaInfo, apiKey);
-
-    console.log('Latitude da gráfica:', coordinates.latitude);
-    console.log('Longitude da gráfica:', coordinates.longitude);
-
-    const pedidosCadastrados = await ItensPedido.findAll({
-      where: {
-        statusPed: 'Aguardando',
-      },
-    });
-    const enderecosPedCadastrados = await Enderecos.findAll();
-
-    // Mapeamento de endereços por idPed para otimizar a busca
-    const enderecoMap = new Map();
-    enderecosPedCadastrados.forEach(endereco => {
-      enderecoMap.set(endereco.idPed, endereco);
-    });
-
-    let found = false;
-    let pedidosNoRaio = [];
-
-    for (let pedido of pedidosCadastrados) {
-      const enderecoPedido = enderecoMap.get(pedido.idPed);
-
-      if (!enderecoPedido) {
-        console.log(`Endereço não encontrado para o pedido com Id: ${pedido.idPed}`);
-        continue;
-      }
-
-      const raio = pedido.raio; // Agora acessamos diretamente o raio do pedido
-
-      const enderecoEntregaInfo = {
-        rua: enderecoPedido.rua,
-        cep: enderecoPedido.cep,
-        cidade: enderecoPedido.cidade,
-        estado: enderecoPedido.estado,
-      };
-
-      console.log(`Verificando pedido com o Id: ${pedido.idPed}`);
-      console.log(`Endereço de Entrega do pedido com o Id: ${pedido.idPed}`, enderecoEntregaInfo);
-
-      const coordinatesEnd = await getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey);
-
-      if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
-        console.log(`Latitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.latitude);
-        console.log(`Longitude do Endereço de Entrega (raio ${raio} km):`, coordinatesEnd.longitude);
-
-        const distance = haversineDistance(coordinates.latitude, coordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
-
-        if (distance <= raio) {
-          console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raio} km):`, distance, 'km');
-          pedidosNoRaio.push(pedido);
-          found = true; // Marcamos como encontrado pelo menos um pedido dentro do raio
-        }
-      } else {
-        console.log(`Coordenadas nulas para o Endereço de Entrega (raio ${raio} km).`);
-      }
-    }
-
-    if (found) {
-      console.log('Pedidos dentro do raio:', pedidosNoRaio);
-      res.json({ pedidos: pedidosNoRaio });
-    } else {
-      console.log('Nenhum pedido encontrado dentro dos raios permitidos.');
-      res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos.' });
-    }
-  } catch (error) {
-    console.error('Erro ao buscar pedidos cadastrados:', error);
-    res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
-  }
-});*/
-// Função para calcular a distância haversine entre duas coordenadas geográficas
-/*function haversineDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Raio da Terra em quilômetros
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
-  return distance;
-}
-
-// Função para obter coordenadas geográficas (latitude e longitude) a partir do endereço usando a API de Geocodificação do Bing Maps
-async function getCoordinatesFromAddress(graficaInfo, apiKey) {
-  const { enderecoCad, cepCad, cidadeCad, estadoCad } = graficaInfo;
-  const formattedAddress = `${enderecoCad}, ${cepCad}, ${cidadeCad}, ${estadoCad}`;
-  const geocodingUrl = `https://dev.virtualearth.net/REST/v1/Locations/${encodeURIComponent(formattedAddress)}?o=json&key=${apiKey}`;
-
-  try {
-    const response = await fetch(geocodingUrl);
-
-    if (!response.ok) {
-      throw new Error(`Erro na resposta da API: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
-      const coordinates = data.resourceSets[0].resources[0].point.coordinates;
-      return { latitude: coordinates[0], longitude: coordinates[1] };
-    } else {
-      console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddress);
-      return { latitude: null, longitude: null };
-    }
-  } catch (error) {
-    console.error('Erro ao obter coordenadas de geocodificação:', error.message);
-    return { latitude: null, longitude: null, errorMessage: error.message };
-  }
-}*/
 async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   const {rua, cep, estado, cidade} = enderecoEntregaInfo;
   const formattedAddressEnd = `${rua}, ${cep}, ${cidade}, ${estado}`;
@@ -715,7 +578,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   return distance;
 }
 
-app.get('/pedidos-cadastrados', async (req, res) => {
+/*app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     const graficaId = req.cookies.userId;
 
@@ -836,7 +699,157 @@ app.get('/pedidos-cadastrados', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
   }
 });
+*/
+app.get('/pedidos-cadastrados', async (req, res) => {
+  try {
+    const graficaId = req.cookies.userId;
 
+    if (!graficaId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const grafica = await Graficas.findByPk(graficaId);
+
+    if (!grafica) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+
+    const pedidosCadastrados = await ItensPedido.findAll({
+      where: {
+        statusPed: 'Aguardando',
+      },
+    });
+
+    let pedidosProximos = [];
+
+    for (let pedido of pedidosCadastrados) {
+      const enderecoPedido = await Enderecos.findOne({
+        where: {
+          idPed: pedido.idPed,
+        },
+      });
+
+      if (!enderecoPedido) {
+        console.log(`Endereço não encontrado para o pedido com Id: ${pedido.idPed}`);
+        continue;
+      }
+
+      const enderecoEntregaInfo = {
+        endereco: enderecoPedido.rua,
+        cep: enderecoPedido.cep,
+        cidade: enderecoPedido.cidade,
+        estado: enderecoPedido.estado,
+      };
+
+      console.log(`Verificando pedido com o Id: ${pedido.idPed}`);
+      console.log(`Endereço de Entrega do pedido com o Id: ${pedido.idPed}`, enderecoEntregaInfo);
+
+      const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
+
+      if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+        console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
+        console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
+
+        const graficas = await Graficas.findAll();
+
+        let distanciaMinima = Infinity;
+        let graficaMaisProxima = null;
+
+        for (let graficaAtual of graficas) {
+          const graficaCoordinates = await getCoordinatesFromAddress({
+            endereco: graficaAtual.enderecoCad,
+            cep: graficaAtual.cepCad,
+            cidade: graficaAtual.cidadeCad,
+            estado: graficaAtual.estadoCad,
+          }, apiKey);
+
+          const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+
+          if (distanceToGrafica < distanciaMinima) {
+            distanciaMinima = distanceToGrafica;
+            graficaMaisProxima = graficaAtual;
+          }
+        }
+
+        const raioEndereco = enderecoPedido.raio;
+
+        if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
+          // Verificar se a gráfica possui o produto necessário
+          const produtosGrafica = JSON.parse(graficaMaisProxima.produtos);
+
+          if (produtosGrafica[pedido.nomeProd]) {
+            console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raioEndereco} km):`, distanciaMinima, 'km');
+
+            // Assign the order to the nearest graphic business
+            const pedidoAssociado = {
+              ...pedido.dataValues,
+              graficaId: graficaMaisProxima.id,
+            };
+
+            // Add the order to the array if the associated graphic business is the same as the logged-in one
+            if (pedidoAssociado.graficaId === grafica.id) {
+              pedidosProximos.push(pedidoAssociado);
+            }
+          } else {
+            console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...');
+
+            // Procurar outra gráfica que faz o produto necessário
+            for (let graficaAtual of graficas) {
+              const produtosGraficaAtual = JSON.parse(graficaAtual.produtos);
+
+              if (produtosGraficaAtual[pedido.nomeProd]) {
+                console.log(`Encontrada outra gráfica próxima que faz o produto necessário.`);
+
+                const pedidoAssociado = {
+                  ...pedido.dataValues,
+                  graficaId: graficaAtual.id,
+                };
+
+                if (pedidoAssociado.graficaId === grafica.id) {
+                  pedidosProximos.push(pedidoAssociado);
+                }
+
+                break;
+              }
+            }
+          }
+        } else {
+          console.log('Nenhuma gráfica próxima encontrada ou a distância é maior que o raio permitido.');
+        }
+      } else {
+        console.log(`Coordenadas nulas para o Endereço de Entrega.`);
+      }
+    }
+
+    if (pedidosProximos.length > 0) {
+      console.log('Pedidos próximos à gráfica:', pedidosProximos);
+      res.json({ pedidos: pedidosProximos });
+    } else {
+      console.log('Nenhum pedido encontrado dentro dos raios permitidos ou com produtos necessários.');
+      res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos ou com produtos necessários.' });
+    }
+
+  } catch (error) {
+    console.error('Erro ao buscar pedidos cadastrados:', error);
+
+    if (error.response) {
+      console.error('Detalhes do erro de resposta:', error.response.status, error.response.statusText);
+
+      try {
+        const errorData = await error.response.json();
+        console.error('Detalhes adicionais do erro:', errorData);
+      } catch (jsonError) {
+        console.error('Erro ao analisar o corpo JSON da resposta:', jsonError.message);
+      }
+    }
+
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
+    }
+  }
+});
 app.get('/pedidos-usuario/:userId', async (req, res) => {
   const userId = req.cookies.userId;
 
