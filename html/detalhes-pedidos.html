@@ -57,6 +57,13 @@
           color: white;
           cursor: pointer;
       }
+      a#btnCancelarPedido {
+    position: fixed;
+    left: 80%;
+    top: 93%;
+    text-decoration: underline;
+    color: #EF4126;
+}
       .menu2 {
     display: flex;
     list-style: none;
@@ -339,6 +346,73 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(error => console.error(error));
   } else {
     console.error('ID do Produto não encontrado na URL');
+  }
+});
+
+// Defina uma variável global para armazenar os cookies
+let cookies;
+const urlParams = new URLSearchParams(window.location.search);
+const idPedido = urlParams.get('idPedido');
+
+// Função para obter o ID da gráfica dos cookies
+function getGraficaIdFromCookies() {
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'userId') {
+      console.log('ID da Gráfica nos Cookies:', value);
+      return value;
+    }
+  }
+  console.log('ID da Gráfica não encontrado nos Cookies.');
+  return null;
+}
+
+// Função para obter todos os cookies e atribuí-los à variável global
+function getAllCookies() {
+  cookies = document.cookie.split(';');
+}
+
+// Exemplo de chamada da função para obter todos os cookies
+getAllCookies();
+
+// Modificação para acessar o valor do cookie 'userId'
+// Obtenha o ID da gráfica dos cookies
+const graficaId = getGraficaIdFromCookies();
+
+console.log(`Id da gráfica ${graficaId} id do pedido ${idPedido}`);
+
+const btnCancelarPedido = document.getElementById('btnCancelarPedido');
+
+btnCancelarPedido.addEventListener('click', async () => {
+  try {
+    const idGrafica = graficaId;
+
+    const response = await fetch(`/cancelar-pedido/${idPedido}/${idGrafica}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        graficaId: graficaId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao cancelar pedido: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      console.log('Pedido cancelado com sucesso!');
+      setTimeout(() => {
+        window.location.href = 'pedidos-grafica.html'
+      }, 3000)
+      // Redirecione ou faça outras ações necessárias após o cancelamento
+    } else {
+      console.error('Erro ao cancelar pedido:', data.message);
+    }
+  } catch (error) {
+    console.error('Erro ao cancelar pedido:', error);
   }
 });
 </script>        

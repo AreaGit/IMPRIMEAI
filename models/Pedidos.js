@@ -35,6 +35,9 @@ const Pedidos = db.define('pedidos', {
     graficaAtend: {
         type: Sequelize.STRING(255),
     },
+    graficaCancl: {
+        type: Sequelize.STRING(255),
+    },
 });
 
 Pedidos.hasMany(ItensPedidos, { foreignKey: 'idPed'});

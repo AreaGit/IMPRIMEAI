@@ -61,7 +61,10 @@ const ItensPedidos = db.define('itenspedidos', {
     },
     graficaAtend: {
         type: Sequelize.STRING(255),
-    }
+    },
+    graficaCancl: {
+        type: Sequelize.STRING(255)
+    },
 })
 
 ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });

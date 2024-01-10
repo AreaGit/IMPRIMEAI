@@ -39,6 +39,11 @@ form > h1 {
     left: 39%;
     top: 29%;
     }
+    p#msg {
+        text-align: center;
+        position: fixed;
+        left: 891px;
+    }
     .btns > a {
     text-decoration: none;
     width: 580px;
@@ -59,14 +64,16 @@ form > h1 {
 .logo-imprimeai {
     position: absolute;
     top: 12%;
-    left: 41%;
+    left: 50%;
+    transform: translate(-50%);
 }
 form > h1 {
     text-align: center;
     font-size: 40px;
     position: fixed;
-    left: 44%;
+    left: 50%;
     top: 18%;
+    transform: translate(-50%);
 }
 form > p {
     text-align: center;
@@ -74,6 +81,11 @@ form > p {
     position: fixed;
     left: -1%;
     top: 23%;
+}
+p#msg {
+    position: fixed;
+    left:50%;
+    transform: translate(-50%);
 }
 form > input {
     width: 94vw;
@@ -89,14 +101,14 @@ form {
 }
 #cad {
     position: fixed;
-    top: 54%;
+    top: 65%;
     left: 45%;
     transform: translate(-50%, 125%);
 }
 #lnk-esq {
     position: fixed;
     left: 50%;
-    top: 66%;
+    top: 80%;
     transform: translateX(-52%);
 }
 button {
@@ -107,21 +119,30 @@ button {
 .logo-imprimeai {
     position: absolute;
     top: 12%;
-    left: 28%;
+    left: 50%;
+    transform: translate(-50%);
 }
 form > h1 {
     text-align: center;
     font-size: 40px;
     position: fixed;
-    left: 33%;
+    left: 50%;
     top: 18%;
+    transform: translate(-50%);
 }
 form > p {
     text-align: center;
     /* padding: 20px 0px 20px 0px; */
     position: fixed;
-    left: -1%;
+    left: 50%;
     top: 23%;
+    transform: translate(-50%, -2%);
+}
+p#msg {
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -2%);
 }
 form > input {
     width: 94vw;
@@ -129,7 +150,7 @@ form > input {
 form {
     position: fixed;
     top: 34%;
-    left: -1%;
+    left: 1%;
 }
 .btns {
     position: fixed;
@@ -138,12 +159,12 @@ form {
 #cad {
     position: fixed;
     top: 54%;
-    left: 45%;
+    left: 27%;
     transform: translate(-50%, 125%);
 }
 #lnk-esq {
     position: fixed;
-    left: 50%;
+    left: 30%;
     top: 66%;
     transform: translateX(-52%);
 }
@@ -151,13 +172,193 @@ button {
     width: 94vw;
 }
 }
+@media screen and (min-width:1440px) and (max-width:1440px) {
+    .logo-imprimeai {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%);
+}
+form > h1 {
+    text-align: center;
+    font-size: 40px;
+    position: fixed;
+    left: 50%;
+    top: 18%;
+    transform: translate(-50%);
+}
+form > p {
+    text-align: center;
+    /* padding: 20px 0px 20px 0px; */
+    position: fixed;
+    left: 50%;
+    top: 23%;
+    transform: translate(-50%, -2%);
+}
+p#msg {
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -2%);
+}
+form > input {
+    width: 94vw;
+}
+form {
+    position: fixed;
+    top: 34%;
+    left: 1%;
+}
+.btns {
+    position: fixed;
+    height: 130px;
+}
+#cad {
+    position: fixed;
+    top: 54%;
+    left: 27%;
+    transform: translate(-50%, 125%);
+}
+#lnk-esq {
+    position: fixed;
+    left: 27%;
+    top: 66%;
+    transform: translateX(-50%);
+}
+button {
+    width: 94vw;
+} 
+}
+@media screen and (min-width:1441px) and (max-width:2560px) {
+    .logo-imprimeai {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%);
+}
+form > h1 {
+    text-align: center;
+    font-size: 40px;
+    position: fixed;
+    left: 50%;
+    top: 18%;
+    transform: translate(-50%);
+}
+form > p {
+    text-align: center;
+    /* padding: 20px 0px 20px 0px; */
+    position: fixed;
+    left: 50%;
+    top: 23%;
+    transform: translate(-50%, -2%);
+}
+p#msg {
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -2%);
+}
+form > input {
+    width: 94vw;
+}
+form {
+    position: fixed;
+    top: 34%;
+    left: 1%;
+}
+.btns {
+    position: fixed;
+    height: 130px;
+}
+#cad {
+    position: fixed;
+    top: 54%;
+    left: 49%;
+    transform: translate(-50%, 125%);
+}
+#lnk-esq {
+    position: fixed;
+    left: 49%;
+    top: 66%;
+    transform: translateX(-50%);
+}
+button {
+    width: 94vw;
+} 
+}
+@media screen and (min-width:2560px) {
+.logo-imprimeai {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 10%;
+}
+form > h1 {
+    text-align: center;
+    font-size: 54px;
+    position: fixed;
+    left: 50%;
+    top: 18%;
+    transform: translate(-50%);
+}
+form > p {
+    text-align: center;
+    /* padding: 20px 0px 20px 0px; */
+    position: fixed;
+    left: 50%;
+    top: 23%;
+    font-size: 25px;
+    transform: translate(-50%, -2%);
+}
+p#msg {
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -2%);
+}
+form > input {
+    width: 94vw;
+    font-size: 22px;
+    height: 84px
+}
+form {
+    position: fixed;
+    top: 34%;
+    left: 1%;
+}
+.btns {
+    position: fixed;
+    height: 130px;
+}
+#cad {
+    position: fixed;
+    top: 54%;
+    left: 49%;
+    transform: translate(-50%, 125%);
+    font-size: 26px;
+}
+#lnk-esq {
+    position: fixed;
+    left: 49%;
+    top: 64%;
+    transform: translateX(-50%);
+    font-size: 26px;
+}
+button {
+    width: 94vw;
+    height: 58px;
+    font-size: 26px;
+}
+
+}
 </style>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
     <form>
         <h1>Entrar</h1>
-        <p id="msg">Se já possui uma conta, preencha os dados para entrar.</p>
-
+        <p id="pdp">Se já possui uma conta, preencha os dados para entrar.</p>
+        <p id="msg"></p>
         <input type="email" name="email" id="email" placeholder="Digite seu E-mail..." autocomplete="email" required>
         <br>
         <input type="password" name="pass" id="pass" placeholder="Digite sua Senha..." autocomplete="current-password" required>

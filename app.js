@@ -27,21 +27,15 @@ const msGraph = require('@microsoft/microsoft-graph-client');
 const cors = require('cors')
 app.use(cors());
 const http = require('http');
-const socketIo = require('socket.io');
+const socketIO = require('socket.io');
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIO(server);
 
 io.on('connection', (socket) => {
-  console.log('Cliente conectado');
+  console.log('Cliente conectado:', socket.id);
 
-  // Evento para notificar o cliente sobre novos pedidos
-  socket.on('novoPedido', (pedido) => {
-    io.emit('novoPedido', pedido); // Emitir para todos os clientes conectados
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Cliente desconectado');
-  });
+  // Enviar mensagem de boas-vindas ao cliente
+  socket.emit('message', { text: 'Bem-vindo! Conectado ao servidor WebSocket.' });
 });
 
 app.use(session({
@@ -700,10 +694,9 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   }
 });
 */
-app.get('/pedidos-cadastrados', async (req, res) => {
+/*app.get('/pedidos-cadastrados', async (req, res) => {
   try {
     const graficaId = req.cookies.userId;
-
     if (!graficaId) {
       return res.status(401).json({ message: "Usuário não autenticado" });
     }
@@ -730,11 +723,19 @@ app.get('/pedidos-cadastrados', async (req, res) => {
           idPed: pedido.idPed,
         },
       });
+      console.log('Grafica ID', graficaId)
+      console.log('GraficaCancl', pedido.graficaCancl)
 
       if (!enderecoPedido) {
         console.log(`Endereço não encontrado para o pedido com Id: ${pedido.idPed}`);
         continue;
       }
+
+      if (pedido.graficaCancl === graficaId) {
+        // Se o pedido foi cancelado pela gráfica atual, pule para o próximo pedido
+        console.log(`Pedido cancelado pela gráfica atual. Ignorando pedido com Id: ${pedido.idPed}`);
+        continue;
+      }        
 
       const enderecoEntregaInfo = {
         endereco: enderecoPedido.rua,
@@ -849,7 +850,196 @@ app.get('/pedidos-cadastrados', async (req, res) => {
       res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
     }
   }
+});*/
+
+app.get('/pedidos-cadastrados', async (req, res) => {
+  try {
+    const graficaId = req.cookies.userId;
+    if (!graficaId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const grafica = await Graficas.findByPk(graficaId);
+
+    if (!grafica) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+
+    const pedidosCadastrados = await ItensPedido.findAll({
+      where: {
+        statusPed: 'Aguardando',
+      },
+    });
+
+    let pedidosProximos = [];
+
+    for (let pedido of pedidosCadastrados) {
+      const enderecoPedido = await Enderecos.findOne({
+        where: {
+          idPed: pedido.idPed,
+        },
+      });
+
+      console.log('Grafica ID', graficaId);
+      console.log('GraficaCancl', pedido.graficaCancl);
+
+      if (!enderecoPedido) {
+        console.log(`Endereço não encontrado para o pedido com Id: ${pedido.idPed}`);
+        continue;
+      }
+
+      // Verificar se o pedido foi cancelado pela gráfica atual
+      if (pedido.graficaCancl === graficaId) {
+        console.log(`Pedido cancelado pela gráfica atual. Ignorando pedido com Id: ${pedido.idPed}`);
+        continue;
+      }
+
+      const enderecoEntregaInfo = {
+        endereco: enderecoPedido.rua,
+        cep: enderecoPedido.cep,
+        cidade: enderecoPedido.cidade,
+        estado: enderecoPedido.estado,
+      };
+
+      console.log(`Verificando pedido com o Id: ${pedido.idPed}`);
+      console.log(`Endereço de Entrega do pedido com o Id: ${pedido.idPed}`, enderecoEntregaInfo);
+
+      const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
+
+      if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+        console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
+        console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
+
+        const graficas = await Graficas.findAll();
+
+        let distanciaMinima = Infinity;
+        let graficaMaisProxima = null;
+
+        for (let graficaAtual of graficas) {
+          const graficaCoordinates = await getCoordinatesFromAddress({
+            endereco: graficaAtual.enderecoCad,
+            cep: graficaAtual.cepCad,
+            cidade: graficaAtual.cidadeCad,
+            estado: graficaAtual.estadoCad,
+          }, apiKey);
+
+          const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+
+          if (distanceToGrafica < distanciaMinima) {
+            distanciaMinima = distanceToGrafica;
+            graficaMaisProxima = graficaAtual;
+          }
+        }
+
+        const raioEndereco = enderecoPedido.raio;
+
+        if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
+          const produtosGrafica = JSON.parse(graficaMaisProxima.produtos);
+
+          if (produtosGrafica[pedido.nomeProd]) {
+            console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raioEndereco} km):`, distanciaMinima, 'km');
+
+            const pedidoAssociado = {
+              ...pedido.dataValues,
+              graficaId: graficaMaisProxima.id,
+            };
+
+            pedidosProximos.push(pedidoAssociado);
+          } else {
+            console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...');
+
+            for (let graficaAtual of graficas) {
+              const produtosGraficaAtual = JSON.parse(graficaAtual.produtos);
+
+              if (produtosGraficaAtual[pedido.nomeProd]) {
+                console.log(`Encontrada outra gráfica próxima que faz o produto necessário.`);
+
+                const pedidoAssociado = {
+                  ...pedido.dataValues,
+                  graficaId: graficaAtual.id,
+                };
+
+                pedidosProximos.push(pedidoAssociado);
+                break;
+              }
+            }
+          }
+        } else {
+          console.log('Nenhuma gráfica próxima encontrada ou a distância é maior que o raio permitido.');
+        }
+      } else {
+        console.log(`Coordenadas nulas para o Endereço de Entrega.`);
+      }
+    }
+
+    if (pedidosProximos.length > 0) {
+      console.log('Pedidos próximos à gráfica:', pedidosProximos);
+      res.json({ pedidos: pedidosProximos });
+    } else {
+      console.log('Nenhum pedido encontrado dentro dos raios permitidos ou com produtos necessários.');
+      res.json({ message: 'Nenhum pedido encontrado dentro dos raios permitidos ou com produtos necessários.' });
+    }
+
+  } catch (error) {
+    console.error('Erro ao buscar pedidos cadastrados:', error);
+
+    if (error.response) {
+      console.error('Detalhes do erro de resposta:', error.response.status, error.response.statusText);
+
+      try {
+        const errorData = await error.response.json();
+        console.error('Detalhes adicionais do erro:', errorData);
+      } catch (jsonError) {
+        console.error('Erro ao analisar o corpo JSON da resposta:', jsonError.message);
+      }
+    }
+
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
+    }
+  }
 });
+
+app.post('/cancelar-pedido/:idPedido/:idGrafica', async (req, res) => {
+  try {
+    const graficaId = req.params.idGrafica;
+    const idPedido = req.params.idPedido;
+
+    console.log('Grafica ID', graficaId, 'Pedido ID', idPedido);
+
+    // Atualize o pedido
+    const pedido = await Pedidos.findByPk(idPedido);
+
+    if (!pedido) {
+      return res.status(404).json({ message: 'Pedido não encontrado' });
+    }
+
+    await pedido.update({
+      graficaCancl: graficaId,
+    });
+
+    // Atualize os itens do pedido
+    const itensPedido = await ItensPedidos.findAll({
+      where: {
+        idPed: idPedido,
+      },
+    });
+
+    for (const itemPedido of itensPedido) {
+      await itemPedido.update({
+        graficaCancl: graficaId,
+      });
+    }
+
+    res.json({ success: true, message: `Pedido ${idPedido} cancelado com sucesso` });
+  } catch (error) {
+    console.error('Erro ao cancelar pedido:', error);
+    res.status(500).json({ error: 'Erro ao cancelar pedido', message: error.message });
+  }
+});
+
 app.get('/pedidos-usuario/:userId', async (req, res) => {
   const userId = req.cookies.userId;
 

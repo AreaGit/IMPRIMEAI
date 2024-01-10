@@ -34,7 +34,7 @@
     "op": "^0.0.6",
     "pipe": "^1.1.0",
     "sequelize": "^6.32.1",
-    "socket.io": "^4.7.2",
+    "socket.io": "^4.7.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

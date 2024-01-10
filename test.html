@@ -12,7 +12,7 @@
   <!-- Os pedidos serão exibidos aqui -->
 </div>
 
-<script>
+<!--<script>
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const response = await fetch('/pedidos-cadastrados', {
@@ -51,7 +51,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Erro ao buscar pedidos:', error.message);
   }
 });
-</script>
+</script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+  const socket = io('http://localhost:8080/test.html'); // Make sure to use the correct server URL
 
+  socket.on('message', (data) => {
+    console.log('Message from server:', data.text);
+  });
+</script>
 </body>
 </html>
