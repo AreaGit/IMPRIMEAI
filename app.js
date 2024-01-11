@@ -1839,6 +1839,7 @@ app.get('/pagamento', (req, res) => {
           
           const enderecos = await Promise.all(enderecosPromises);
           
+          await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
           req.session.carrinho = [];
           req.session.endereco = {};
   
@@ -1897,6 +1898,8 @@ app.get('/pagamento', (req, res) => {
             tipoEntrega: enderecoDaSessao.tipoEntrega,
           });
     
+          await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
+
           req.session.carrinho = [];
           req.session.endereco = {};
     
@@ -1907,7 +1910,152 @@ app.get('/pagamento', (req, res) => {
         res.status(500).json({ error: 'Erro ao criar pedidos' });
       }
     });
-  
+
+    async function verificarGraficaMaisProximaEAtualizar(pedido) {
+      try {
+        const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+    
+        const enderecoPedido = await Enderecos.findOne({
+          where: {
+            idPed: pedido.id,
+          },
+        });
+    
+        if (!enderecoPedido) {
+          console.log(`Endereço não encontrado para o pedido com Id: ${pedido.id}`);
+          return;
+        }
+    
+        const coordinatesEnd = await getCoordinatesFromAddress({
+          endereco: enderecoPedido.rua,
+          cep: enderecoPedido.cep,
+          cidade: enderecoPedido.cidade,
+          estado: enderecoPedido.estado,
+        }, apiKey);
+    
+        if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+          const graficas = await Graficas.findAll();
+    
+          let distanciaMinima = Infinity;
+          let graficaMaisProxima = null;
+          let graficaEncontrada = false;
+          
+          // Definindo a variável pedidosProximos no escopo adequado
+          const pedidosProximos = [];
+    
+          for (let graficaAtual of graficas) {
+            const graficaCoordinates = await getCoordinatesFromAddress({
+              endereco: graficaAtual.enderecoCad,
+              cep: graficaAtual.cepCad,
+              cidade: graficaAtual.cidadeCad,
+              estado: graficaAtual.estadoCad,
+            }, apiKey);
+    
+            const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+    
+            if (distanceToGrafica < distanciaMinima) {
+              distanciaMinima = distanceToGrafica;
+              graficaMaisProxima = graficaAtual;
+            }
+          }
+    
+          if (graficaMaisProxima) {
+            const raioEndereco = enderecoPedido.raio;
+            console.log(`Distância entre a gráfica e o endereço de entrega (raio ${raioEndereco} km):`, distanciaMinima, 'km');
+    
+            const produtosGrafica = JSON.parse(graficaMaisProxima.produtos);
+    
+            if (produtosGrafica.hasOwnProperty(pedido.nomeProd)) {
+              console.log(`Produto ${pedido.nomeProd} disponível na gráfica mais próxima.`);
+    
+              // Salvar o ID da gráfica no banco associado ao pedido
+              await Pedidos.update({ graficaAtend: graficaMaisProxima.id }, {
+                where: { id: pedido.id },
+              });
+    
+              console.log(`Pedido ${pedido.id} associado à gráfica mais próxima: ${graficaMaisProxima.id}`);
+    
+              await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedido.id}`, 'Você tem um novo pedido para ser atendido.');
+              console.log(`E-mail de notificação enviado para a gráfica ${graficaMaisProxima.id}`);
+    
+              // Atualizamos a variável de controle para indicar que encontramos a gráfica
+              graficaEncontrada = true;
+            } else {
+              console.log(`A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...`);
+            }
+          } else {
+            console.log('Nenhuma gráfica próxima encontrada ou a distância é maior que o raio permitido.');
+          }
+    
+          // Se não encontramos uma gráfica na iteração anterior, procuramos outra gráfica
+          if (!graficaEncontrada) {
+            console.log('Procurando outra gráfica...');
+            for (let graficaAtual of graficas) {
+              const produtosGraficaAtual = JSON.parse(graficaAtual.produtos);
+    
+              if (produtosGraficaAtual.hasOwnProperty(pedido.nomeProd)) {
+                console.log(`Encontrada outra gráfica próxima que faz o produto necessário.`);
+    
+                const pedidoAssociado = {
+                  ...pedido.dataValues,
+                  graficaId: graficaAtual.id,
+                };
+
+                console.log(`Produto ${pedido.nomeProd} disponível na gráfica mais próxima.`);
+    
+                // Salvar o ID da gráfica no banco associado ao pedido
+                await Pedidos.update({ graficaAtend: graficaAtual.id }, {
+                  where: { id: pedido.id },
+                });
+      
+                console.log(`Pedido ${pedido.id} associado à gráfica mais próxima: ${graficaAtual.id}`);
+      
+                await enviarEmailNotificacao(graficaAtual.emailCad, `Novo Pedido - ID ${pedido.id}`, 'Você tem um novo pedido para ser atendido. Abra seu painel de pedidos!');
+                console.log(`E-mail de notificação enviado para a gráfica ${graficaAtual.id}`);
+      
+                // Atualizamos a variável de controle para indicar que encontramos a gráfica
+                graficaEncontrada = true;
+    
+                pedidosProximos.push(pedidoAssociado);
+                break;
+              }
+            }
+          }
+    
+          // Agora você pode usar a variável pedidosProximos conforme necessário
+          if (pedidosProximos.length > 0) {
+            console.log('Pedidos próximos à gráfica:', pedidosProximos);
+          } else {
+            console.log('Nenhum pedido encontrado dentro dos raios permitidos ou com produtos necessários.');
+          }
+        } else {
+          console.log(`Coordenadas nulas para o Endereço de Entrega do Pedido ${pedido.id}.`);
+        }
+      } catch (error) {
+        console.error('Erro ao verificar gráfica mais próxima e atualizar o pedido:', error);
+      }
+    }
+    
+    async function enviarEmailNotificacao(destinatario, assunto, corpo) {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: "gabrieldiastrin63@gmail.com",
+          pass: "vavk ljzo hrpn vzoh"
+        }
+      })
+
+      const info = await transporter.sendMail({
+        from: 'gabrieldiastrin63@gmail.com',
+        to: destinatario,
+        subject: assunto,
+        text: corpo,
+      });
+    
+      console.log('E-mail enviado:', info);
+    }
 // Exemplo de rota no servidor Node.js    console.log('Sessão do Carrinho:', req.session.carrinho);
 
 app.post('/atualizar-status-pedido', async (req, res) => {
@@ -1950,7 +2098,7 @@ const transport = nodemailer.createTransport({
   secure: true,
   auth: {
     user: "gabrieldiastrin63@gmail.com",
-    pass: "xjoe jajs urxb lapq"
+    pass: "vavk ljzo hrpn vzoh"
   }
 })
 //Enviando E-mail
