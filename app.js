@@ -27,15 +27,23 @@ const msGraph = require('@microsoft/microsoft-graph-client');
 const cors = require('cors')
 app.use(cors());
 const http = require('http');
-const socketIO = require('socket.io');
-const server = http.createServer(app);
-const io = socketIO(server);
+const socket = require('socket.io');
 
-io.on('connection', (socket) => {
-  console.log('Cliente conectado:', socket.id);
+const httpServer = http.createServer(app);
+const io = socket(httpServer, {
+    path: '/socket.io'
+});
 
-  // Enviar mensagem de boas-vindas ao cliente
-  socket.emit('message', { text: 'Bem-vindo! Conectado ao servidor WebSocket.' });
+const clients = [];
+
+io.on('connection', (client) => {
+  console.log(`Client conectado ${client.id}`);
+  clients.push(client);
+
+  client.on('disconnect', () => {
+      clients.splice(clients.indexOf(client), 1);
+      console.log(`Client desconectado ${client.id}`);
+  });
 });
 
 app.use(session({
@@ -2321,6 +2329,6 @@ app.get('/graficas-cadastradas', async (req, res) => {
   }
 });
 
-app.listen(8080, () => {
+httpServer.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
 });

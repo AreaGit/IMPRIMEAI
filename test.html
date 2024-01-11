@@ -1,64 +1,20 @@
-<!-- Adicione este trecho ao seu arquivo HTML -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exemplo de Pedidos</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io TESTE</title>
 </head>
 <body>
+    <h1>TESTE</h1>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+    <script>
+    const socket = io(window.location.origin);
 
-<div id="pedidos-container">
-  <!-- Os pedidos serão exibidos aqui -->
-</div>
-
-<!--<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const response = await fetch('/pedidos-cadastrados', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Adicione qualquer configuração adicional necessária, como headers de autenticação
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      const pedidosContainer = document.getElementById('pedidos-container');
-
-      if (data.pedidos && data.pedidos.length > 0) {
-        // Exibir pedidos
-        const pedidosList = document.createElement('ul');
-        data.pedidos.forEach(pedido => {
-          const pedidoItem = document.createElement('li');
-          pedidoItem.textContent = `Pedido ID: ${pedido.idPed} - Gráfica ID: ${pedido.graficaId}`;
-          pedidosList.appendChild(pedidoItem);
-        });
-        pedidosContainer.appendChild(pedidosList);
-      } else {
-        // Nenhum pedido encontrado
-        const mensagem = document.createElement('p');
-        mensagem.textContent = 'Nenhum pedido encontrado dentro dos raios permitidos.';
-        pedidosContainer.appendChild(mensagem);
-      }
-    } else {
-      // Tratar erro de resposta
-      console.error('Erro na resposta da API:', response.status, response.statusText);
-    }
-  } catch (error) {
-    console.error('Erro ao buscar pedidos:', error.message);
-  }
+socket.on('msg', (msg) => {
+    alert(msg);
 });
-</script>-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-<script>
-  const socket = io('http://localhost:8080/test.html'); // Make sure to use the correct server URL
-
-  socket.on('message', (data) => {
-    console.log('Message from server:', data.text);
-  });
-</script>
+    </script>
 </body>
 </html>
