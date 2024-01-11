@@ -398,7 +398,7 @@ label {
 li {
     list-style: none;
 }
-@media screen and (min-width: 320px) and (max-width: 375px){
+@media screen and (min-width: 320px) and (max-width: 481px){
     header > p {
     position: relative;
     top: 5px;
@@ -425,14 +425,89 @@ li {
     padding-left: 5px;
 }
 .logo-imprimeai {
-    position: relative;
-    top: 35px;
-    left: 24%;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%);
 }
 .carrinho-vazio {
     width: fit-content;
     position: absolute;
-    left: -13%;
+    left: 50%;
+    transform: translate(-50%);
+}
+.produto-carrinho > img {
+    width: 50%;
+    position: absolute;
+    transform: translate(-22%);
+}
+.produto-carrinho > h2 {
+    font-size: 13px;
+    width: fit-content;
+    position: absolute;
+    top: 1%;
+    left: 37%;
+    transform: translate(17%, 50%);
+}
+.produto-carrinho > .qnt {
+    font-size: 11px;
+    width: fit-content;
+    position: absolute;
+    top: 4%;
+    left: 36%;
+    transform: translate(25%);
+}
+.produto-carrinho > .vlr {
+    font-size: 11px;
+    width: fit-content;
+    position: absolute;
+    top: 6%;
+    left: 32%;
+    transform: translate(25%);
+}
+.produto-carrinho > .sub {
+    font-size: 11px;
+    width: fit-content;
+    position: absolute;
+    top: 8%;
+    left: 34%;
+    transform: translate(25%);
+}
+.produto-carrinho > .remover-produto {
+    background-color: white;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    color: #EF4126;
+    position: absolute;
+    top: 11%;
+    left: 45%;
+    transform: translate(-19%);
+}
+#resumo-compra {
+    width: 20%;
+    color: #222529;
+    height: 20%;
+    position: absolute;
+    left: 50%;
+    transform: translate(49%);
+    top: 65%;
+}
+.lnk-av {
+    background-color: #EF4126;
+    color: white;
+    text-decoration: none;
+    position: absolute;
+    transform: translate(-1%);
+}
+#voltar_ao_topo {
+    position: fixed;
+    bottom: -14px;
+    right: 21px;
+    cursor: pointer;
+    background-color: #F37160;
+    border-radius: 5px;
+    color: white;
 }
 }
 @media screen and (min-width:1280px) and (max-width:1360px) {
@@ -467,6 +542,106 @@ li {
     position: fixed;
     left: 68%;
     top: 336px;
+}
+}
+@media screen and (min-width:768px) and (max-width:1440px) {
+.logo-imprimeai {
+    position: absolute;
+    top: 20%;
+    left: 18%;
+    transform: translate(-20%);
+}
+.menu2 {
+    display: flex;
+    list-style: none;
+    width: max-content;
+    position: absolute;
+    top: 7%;
+    left: 60%;
+    transform: translate(-46%);
+}
+header > p {
+    position: absolute;
+    top: 9%;
+    left: 1%;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    width: fit-content;
+}
+.icons-header {
+    position: absolute;
+    left: 60%;
+    transform: translate(45%);
+    top: 10%;
+}
+.carrinho-vazio {
+    width: fit-content;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+.produto-carrinho > h2 {
+    font-size: 22px;
+    width: fit-content;
+    position: absolute;
+    left: 24%;
+    top: 4%;
+    transform: translate(34%);
+}
+.produto-carrinho > .qnt {
+    font-size: 14px;
+    width: fit-content;
+    position: absolute;
+    top: 7%;
+    left: 23%;
+    transform: translate(65%);
+}
+.produto-carrinho > .vlr {
+    font-size: 14px;
+    width: fit-content;
+    position: absolute;
+    top: 9%;
+    left: 25%;
+    transform: translate(28%);
+}
+.produto-carrinho > .sub {
+    font-size: 14px;
+    width: fit-content;
+    position: absolute;
+    top: 11%;
+    left: 21%;
+    transform: translate(59%);
+}
+.produto-carrinho > .remover-produto {
+    background-color: white;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    color: #EF4126;
+    position: absolute;
+    top: 5%;
+    left: 45%;
+    transform: translate(46%);
+}
+.produto-carrinho > img {
+    min-width: 25%;
+    max-width: 25%;
+}
+}
+@media screen and (min-width:1440px) and (max-width: 2560px) {
+.icons-header {
+    position: absolute;
+    left: 70%;
+    transform: translate(45%);
+    top: 12%;
+}
+}
+@media screen and (min-width:2560px) {
+    .icons-header {
+    position: absolute;
+    left: 70%;
+    transform: translate(45%);
+    top: 9%;
 }
 }
 </style>
