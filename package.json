@@ -39,6 +39,7 @@
     "sequelize": "^6.32.1",
     "socket.io": "^4.7.3",
     "twilio": "^5.0.0-rc.1",
+    "ultramsg-whatsapp-api": "^1.0.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

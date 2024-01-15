@@ -29,7 +29,11 @@ app.use(cors());
 const http = require('http');
 const socket = require('socket.io');
 const twilio = require('twilio');
-const {google} = require('googleapis');
+const ultramsg = require('ultramsg-whatsapp-api');
+const instance_id = "instance74906";
+const ultramsg_token = "sltm2rrl2h6j9r2j";
+const api = new ultramsg(instance_id, ultramsg_token);
+
 
 const httpServer = http.createServer(app);
 const io = socket(httpServer, {
@@ -1979,7 +1983,7 @@ app.get('/pagamento', (req, res) => {
     
               await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedido.id}`, 'Você tem um novo pedido para ser atendido.');
               console.log(`E-mail de notificação enviado para a gráfica ${graficaMaisProxima.id}`);
-              await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ID ${pedido.id}Você tem um novo pedido para ser atendido.`);
+              await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ID ${pedido.id} Você tem um novo pedido para ser atendido.`);
               console.log(`Mensagem Whatsapp de notificação enviado para a gráfica ${graficaMaisProxima.id}`);
     
               // Atualizamos a variável de controle para indicar que encontramos a gráfica
@@ -2016,7 +2020,7 @@ app.get('/pagamento', (req, res) => {
       
                 await enviarEmailNotificacao(graficaAtual.emailCad, `Novo Pedido - ID ${pedido.id}`, 'Você tem um novo pedido para ser atendido. Abra seu painel de pedidos!');
                 console.log(`E-mail de notificação enviado para a gráfica ${graficaAtual.id}`);
-                await enviarNotificacaoWhatsapp(graficaAtual.telefoneCad,`Novo Pedido - ID ${pedido.id}Você tem um novo pedido para ser atendido.`);
+                await enviarNotificacaoWhatsapp(graficaAtual.telefoneCad,`Novo Pedido - ID ${pedido.id} Você tem um novo pedido para ser atendido.`);
                 console.log(`Mensagem Whatsapp de notificação enviado para a gráfica ${graficaAtual.id}`);
                 // Atualizamos a variável de controle para indicar que encontramos a gráfica
                 graficaEncontrada = true;
@@ -2063,17 +2067,15 @@ app.get('/pagamento', (req, res) => {
     }
 
     async function enviarNotificacaoWhatsapp(destinatario, corpo) {
-      const client = new twilio('ACae2e6c3e273e9ec5a8c7f3fe64e0e6b2', 'a1620a450dbbee543323e284ee303abe');
-      
-      // O número 'from' deve começar com 'whatsapp:+'
-      const message = await client.messages.create({
-        body: corpo,
-        from: 'whatsapp:+1 808 427 0367', // Seu número Twilio configurado para WhatsApp
-        to: `whatsapp:${destinatario}`,
-      });
-      
-      console.log('Mensagem WhatsApp enviada:', message.sid);
-    }
+      try {
+          const response = await api.sendChatMessage(destinatario, corpo);
+          console.log(`Mensagem enviada com sucesso para a gráfica ${destinatario}:`, response);
+          return response;
+      } catch (error) {
+          console.error(`Erro ao enviar mensagem para a gráfica ${destinatario}:`, error);
+          throw error;
+      }
+  }
 // Exemplo de rota no servidor Node.js    console.log('Sessão do Carrinho:', req.session.carrinho);
 
 app.post('/atualizar-status-pedido', async (req, res) => {
