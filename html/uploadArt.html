@@ -451,143 +451,108 @@ label.lbl-EnvArtDep {
           });
         }
         const linksDeDownload = [];
-        async function enviarArquivoParaDropbox(file) {
-  try {
-    const accessToken = 'sl.BsDMlk5bqXJmhW52__3-steufcBU0S1vnQo6-XkvhpacetQDN89ICFVlxV3DWsVz-Q1evNadAYSVj3vXzvSEM-pgdkISQ7A_H3IVFqhi2l5jLHmdwFqHMgz9MUkeDURNrw3F-y-tdcpMWDD0JKn2Ghs';
 
-    // Passo 1: Faça o upload do arquivo para o Dropbox
-    const uploadResponse = await fetch('https://content.dropboxapi.com/2/files/upload', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/octet-stream',
-        'Dropbox-API-Arg': JSON.stringify({
-          path: '/' + file.name,
-          mode: 'add',
-          autorename: true,
-          mute: false,
-        }),
-      },
-      body: file,
-    });
+        async function enviarArquivoParaGoogleDrive(file) {
+            try {
+                // Utilize as credenciais e token de acesso adequados para a API do Google Drive
+                // Substitua 'YOUR_ACCESS_TOKEN' e 'YOUR_API_KEY' pelos valores corretos
+                const accessToken = 'YOUR_ACCESS_TOKEN';
+                const apiKey = 'AIzaSyCEflp4a-Vw1bIINHYPUO7wcyqVTIsNzJo';
 
-    if (!uploadResponse.ok) {
-      throw new Error('Erro ao fazer upload do arquivo para o Dropbox');
-    }
+                const formData = new FormData();
+                formData.append('file', file);
 
-    // Passo 2: Obtenha o link de compartilhamento do arquivo no Dropbox
-    const shareResponse = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        path: '/' + file.name,
-      }),
-    });
+                const uploadResponse = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                    body: formData,
+                });
 
-    if (!shareResponse.ok) {
-      throw new Error('Erro ao obter o link de compartilhamento do Dropbox');
-    }
+                if (!uploadResponse.ok) {
+                    throw new Error('Erro ao fazer upload do arquivo para o Google Drive');
+                }
 
-    const linkInfo = await shareResponse.json();
+                const uploadData = await uploadResponse.json();
 
-    // Certifique-se de obter o link de download corretamente
-    const downloadLink = linkInfo.url || linkInfo.error.shared_link_already_exists.metadata.url;
+                // Obtenha o link de compartilhamento do arquivo no Google Drive
+                const downloadLink = uploadData.webContentLink;
 
-    console.log(`Link de Download (Dropbox) para ${file.name}:`, downloadLink);
+                console.log(`Link de Download (Google Drive) para ${file.name}:`, downloadLink);
 
-    // Adicione sua lógica aqui para manipular o link de download, se necessário
-    return downloadLink;
-  } catch (error) {
-    console.error('Erro ao enviar arquivo para o Dropbox:', error.message);
-    throw error; // Propaga o erro para o chamador
-  }
-}
-async function salvarTodos(index, produtoId) {
-    const inputFile = document.getElementById(`envArt_${index}`);
-
-    if (inputFile.files.length > 0) {
-        try {
-            // Enviar arquivo para o servidor
-            const formData = new FormData();
-            formData.append('arquivo', inputFile.files[0]);
-            formData.append('produtoIndex', index);
-            formData.append('produtoId', produtoId);
-
-            const response = await fetch('/api/salvarArquivo', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro ao salvar arquivo no servidor');
+                return downloadLink;
+            } catch (error) {
+                console.error('Erro ao enviar arquivo para o Google Drive:', error.message);
+                throw error; // Propaga o erro para o chamador
             }
-
-            // Obter o nome do arquivo retornado pelo servidor
-            const nomeArquivo = await response.text();
-            console.log(`Arquivo ${nomeArquivo} salvo com sucesso para o produto com o id ${produtoId}`);
-
-            // Enviar arquivo para o Dropbox
-            const linkDownload = await enviarArquivoParaDropbox(inputFile.files[0]);
-
-            console.log('Link de Download (Dropbox):', linkDownload);
-
-            // Adicionar o nome do arquivo e link de download ao array
-            linksDeDownload.push({ nomeArquivo, linkDownload });
-
-            // Agora, incluir o link de download na chamada para o servidor
-            const responseSalvarArquivo = await fetch('/api/salvarArquivo', {
-                method: 'POST',
-                body: JSON.stringify({ produtoId, linkDownload }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!responseSalvarArquivo.ok) {
-                throw new Error('Erro ao salvar link de download no servidor');
-            }
-        } catch (error) {
-            console.error('Erro ao salvar arquivo:', error.message);
-            // Adicione lógica para informar ao usuário sobre o erro, se necessário
         }
-    }
-}
-const btnSalvarTodos = document.getElementById('btnSalvaTodos');
-btnSalvarTodos.addEventListener('click', async () => {
-  const produtos = document.querySelectorAll('.produto-carrinho');
 
-  for (let i = 0; i < produtos.length; i++) {
-    const inputFile = produtos[i].querySelector(`#envArt_${i}`);
-    const produtoId = inputFile.getAttribute('data-produto-id');
+        async function salvarTodos(index, produtoId) {
+            const inputFile = document.getElementById(`envArt_${index}`);
 
-    if (inputFile.files.length > 0) {
-      await salvarTodos(i, produtoId);
-    }
-  }
+            if (inputFile.files.length > 0) {
+                try {
+                    // Enviar arquivo para o Google Drive
+                    const linkDownload = await enviarArquivoParaGoogleDrive(inputFile.files[0]);
 
-  // Verificar se todos os produtos têm links de download
-  const todosComLinks = linksDeDownload.every((produto) => produto.linkDownload);
+                    console.log('Link de Download (Google Drive):', linkDownload);
 
-  if (todosComLinks) {
-    // Feedback de sucesso
-    const loadingMessage = document.getElementById('loading-message');
-    loadingMessage.innerHTML = '<p>Arquivo Enviado com sucesso! Redirecionando...</p>';
-    loadingMessage.style.color = 'green'
+                    // Adicionar o link de download ao array
+                    linksDeDownload.push({ produtoId, linkDownload });
 
-    // Redirecionar para a página de local-entrega.html após 10 segundos
-    setTimeout(() => {
-      window.location.href = 'local-entrega.html';
-    }, 5000);
-  } else {
-    // Feedback de erro
-    const loadingMessage = document.getElementById('loading-message');
-    loadingMessage.innerHTML = '<p>Erro ao gerar links. Tente novamente mais tarde.</p>';
-    loadingMessage.style.color = 'red'
-  }
-});
-      </script>
+                    // Agora, incluir o link de download na chamada para o servidor
+                    const responseSalvarArquivo = await fetch('/api/salvarArquivo', {
+                        method: 'POST',
+                        body: JSON.stringify({ produtoId, linkDownload }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (!responseSalvarArquivo.ok) {
+                        throw new Error('Erro ao salvar link de download no servidor');
+                    }
+                } catch (error) {
+                    console.error('Erro ao salvar arquivo:', error.message);
+                    // Adicione lógica para informar ao usuário sobre o erro, se necessário
+                }
+            }
+        }
+
+        const btnSalvarTodos = document.getElementById('btnSalvaTodos');
+        btnSalvarTodos.addEventListener('click', async () => {
+            const produtos = document.querySelectorAll('.produto-carrinho');
+
+            for (let i = 0; i < produtos.length; i++) {
+                const inputFile = produtos[i].querySelector(`#envArt_${i}`);
+                const produtoId = inputFile.getAttribute('data-produto-id');
+
+                if (inputFile.files.length > 0) {
+                    await salvarTodos(i, produtoId);
+                }
+            }
+
+            // Verificar se todos os produtos têm links de download
+            const todosComLinks = linksDeDownload.every((produto) => produto.linkDownload);
+
+            if (todosComLinks) {
+                // Feedback de sucesso
+                const loadingMessage = document.getElementById('loading-message');
+                loadingMessage.innerHTML = '<p>Arquivo Enviado com sucesso! Redirecionando...</p>';
+                loadingMessage.style.color = 'green'
+
+                // Redirecionar para a página de local-entrega.html após 10 segundos
+                setTimeout(() => {
+                    window.location.href = 'local-entrega.html';
+                }, 5000);
+            } else {
+                // Feedback de erro
+                const loadingMessage = document.getElementById('loading-message');
+                loadingMessage.innerHTML = '<p>Erro ao gerar links. Tente novamente mais tarde.</p>';
+                loadingMessage.style.color = 'red'
+            }
+        });
+    </script>
 </body>
 </html>
