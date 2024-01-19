@@ -341,6 +341,7 @@ label.lbl-EnvArtDep {
         <button id="btnSalvaTodos" class="lnk-av">Salvar Todos</button>
     </main>
     <script>
+        const btnSalvaTodos = document.getElementById('btnSalvaTodos');
         document.addEventListener('DOMContentLoaded', carregarProdutosCarrinho);
       
         async function carregarProdutosCarrinho() {
@@ -452,107 +453,57 @@ label.lbl-EnvArtDep {
         }
         const linksDeDownload = [];
 
-        async function enviarArquivoParaGoogleDrive(file) {
-            try {
-                // Utilize as credenciais e token de acesso adequados para a API do Google Drive
-                // Substitua 'YOUR_ACCESS_TOKEN' e 'YOUR_API_KEY' pelos valores corretos
-                const accessToken = 'YOUR_ACCESS_TOKEN';
-                const apiKey = 'AIzaSyCEflp4a-Vw1bIINHYPUO7wcyqVTIsNzJo';
+        async function enviarArquivoParaServidor(file, produtoId) {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('produtoId', produtoId);
 
-                const formData = new FormData();
-                formData.append('file', file);
+    const uploadResponse = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
 
-                const uploadResponse = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&key=${apiKey}`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                    body: formData,
-                });
+    if (!uploadResponse.ok) {
+      throw new Error('Erro ao fazer upload do arquivo para o servidor');
+    }
 
-                if (!uploadResponse.ok) {
-                    throw new Error('Erro ao fazer upload do arquivo para o Google Drive');
-                }
+    // Adicione a lógica necessária para atualizar a interface do usuário ou qualquer outra coisa que seja necessário
 
-                const uploadData = await uploadResponse.json();
+    console.log('Arquivo enviado com sucesso para o servidor.');
 
-                // Obtenha o link de compartilhamento do arquivo no Google Drive
-                const downloadLink = uploadData.webContentLink;
+    // Redirecione para a página local-entrega.html após o upload bem-sucedido
+    window.location.href = 'local-entrega.html';
 
-                console.log(`Link de Download (Google Drive) para ${file.name}:`, downloadLink);
+  } catch (error) {
+    console.error('Erro ao enviar arquivo para o servidor:', error.message);
+    // Adicione lógica para informar ao usuário sobre o erro, se necessário
+  }
+}
 
-                return downloadLink;
-            } catch (error) {
-                console.error('Erro ao enviar arquivo para o Google Drive:', error.message);
-                throw error; // Propaga o erro para o chamador
-            }
-        }
+// Função chamada quando o botão "Salvar Todos" é clicado
+btnSalvaTodos.addEventListener('click', async () => {
+  const produtos = document.querySelectorAll('.produto-carrinho');
 
-        async function salvarTodos(index, produtoId) {
-            const inputFile = document.getElementById(`envArt_${index}`);
+  for (let i = 0; i < produtos.length; i++) {
+    const inputFile = produtos[i].querySelector(`#envArt_${i}`);
+    const produtoId = inputFile.getAttribute('data-produto-id');
 
-            if (inputFile.files.length > 0) {
-                try {
-                    // Enviar arquivo para o Google Drive
-                    const linkDownload = await enviarArquivoParaGoogleDrive(inputFile.files[0]);
+    if (inputFile.files.length > 0) {
+      try {
+        // Enviar arquivo para o servidor
+        await enviarArquivoParaServidor(inputFile.files[0], produtoId);
 
-                    console.log('Link de Download (Google Drive):', linkDownload);
+        // Agora, incluir a lógica necessária para atualizar a interface do usuário ou qualquer outra coisa que seja necessário
+        // Exemplo: Atualizar uma barra de progresso, mostrar uma mensagem de sucesso, etc.
 
-                    // Adicionar o link de download ao array
-                    linksDeDownload.push({ produtoId, linkDownload });
-
-                    // Agora, incluir o link de download na chamada para o servidor
-                    const responseSalvarArquivo = await fetch('/api/salvarArquivo', {
-                        method: 'POST',
-                        body: JSON.stringify({ produtoId, linkDownload }),
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-
-                    if (!responseSalvarArquivo.ok) {
-                        throw new Error('Erro ao salvar link de download no servidor');
-                    }
-                } catch (error) {
-                    console.error('Erro ao salvar arquivo:', error.message);
-                    // Adicione lógica para informar ao usuário sobre o erro, se necessário
-                }
-            }
-        }
-
-        const btnSalvarTodos = document.getElementById('btnSalvaTodos');
-        btnSalvarTodos.addEventListener('click', async () => {
-            const produtos = document.querySelectorAll('.produto-carrinho');
-
-            for (let i = 0; i < produtos.length; i++) {
-                const inputFile = produtos[i].querySelector(`#envArt_${i}`);
-                const produtoId = inputFile.getAttribute('data-produto-id');
-
-                if (inputFile.files.length > 0) {
-                    await salvarTodos(i, produtoId);
-                }
-            }
-
-            // Verificar se todos os produtos têm links de download
-            const todosComLinks = linksDeDownload.every((produto) => produto.linkDownload);
-
-            if (todosComLinks) {
-                // Feedback de sucesso
-                const loadingMessage = document.getElementById('loading-message');
-                loadingMessage.innerHTML = '<p>Arquivo Enviado com sucesso! Redirecionando...</p>';
-                loadingMessage.style.color = 'green'
-
-                // Redirecionar para a página de local-entrega.html após 10 segundos
-                setTimeout(() => {
-                    window.location.href = 'local-entrega.html';
-                }, 5000);
-            } else {
-                // Feedback de erro
-                const loadingMessage = document.getElementById('loading-message');
-                loadingMessage.innerHTML = '<p>Erro ao gerar links. Tente novamente mais tarde.</p>';
-                loadingMessage.style.color = 'red'
-            }
-        });
+      } catch (error) {
+        console.error('Erro ao salvar arquivo:', error.message);
+        // Adicione lógica para informar ao usuário sobre o erro, se necessário
+      }
+    }
+  }
+});
     </script>
 </body>
 </html>
