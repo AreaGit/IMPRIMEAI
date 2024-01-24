@@ -25,29 +25,33 @@ const ItensPedidos = db.define('itenspedidos', {
     },
     valorProd: {
         type: Sequelize.FLOAT, // Use FLOAT para valores decimais
-        allowNull: false,
+        allowNull: true,
     },
     acabamento: {
         type: Sequelize.STRING(255),
-        allowNull: false,
+        allowNull: true,
     },
     cor: {
         type: Sequelize.STRING(255),
-        allowNull: false,
+        allowNull: true,
     },
     enobrecimento: {
         type: Sequelize.STRING(255),
-        allowNull: false
+        allowNull: true
     },
     formato: {
         type: Sequelize.STRING(255),
-        allowNull: false,
+        allowNull: true,
     },
     material: {
         type: Sequelize.STRING(255),
-        allowNull: false
+        allowNull: true
     },
     arquivo: {
+        type: Sequelize.BLOB(),
+        allowNull: true,
+    },
+    extensao: {
         type: Sequelize.STRING(255),
         allowNull: true,
     },
@@ -67,7 +71,7 @@ const ItensPedidos = db.define('itenspedidos', {
     },
 })
 
-ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
+//ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
 //ItensPedidos.sync({force:true})
 ItensPedidos.sync()
 

@@ -18,82 +18,58 @@ socket.on('msg', (msg) => {
     </script>
 </body>
 </html>-->
-
-<!--<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload de Arquivos para Google Drive</title>
+    <title>File Upload to Google Drive</title>
 </head>
 <body>
-    <input type="file" id="fileInput" />
-    <button id="uploadButton">Upload para Google Drive</button>
+    <h1>Upload a File</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput" />
+        <button type="button" onclick="uploadFile()">Upload</button>
+    </form>
 
-    <script src="https://apis.google.com/js/api.js"></script>
+    <div id="result">
+        <!-- Resultado do upload será exibido aqui -->
+    </div>
+
     <script>
-        // Defina suas credenciais OAuth aqui
-        const CLIENT_ID = '117143186417504099510';
-        const API_KEY = 'AIzaSyCdkGHda1ySXDlRsy_ST9obTjik26yXzHI';
-        const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
-        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-
-        // Função de inicialização do cliente
-        function initClient() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-            }).then(() => {
-                // Agora o cliente está inicializado, você pode chamar as funções do Google Drive
-                document.getElementById('uploadButton').addEventListener('click', uploadFile);
-            });
-        }
-
-        // Função de upload de arquivo
-        function uploadFile() {
+        async function uploadFile() {
             const fileInput = document.getElementById('fileInput');
             const file = fileInput.files[0];
 
-            const metadata = {
-                name: file.name,
-                parents: ['1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1'] // Substitua pelo ID da pasta no Google Drive
-            };
+            const formData = new FormData();
+            formData.append('file', file);
 
-            const form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            form.append('file', file);
+            try {
+                const response = await fetch('/uploadGoogleDrive', {
+                    method: 'POST',
+                    body: formData
+                });
 
-            gapi.client.drive.files.create({
-                resource: metadata,
-                media: {
-                    mimeType: file.type,
-                    body: form
+                if (response.ok) {
+                    const result = await response.json();
+                    displayResult(result);
+                } else {
+                    console.error('Erro ao fazer upload do arquivo:', response.statusText);
                 }
-            }).then(response => {
-                console.log('File uploaded:', response.result);
-            }).catch(error => {
-                console.error('Error uploading file:', error);
-            });
+            } catch (error) {
+                console.error('Erro na requisição ao fazer upload do arquivo:', error);
+            }
         }
 
-        // Carregue a API do cliente e execute a função de inicialização
-        gapi.load('client', initClient);
+        function displayResult(result) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <p>File ID: ${result.fileId}</p>
+                <p>Web View Link: <a href="${result.webViewLink}" target="_blank">${result.webViewLink}</a></p>
+                <p>Download Link: <a href="${result.downloadLink}" target="_blank">${result.downloadLink}</a></p>
+            `;
+        }
     </script>
-</body>
-</html>-->
-
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download de Imagem do Produto</title>
-</head>
-<body>
-  <h1>Download de Imagem do Produto</h1>
-  <a href="/download/3">Baixar Imagem do Produto 1</a>
-  <!-- Substitua "1" pelo ID do produto desejado -->
 </body>
 </html>

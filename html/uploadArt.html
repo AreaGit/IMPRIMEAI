@@ -451,59 +451,9 @@ label.lbl-EnvArtDep {
             }
           });
         }
-        const linksDeDownload = [];
+        btnSalvaTodos.addEventListener('click', async function () {
 
-        async function enviarArquivoParaServidor(file, produtoId) {
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('produtoId', produtoId);
-
-    const uploadResponse = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!uploadResponse.ok) {
-      throw new Error('Erro ao fazer upload do arquivo para o servidor');
-    }
-
-    // Adicione a lógica necessária para atualizar a interface do usuário ou qualquer outra coisa que seja necessário
-
-    console.log('Arquivo enviado com sucesso para o servidor.');
-
-    // Redirecione para a página local-entrega.html após o upload bem-sucedido
-    window.location.href = 'local-entrega.html';
-
-  } catch (error) {
-    console.error('Erro ao enviar arquivo para o servidor:', error.message);
-    // Adicione lógica para informar ao usuário sobre o erro, se necessário
-  }
-}
-
-// Função chamada quando o botão "Salvar Todos" é clicado
-btnSalvaTodos.addEventListener('click', async () => {
-  const produtos = document.querySelectorAll('.produto-carrinho');
-
-  for (let i = 0; i < produtos.length; i++) {
-    const inputFile = produtos[i].querySelector(`#envArt_${i}`);
-    const produtoId = inputFile.getAttribute('data-produto-id');
-
-    if (inputFile.files.length > 0) {
-      try {
-        // Enviar arquivo para o servidor
-        await enviarArquivoParaServidor(inputFile.files[0], produtoId);
-
-        // Agora, incluir a lógica necessária para atualizar a interface do usuário ou qualquer outra coisa que seja necessário
-        // Exemplo: Atualizar uma barra de progresso, mostrar uma mensagem de sucesso, etc.
-
-      } catch (error) {
-        console.error('Erro ao salvar arquivo:', error.message);
-        // Adicione lógica para informar ao usuário sobre o erro, se necessário
-      }
-    }
-  }
-});
+        });
     </script>
 </body>
 </html>

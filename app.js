@@ -33,7 +33,10 @@ const ultramsg = require('ultramsg-whatsapp-api');
 const instance_id = "instance75591";
 const ultramsg_token = "voqt7bp0dfrdvgd4";
 const api = new ultramsg(instance_id, ultramsg_token);
-
+const mime = require('mime-types');
+const stream = require('stream');
+const { google } = require('googleapis');
+const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
 
 const httpServer = http.createServer(app);
 const io = socket(httpServer, {
@@ -1531,34 +1534,26 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   }
 });
 app.use(cors());
-app.post('/api/salvarArquivo', upload.single('arquivo'), async (req, res) => {
+app.post('/api/salvarArquivo', upload.array('arquivo'), async (req, res) => {
   try {
-    const produtoId = parseInt(req.body.produtoId, 10);
-    const { linkDownload } = req.body;
+      const carrinho = req.session.carrinho || [];
+      const arquivos = req.files || [];
 
-    //console.log('Link de Download recebido no servidor:', linkDownload);
+      // Processar arquivos e adicioná-los ao carrinho
+      arquivos.forEach((arquivo, index) => {
+          carrinho.push({
+              produtoId: `produto_${index}`, // Use um identificador único para cada arquivo
+              nomeArquivo: arquivo.originalname
+          });
+      });
 
-    // Lógica para atualizar o produto no carrinho com o arquivo e o link de download recebidos
-    const produtoNoCarrinho = req.session.carrinho.find((item) => item.produtoId === produtoId);
+      // Atualizar o carrinho na sessão
+      req.session.carrinho = carrinho;
 
-    if (produtoNoCarrinho) {
-      // Atualize o produto com as informações do arquivo e link de download
-      //produtoNoCarrinho.arquivo = req.file.originalname;
-      produtoNoCarrinho.arquivo = linkDownload;
-
-      console.log(`Arquivo  e link de download salvos para o produto com o id ${produtoId}`);
-
-      // Imprima o carrinho no console após a atualização
-      console.log('Carrinho após salvar o arquivo e link de download:', req.session.carrinho);
-
-      res.status(200).json({ nomeArquivo: linkDownload });
-    } else {
-      console.error(`Produto com o id ${produtoId} não encontrado no carrinho.`);
-      res.status(404).send('Produto não encontrado no carrinho.');
-    }
+      res.status(200).send('Arquivos adicionados ao carrinho com sucesso.');
   } catch (error) {
-    console.error('Erro ao salvar arquivo e link de download:', error);
-    res.status(500).send('Erro interno ao salvar o arquivo e link de download.');
+      console.error('Erro ao adicionar arquivos ao carrinho:', error);
+      res.status(500).send('Erro ao adicionar arquivos ao carrinho.');
   }
 });
 app.get('/carrinho', (req, res) => {
@@ -1989,100 +1984,6 @@ app.get('/pagamento', (req, res) => {
       }
     });
 
- /*   async function verificarGraficaMaisProximaEAtualizar(pedido) {
-      try {
-        const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-    
-        const pedidosCadastrados = await ItensPedido.findAll({
-          where: {
-            statusPed: 'Aguardando',
-          },
-        });
-    
-        let pedidosProximos = [];
-    
-        for (let pedidoCadastrado of pedidosCadastrados) {
-          const enderecosPedido = await Enderecos.findAll({
-            where: {
-              id: pedidoCadastrado.id,
-            },
-          });
-    
-          for (let enderecoPedido of enderecosPedido) {
-            console.log(`Verificando pedido com o Id: ${pedidoCadastrado.id} e Endereço Id: ${enderecoPedido.id}`);
-    
-            const enderecoEntregaInfo = {
-              endereco: enderecoPedido.rua,
-              cep: enderecoPedido.cep,
-              cidade: enderecoPedido.cidade,
-              estado: enderecoPedido.estado,
-            };
-    
-            const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
-    
-            if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
-              console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
-              console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
-    
-              const graficas = await Graficas.findAll();
-    
-              let distanciaMinima = Infinity;
-              let graficaMaisProxima = null;
-    
-              for (let graficaAtual of graficas) {
-                const graficaCoordinates = await getCoordinatesFromAddress({
-                  endereco: graficaAtual.enderecoCad,
-                  cep: graficaAtual.cepCad,
-                  cidade: graficaAtual.cidadeCad,
-                  estado: graficaAtual.estadoCad,
-                }, apiKey);
-    
-                const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
-    
-                if (distanceToGrafica < distanciaMinima) {
-                  distanciaMinima = distanceToGrafica;
-                  graficaMaisProxima = graficaAtual;
-                }
-              }
-    
-              const raioEndereco = enderecoPedido.raio;
-    
-              if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
-                const produtosGrafica = JSON.parse(graficaMaisProxima.produtos);
-    
-                if (produtosGrafica[pedidoCadastrado.nomeProd]) {
-                  const pedidoAssociado = {
-                    ...pedidoCadastrado.dataValues,
-                    enderecoId: enderecoPedido.id,
-                    graficaId: graficaMaisProxima.id,
-                  };
-    
-                  pedidosProximos.push(pedidoAssociado);
-    
-                  await pedidoCadastrado.update({
-                    graficaId: graficaMaisProxima.id,
-                  });
-    
-                  // Notifica a gráfica
-                  await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, 'Você tem um novo pedido para ser atendido. Abra seu painel de pedidos!');
-                  await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ID ${pedidoCadastrado.id} Você tem um novo pedido para ser atendido.`);
-                }
-              }
-            }
-          }
-        }
-    
-        if (pedidosProximos.length > 0) {
-          console.log("TODOS OS PEDIDOS", pedidosProximos);
-          // Restante do código para filtrar e retornar os pedidos
-        }
-      } catch (error) {
-        console.error('Erro ao buscar pedidos cadastrados:', error);
-    
-        // Restante do código para tratamento de erros
-      }
-    }*/
-
     async function verificarGraficaMaisProximaEAtualizar(pedido) {
       try {
         const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
@@ -2361,6 +2262,66 @@ app.get('/graficas-cadastradas', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar graficas cadastradas', message: error.message });
   }
 });
+
+app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
+  const file = req.file; // Check if req.file is defined
+  console.log(file);
+
+  if (!file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  try {
+    const result = await uploadFile(file);
+    res.json(result);
+  } catch (error) {
+    console.error('Error during file upload:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+async function uploadFile(file) {
+  console.log('File Object:', file);
+  try {
+    const auth = await new google.auth.GoogleAuth({
+      keyFile: './googledrive.json',
+      scopes: ['https://www.googleapis.com/auth/drive']
+    });
+
+    const driveService = google.drive({
+      version: 'v3',
+      auth
+    });
+
+    const fileMetaData = {
+      'name': file.originalname,
+      'parents': [GOOGLE_API_FOLDER_ID],
+    };
+
+    const media = {
+      mimeType: file.mimetype,
+      body: stream.Readable.from(file.buffer), // Use stream.Readable.from to create a readable stream
+      length: file.size, // Provide the length of the buffer
+    };
+
+    const response = await driveService.files.create({
+      resource: fileMetaData,
+      media: media,
+      fields: 'id,webViewLink'
+    });
+
+    const fileId = response.data.id;
+    const webViewLink = response.data.webViewLink;
+
+    // Build the download link
+    const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+    return { fileId, webViewLink, downloadLink };
+  } catch (err) {
+    console.error('Error during authentication:', err);
+    throw err;
+  }
+}
 
 httpServer.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
