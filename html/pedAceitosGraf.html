@@ -65,24 +65,24 @@
     }
     .ped-nome {
       font-weight: normal;
-      position: fixed;
+      position: relative;
       left: 23%;
       width: fit-content;
-      top: 52%;
+      top: -19px;
     }
     .ped-valor {
       font-weight: normal;
-      position: fixed;
+      position: relative;
       left: 37%;
       width: fit-content;
-      top: 52%;
+      top: -37px;
     }
     .ped-quant {
       font-weight: normal;
-      position: fixed;
+      position: relative;
       left: 47%;
       width: fit-content;
-      top: 52%;
+      top: -56px;
     }
     a#verPed {
         left: 65%;
@@ -90,9 +90,9 @@
         width: fit-content;
         position: relative;
     }
-    button.btnFinalizarPedido {
-      position: fixed;
-      top: 50%;
+    button {
+      position: relative;
+      top: -93px;
       background-color: #EF4126;
       border: none;
       color: white;
@@ -154,21 +154,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const data = await response.json();
     const pedidosAceitos = data.pedidos;
+    console.log(pedidosAceitos)
 
     // Create HTML elements for each accepted order and append them to the container
     const pedidosContainer = document.getElementById('pedidosContainer');
     pedidosAceitos.forEach(pedido => {
-      pedido.itenspedidos.forEach(item => {
         const pedidoDiv = document.createElement('li');
         pedidoDiv.innerHTML = `
-          <p class="ped-id">${pedido.id}</p>
-          <p class="ped-nome">${item.nomeProd}</p>
-          <p class="ped-valor">${item.valorProd}</p>
-          <p class="ped-quant">${item.quantidade}</p>
-          <button class="btnFinalizarPedido" data-pedido-id="${pedido.id}">Finalizar Pedido</button>
+          <p class="ped-id">${pedidosAceitos[0].id}</p>
+          <p class="ped-nome">${pedidosAceitos[0].nomeProd}</p>
+          <p class="ped-valor">${pedidosAceitos[0].valorProd}</p>
+          <p class="ped-quant">${pedidosAceitos[0].quantidade}</p>
+          <button class="btnFinalizarPedido" data-pedido-id="${pedidosAceitos[0].id}">Finalizar Pedido</button>
         `;
         pedidosContainer.appendChild(pedidoDiv);
-      });
     });
 
     // Add a click event listener to the "Finalizar Pedido" buttons

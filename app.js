@@ -30,8 +30,8 @@ const http = require('http');
 const socket = require('socket.io');
 const twilio = require('twilio');
 const ultramsg = require('ultramsg-whatsapp-api');
-const instance_id = "instance75591";
-const ultramsg_token = "voqt7bp0dfrdvgd4";
+const instance_id = "instance74906";
+const ultramsg_token = "sltm2rrl2h6j9r2j";
 const api = new ultramsg(instance_id, ultramsg_token);
 const mime = require('mime-types');
 const stream = require('stream');
@@ -253,21 +253,11 @@ app.get('/pedidos-aceitos-grafica', async (req, res) => {
       return res.status(401).json({ message: "Usuário não autenticado" });
     }
     // Query the database for orders with status "Pedido Aceito Pela Gráfica" and associated data
-    const pedidosAceitos = await Pedidos.findAll({
+    const pedidosAceitos = await ItensPedido.findAll({
       where: {
         statusPed: 'Pedido Aceito Pela Gráfica',
         graficaAtend: graficaId, // Filter by the ID of the graphics company
       },
-      include: [
-        {
-          model: Enderecos,
-          attributes: ['rua', 'cep', 'estado', 'numero', 'complemento', 'bairro', 'cidade'],
-        },
-        {
-          model: ItensPedido,
-          attributes: ['idPed', 'idProduto', 'nomeProd', 'quantidade', 'valorProd', 'acabamento', 'cor', 'enobrecimento', 'formato', 'material', 'arquivo', 'raio', 'statusPed'],
-        },
-      ],
     });
 
     // Return the filtered orders with associated data as JSON
@@ -286,21 +276,11 @@ app.get('/pedidos-finalizados-grafica', async (req,res) => {
       return res.status(401).json({ message: "Usuário não autenticado" });
     }
     // Query the database for orders with status "Pedido Aceito Pela Gráfica" and associated data
-    const pedidosAceitos = await Pedidos.findAll({
+    const pedidosAceitos = await ItensPedido.findAll({
       where: {
         statusPed: 'Finalizado',
         graficaAtend: graficaId, // Filter by the ID of the graphics company
       },
-      include: [
-        {
-          model: Enderecos,
-          attributes: ['rua', 'cep', 'estado', 'numero', 'complemento', 'bairro', 'cidade'],
-        },
-        {
-          model: ItensPedido,
-          attributes: ['idPed', 'idProduto', 'nomeProd', 'quantidade', 'valorProd', 'acabamento', 'cor', 'enobrecimento', 'formato', 'material', 'arquivo', 'raio', 'statusPed'],
-        },
-      ],
     });
 
     // Return the filtered orders with associated data as JSON
@@ -319,21 +299,11 @@ app.get('/pedidos-enviados-grafica', async (req, res) => {
       return res.status(401).json({ message: 'Usuário não autenticado' });
     }
 
-    const pedidosEnviados = await Pedidos.findAll({
+    const pedidosEnviados = await ItensPedido.findAll({
       where: {
         statusPed: 'Pedido Enviado pela Gráfica',
         graficaatend: graficaId,
       },
-      include: [
-        {
-          model: Enderecos,
-          attributes: ['rua', 'cep', 'estado', 'numero', 'complemento', 'bairro', 'cidade'],
-        },
-        {
-          model: ItensPedido,
-          attributes: ['idPed', 'idProduto', 'nomeProd', 'quantidade', 'valorProd', 'acabamento', 'cor', 'enobrecimento', 'formato', 'material', 'arquivo', 'raio', 'statusPed'],
-        },
-      ],
     });
 
     res.json({ success: true, pedidos: pedidosEnviados });
@@ -1762,6 +1732,7 @@ carrinho.forEach((produto, produtoIndex) => {
       formato: produto.formato,
       material: produto.material,
       arquivo: produto.arquivo,
+      downloadLink: produto.downloadLink,
       tipoEntrega: 'Múltiplos Enderecos',
       endereco: endereco,
     });
@@ -1882,6 +1853,7 @@ app.get('/pagamento', (req, res) => {
               material: produtoQuebrado.material,
               arquivo: produtoQuebrado.arquivo,
               statusPed: 'Aguardando',
+              linkDownload: produtoQuebrado.downloadLink,
               // ... outros campos relevantes ...
             });
           });
@@ -1949,6 +1921,7 @@ app.get('/pagamento', (req, res) => {
               material: produtoNoCarrinho.material,
               arquivo: produtoNoCarrinho.arquivo,
               statusPed: 'Aguardando',
+              linkDownload: produtoNoCarrinho.downloadLink
             });
           });
     
@@ -2131,7 +2104,7 @@ app.post('/atualizar-status-pedido', async (req, res) => {
     // Atualize o status do pedido na tabela Pedidos
     const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
     console.log(graficaId)
-    const pedido = await Pedidos.findByPk(pedidoId);
+    const pedido = await ItensPedido.findByPk(pedidoId);
     if (!pedido) {
       return res.json({ success: false, message: 'Pedido não encontrado.' });
     }
@@ -2141,12 +2114,13 @@ app.post('/atualizar-status-pedido', async (req, res) => {
     await pedido.save();
 
     // Atualize o status do pedido na tabela ItensPedidos
-    const itensPedidos = await ItensPedido.update(
+    /*const itensPedidos = await ItensPedido.update(
       { statusPed: novoStatus },
-      { where: { idPed: pedidoId } }
-    );
+      { where: { id: pedidoId } },
+      { graficaAtend: graficaId }
+    );*/
 
-    return res.json({ success: true, graficaAtend: graficaId, itensPedidos });
+    return res.json({ success: true, graficaAtend: graficaId, /*itensPedidos*/ });
   } catch (error) {
     console.error('Erro ao atualizar o status do pedido:', error);
     return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });
@@ -2282,46 +2256,89 @@ app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
 
 async function uploadFile(file) {
   console.log('File Object:', file);
-  try {
-    const auth = await new google.auth.GoogleAuth({
-      keyFile: './googledrive.json',
-      scopes: ['https://www.googleapis.com/auth/drive']
-    });
 
-    const driveService = google.drive({
-      version: 'v3',
-      auth
-    });
+  const fileMetaData = {
+    'name': file.originalname, // Use file.originalname instead of 'file.originalname'
+    'parents': [GOOGLE_API_FOLDER_ID],
+  };
 
-    const fileMetaData = {
-      'name': file.originalname,
-      'parents': [GOOGLE_API_FOLDER_ID],
-    };
+  const media = {
+    mimeType: file.mimetype,
+    body: stream.Readable.from(file.buffer),
+    length: file.size,
+  };
 
-    const media = {
-      mimeType: file.mimetype,
-      body: stream.Readable.from(file.buffer), // Use stream.Readable.from to create a readable stream
-      length: file.size, // Provide the length of the buffer
-    };
+  const maxRetries = 3;
+  let retryCount = 0;
 
-    const response = await driveService.files.create({
-      resource: fileMetaData,
-      media: media,
-      fields: 'id,webViewLink'
-    });
+  while (retryCount < maxRetries) {
+    try {
+      const auth = await new google.auth.GoogleAuth({
+        keyFile: './googledrive.json',
+        scopes: ['https://www.googleapis.com/auth/drive']
+      });
 
-    const fileId = response.data.id;
-    const webViewLink = response.data.webViewLink;
+      const driveService = google.drive({
+        version: 'v3',
+        auth
+      });
 
-    // Build the download link
-    const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      const response = await driveService.files.create({
+        resource: fileMetaData,
+        media: media,
+        fields: 'id,webViewLink',
+        timeout: 10000, // 60 seconds timeout
+      });
 
-    return { fileId, webViewLink, downloadLink };
-  } catch (err) {
-    console.error('Error during authentication:', err);
-    throw err;
+      const fileId = response.data.id;
+      const webViewLink = response.data.webViewLink;
+
+      const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+      return { fileId, webViewLink, downloadLink };
+    } catch (err) {
+      console.error('Error during file upload:', err);
+      retryCount++;
+    }
   }
+
+  throw new Error('Max retry attempts reached. Upload failed.');
 }
+
+
+app.post('/api/upload', upload.array('files'), async (req, res) => {
+  try {
+    const files = req.files;
+    const uploadedFiles = [];
+
+    for (const file of files) {
+      const result = await uploadFile(file);
+      uploadedFiles.push(result);
+    }
+
+    // Atualizar os links de download na sessão do carrinho
+    const { session } = req;
+    const carrinho = session.carrinho || [];
+
+    uploadedFiles.forEach((file) => {
+      const produtoIndex = carrinho.findIndex((produto) => !produto.downloadLink);
+      
+      if (produtoIndex !== -1) {
+        // Encontrou um produto sem link de download
+        carrinho[produtoIndex].downloadLink = file.downloadLink;
+      }
+    });
+
+    session.carrinho = carrinho;
+
+    console.log('Arquivos enviados para o Google Drive:', uploadedFiles);
+    console.log(carrinho);
+    res.status(200).send('Upload para o Google Drive concluído com sucesso');
+  } catch (error) {
+    console.error('Erro durante o upload para o Google Drive:', error);
+    res.status(500).send('Erro durante o upload para o Google Drive');
+  }
+});
 
 httpServer.listen(8080, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);

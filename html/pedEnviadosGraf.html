@@ -58,45 +58,45 @@
         top: 30px;
     }
     .ped-id {
-    font-weight: normal;
-    position: relative;
-    left: 18%;
-    width: fit-content;
-}
+        font-weight: normal;
+        position: relative;
+        left: 18%;
+        width: fit-content;
+    }
     .ped-nome {
-    font-weight: normal;
-    position: relative;
-    left: 23%;
-    width: fit-content;
-    top: -20px;
-}
+      font-weight: normal;
+      position: relative;
+      left: 23%;
+      width: fit-content;
+      top: -19px;
+    }
     .ped-valor {
-    font-weight: normal;
-    position: relative;
-    left: 37%;
-    width: fit-content;
-    top: -42px;
-}
+      font-weight: normal;
+      position: relative;
+      left: 37%;
+      width: fit-content;
+      top: -37px;
+    }
     .ped-quant {
-    font-weight: normal;
-    position: relative;
-    left: 47%;
-    width: fit-content;
-    top: -63px;
-}
+      font-weight: normal;
+      position: relative;
+      left: 47%;
+      width: fit-content;
+      top: -56px;
+    }
     a#verPed {
-    position: relative;
-    left: 57%;
-    top: -85px;
-    width: fit-content;
-}
-    button.btnPedidoEntregue {
-      position: fixed;
-      top: 50%;
-      left: 55%;
+        left: 65%;
+        top: -84px;
+        width: fit-content;
+        position: relative;
+    }
+    button {
+      position: relative;
+      top: -93px;
       background-color: #EF4126;
       border: none;
       color: white;
+      left: 55%;
     }
     .menu2 {
     display: flex;
@@ -154,21 +154,20 @@
 
         const data = await response.json();
         const pedidosEnviados = data.pedidos;
+        console.log(pedidosEnviados);
 
         // Create HTML elements for each order and append them to the container
         const pedidosContainer = document.getElementById('pedidosContainer');
         pedidosEnviados.forEach(pedido => {
-          pedido.itenspedidos.forEach(item => {
             const pedidoDiv = document.createElement('li');
             pedidoDiv.innerHTML = `
-              <p class="ped-id">${pedido.id}</p>
-              <p class="ped-nome">${item.nomeProd}</p>
-              <p class="ped-valor">${item.valorProd}</p>
-              <p class="ped-quant">${item.quantidade}</p>
-              <button class="btnPedidoEntregue" data-pedido-id="${pedido.id}">Pedido Entregue</button>
+              <p class="ped-id">${pedidosEnviados[0].id}</p>
+              <p class="ped-nome">${pedidosEnviados[0].nomeProd}</p>
+              <p class="ped-valor">${pedidosEnviados[0].valorProd}</p>
+              <p class="ped-quant">${pedidosEnviados[0].quantidade}</p>
+              <button class="btnPedidoEntregue" data-pedido-id="${pedidosEnviados[0].id}">Pedido Entregue</button>
             `;
             pedidosContainer.appendChild(pedidoDiv);
-          });
         });
 
         const btnPedidoEntregue = document.querySelectorAll('.btnPedidoEntregue');

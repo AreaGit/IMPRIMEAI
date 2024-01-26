@@ -149,8 +149,9 @@ li {
 header > h1 {
     position: relative;
     top: -110px;
-    left: 41%;
+    left: 50%;
     width: fit-content;
+    transform: translate(-50%);
 }
 .escLocBtn {
     background-color: #EF4126;
@@ -202,11 +203,12 @@ img {
 header > p {
     position: relative;
     top: -93px;
-    left: 41%;
+    left: 50%;
     font-size: 14px;
     letter-spacing: 0.4px;
     width: fit-content;
     font-weight: normal;
+    transform: translate(-50%);
 }
 .input-container {
     width: 61%;
@@ -338,10 +340,11 @@ label.lbl-EnvArtDep {
         <div id="carrinhoProdutos"></div>
         <div id="resumo-compra" style="display: none;"></div>
         <div id="conteudo"></div>
-        <button id="btnSalvaTodos" class="lnk-av">Salvar Todos</button>
+        <button id="btnSalvarTodos" class="lnk-av">Salvar Todos</button>
     </main>
     <script>
-        const btnSalvaTodos = document.getElementById('btnSalvaTodos');
+        const msg = document.getElementById('loading-message');
+        const btnSalvarTodos = document.getElementById('btnSalvarTodos');
         document.addEventListener('DOMContentLoaded', carregarProdutosCarrinho);
       
         async function carregarProdutosCarrinho() {
@@ -358,6 +361,7 @@ label.lbl-EnvArtDep {
             carrinhoProdutos.innerHTML = '';
       
             if (produtos.length === 0) {
+                console.log("Nenhum produto no Carrinho")
               carrinhoProdutos.innerHTML = `
                 <div class="carrinho-vazio">
                   <img src="../images/CARRINHO VAZIO.png" alt="...">
@@ -451,8 +455,60 @@ label.lbl-EnvArtDep {
             }
           });
         }
-        btnSalvaTodos.addEventListener('click', async function () {
+        btnSalvarTodos.addEventListener('click', async function () {
+            const inputs = document.querySelectorAll('[id^="envArt_"]');
+            msg.innerText = "Aguarde o Envio dos Arquivos";
+            msg.style.color = 'yellow';
+            msg.style.fontWeight = 'bold';
 
+            for (const inputFile of inputs) {
+                const produtoId = inputFile.dataset.produtoId;
+                const file = inputFile.files[0];
+
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('files', file);  // Atualize para 'files' em vez de 'file'
+                    formData.append('produtoId', produtoId);
+
+                    try {
+                        const response = await fetch('/api/upload', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (response.ok) {
+                            const responseBody = await response.text();
+                            console.log(`Arquivo enviado com sucesso para o produto com o ID ${produtoId}`);
+                            // Adicione aqui qualquer lógica adicional após o envio bem-sucedido
+                            if (responseBody === 'Upload para o Google Drive concluído com sucesso') {
+                                console.log(`Upload de Todos Arquivos feito com Sucesso!`);
+                                msg.innerText = "Sucesso ao Enviar";
+                                msg.style.color = 'green';
+                                msg.style.fontWeight = 'bold';
+                                setTimeout(() => {
+                                    window.location.href = 'local-entrega.html';
+                                }, 5000)
+                            }
+                        } else {
+                            console.error('Erro ao enviar arquivo para o servidor:', response.statusText);
+                            msg.innerText = "Erro ao Enviar";
+                            msg.style.color = "red";
+                            setTimeout(() => {
+                                window.location.reload()
+                            }, 10000);
+                            // Adicione aqui qualquer lógica de tratamento de erro
+                        }
+                    } catch (error) {
+                        console.error('Erro ao processar o envio de arquivo:', error);
+                        msg.innerText = "Erro ao Enviar";
+                        msg.style.color = "red";
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 10000);
+                        // Adicione aqui qualquer lógica de tratamento de erro adicional
+                    }
+                }
+            }
         });
     </script>
 </body>

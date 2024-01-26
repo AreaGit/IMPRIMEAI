@@ -13,51 +13,46 @@ const ItensPedidos = db.define('itenspedidos', {
     },
     idProduto: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
     },
     nomeProd: {
         type : Sequelize.STRING(255),
-        allowNull:true
+        allowNull: false,
     },
     quantidade: {
         type: Sequelize.STRING(255),
-        allowNull: true
+        allowNull: false,
     },
     valorProd: {
-        type: Sequelize.FLOAT, // Use FLOAT para valores decimais
-        allowNull: true,
+        type: Sequelize.FLOAT,
+        allowNull: false,
     },
     acabamento: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
     },
     cor: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
     },
     enobrecimento: {
         type: Sequelize.STRING(255),
-        allowNull: true
+        allowNull: false,
     },
     formato: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
     },
     material: {
         type: Sequelize.STRING(255),
-        allowNull: true
+        allowNull: false,
     },
-    arquivo: {
-        type: Sequelize.BLOB(),
-        allowNull: true,
-    },
-    extensao: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+    linkDownload: {
+        type: Sequelize.STRING(255)
     },
     raio: {
         type: Sequelize.FLOAT,
-        allowNull: true,
+        allowNull: false,
     },
     statusPed: {
         type: Sequelize.STRING(255),
@@ -71,7 +66,7 @@ const ItensPedidos = db.define('itenspedidos', {
     },
 })
 
-//ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
+ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
 //ItensPedidos.sync({force:true})
 ItensPedidos.sync()
 

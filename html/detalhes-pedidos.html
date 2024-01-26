@@ -136,6 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Manipula os detalhes do pedido recebidos do servidor
         const detalhesPedido = data.pedido;
         const detalhesUsuario = data.usuario;
+        const pId = detalhesPedido.itenspedidos[0].id;
+        console.log('ID' , detalhesPedido.itenspedidos[0].id)
 
         // Exibe os detalhes do pedido no console.log do HTML
         console.log('Detalhes do Pedido:', detalhesPedido);
@@ -189,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      pedidoId: idPedido,
+                      pedidoId: pId,
                       novoStatus: novoStatus,
                     }),
                   });
@@ -236,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pedidoId: idPedido,
+          pedidoId: pId,
           novoStatus: novoStatus,
         }),
       });
@@ -273,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Restante do código para exibir os detalhes do pedido no HTML
         const detalhesPedidoDiv = document.getElementById('dados-entrega');
         detalhesPedidoDiv.innerHTML = `
-          <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
+          <p class="idPed"><strong>Id do Pedido:</strong> ${pId}</p>
           <!--<p><strong>Nome do Pedido:</strong> ${detalhesPedido.nomePed}</p>-->
           <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.itenspedidos[0].quantidade}</p>
           <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed}</p>
@@ -283,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class=""><strong>Acabamento:</strong> ${variacoesProduto.acabamento}</p>
           <p class=""><strong>Cor:</strong> ${variacoesProduto.cor}</p>
           <p class=""><strong>Enobrecimento:</strong> ${variacoesProduto.enobrecimento}</p>
-          <p class=""><strong>Arte do Produto:</strong> <a href="${detalhesPedido.itenspedidos[0].arquivo}">Clique Aqui para Baixar</a></p>
+          <p class=""><strong>Arte do Produto:</strong> <a href="${detalhesPedido.itenspedidos[0].linkDownload}">Clique Aqui para Baixar</a></p>
         `;
         const enderecoPedidoDiv = document.getElementById('endereco');
         // Adiciona a lógica para verificar se o tipo de entrega é "Entrega a Retirar na Loja"
