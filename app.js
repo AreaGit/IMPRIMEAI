@@ -2257,6 +2257,9 @@ app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
 async function uploadFile(file) {
   console.log('File Object:', file);
 
+  if (file.originalname.trim() === "Enviar Arte Depois") {
+    return { downloadLink: "Enviar Arte Depois" };
+  }else {
   const fileMetaData = {
     'name': file.originalname, // Use file.originalname instead of 'file.originalname'
     'parents': [GOOGLE_API_FOLDER_ID],
@@ -2304,7 +2307,7 @@ async function uploadFile(file) {
 
   throw new Error('Max retry attempts reached. Upload failed.');
 }
-
+}
 
 app.post('/api/upload', upload.array('files'), async (req, res) => {
   try {
@@ -2332,7 +2335,6 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
     session.carrinho = carrinho;
 
     console.log('Arquivos enviados para o Google Drive:', uploadedFiles);
-    console.log(carrinho);
     res.status(200).send('Upload para o Google Drive concluído com sucesso');
   } catch (error) {
     console.error('Erro durante o upload para o Google Drive:', error);

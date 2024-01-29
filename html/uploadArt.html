@@ -346,8 +346,18 @@ label.lbl-EnvArtDep {
         const msg = document.getElementById('loading-message');
         const btnSalvarTodos = document.getElementById('btnSalvarTodos');
         document.addEventListener('DOMContentLoaded', carregarProdutosCarrinho);
-      
+
         async function carregarProdutosCarrinho() {
+            const loadCount = parseInt(localStorage.getItem('loadCount')) || 0;
+            if (loadCount < 2) {
+                // Incrementa o contador de carregamento
+                localStorage.setItem('loadCount', loadCount + 1);
+                // Recarrega a página
+                window.location.reload(true);
+            } else {
+                // Reseta o contador após a segunda recarga
+                localStorage.removeItem('loadCount');
+            }
           try {
             const response = await fetch('/api/carrinho');
       
@@ -372,6 +382,7 @@ label.lbl-EnvArtDep {
               `;
             } else {
               produtos.forEach((produto, index) => {
+                if (!produto.downloadLink) {
                 const produtoElement = document.createElement('div');
                 produtoElement.classList.add('produto-carrinho');
       
@@ -425,6 +436,7 @@ label.lbl-EnvArtDep {
                     paragrafo.textContent = 'Enviar Arquivo';
                   }
                 });
+                }
               });
             }
           } catch (error) {
@@ -463,50 +475,56 @@ label.lbl-EnvArtDep {
 
             for (const inputFile of inputs) {
                 const produtoId = inputFile.dataset.produtoId;
-                const file = inputFile.files[0];
+                let file = inputFile.files[0];
+                const enviarDepoisCheckbox = document.getElementById(`envArtDep_${produtoId}`);
+                const enviarDepoisValue = enviarDepoisCheckbox ? enviarDepoisCheckbox.dataset.enviarDepoisValue : '';
 
-                if (file) {
-                    const formData = new FormData();
-                    formData.append('files', file);  // Atualize para 'files' em vez de 'file'
-                    formData.append('produtoId', produtoId);
+                // Verifica se há um arquivo selecionado, se não, define o file como "Enviar Arte Depois"
+                if (!file) {
+                file = new File([""], "Enviar Arte Depois", { type: "text/plain" });
+                }
 
-                    try {
-                        const response = await fetch('/api/upload', {
-                            method: 'POST',
-                            body: formData,
-                        });
+                const formData = new FormData();
+                formData.append('produtoId', produtoId);
+                formData.append('enviarDepoisValue', enviarDepoisValue);
+                formData.append('files', file);
 
-                        if (response.ok) {
-                            const responseBody = await response.text();
-                            console.log(`Arquivo enviado com sucesso para o produto com o ID ${produtoId}`);
-                            // Adicione aqui qualquer lógica adicional após o envio bem-sucedido
-                            if (responseBody === 'Upload para o Google Drive concluído com sucesso') {
-                                console.log(`Upload de Todos Arquivos feito com Sucesso!`);
-                                msg.innerText = "Sucesso ao Enviar";
-                                msg.style.color = 'green';
-                                msg.style.fontWeight = 'bold';
-                                setTimeout(() => {
-                                    window.location.href = 'local-entrega.html';
-                                }, 5000)
-                            }
-                        } else {
-                            console.error('Erro ao enviar arquivo para o servidor:', response.statusText);
-                            msg.innerText = "Erro ao Enviar";
-                            msg.style.color = "red";
-                            setTimeout(() => {
-                                window.location.reload()
-                            }, 10000);
-                            // Adicione aqui qualquer lógica de tratamento de erro
-                        }
-                    } catch (error) {
-                        console.error('Erro ao processar o envio de arquivo:', error);
-                        msg.innerText = "Erro ao Enviar";
-                        msg.style.color = "red";
-                        setTimeout(() => {
-                            window.location.reload()
-                        }, 10000);
-                        // Adicione aqui qualquer lógica de tratamento de erro adicional
+                try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const responseBody = await response.text();
+                    console.log(`Arquivo enviado com sucesso para o produto com o ID ${produtoId}`);
+                    // Adicione aqui qualquer lógica adicional após o envio bem-sucedido
+                    if (responseBody === 'Upload para o Google Drive concluído com sucesso') {
+                    console.log(`Upload de Todos Arquivos feito com Sucesso!`);
+                    msg.innerText = "Sucesso ao Enviar";
+                    msg.style.color = 'green';
+                    msg.style.fontWeight = 'bold';
+                    setTimeout(() => {
+                        window.location.href = 'local-entrega.html';
+                    }, 5000);
                     }
+                } else {
+                    console.error('Erro ao enviar arquivo para o servidor:', response.statusText);
+                    msg.innerText = "Erro ao Enviar";
+                    msg.style.color = "red";
+                    setTimeout(() => {
+                    window.location.reload()
+                    }, 10000);
+                    // Adicione aqui qualquer lógica de tratamento de erro
+                }
+                } catch (error) {
+                console.error('Erro ao processar o envio de arquivo:', error);
+                msg.innerText = "Erro ao Enviar";
+                msg.style.color = "red";
+                setTimeout(() => {
+                    window.location.reload()
+                }, 10000);
+                // Adicione aqui qualquer lógica de tratamento de erro adicional
                 }
             }
         });
