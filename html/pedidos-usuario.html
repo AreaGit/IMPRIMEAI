@@ -91,6 +91,12 @@
         left: 52%;
         top: -84px;
     }
+    li > a {
+        position: relative;
+        left: 70%;
+        transform: translate(-70%);
+        top: -107px;
+    }
 </style>
 <body>
     <header>
@@ -158,6 +164,7 @@ fetch(`/pedidos-usuario/${userId}`)
                         <p class="ped-valor">${pedidos.valorPed}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
                         <p class="ped-status" id="ped-status">${pedidos.statusPed}</p>
+                        <a href="detalhes-pedidosUser.html?idPedido=${pedidos.id}" id="verPed">Detalhes do Pedido</a>
                     `;
 
                     if (pedidos.statusPed === "Aceito") {
