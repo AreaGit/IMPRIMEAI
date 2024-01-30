@@ -1970,9 +1970,9 @@ app.get('/pagamento', (req, res) => {
         const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
     
         const pedidosCadastrados = await ItensPedido.findAll({
-          where: {
+          /*where: {
             statusPed: 'Aguardando',
-          },
+          },*/
         });
     
         let pedidosProximos = [];
@@ -2050,12 +2050,22 @@ app.get('/pagamento', (req, res) => {
                   });
     
                   // Notifica a gráfica apenas uma vez
-                  await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, 'Você tem um novo pedido para ser atendido. Abra seu painel de pedidos!');
-                  await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - Você tem um novo pedido para ser atendido. Abra seu painel de pedidos!`);
-    
-                  enderecoNotificado = true; // Marca o endereço como notificado
-                  graficasNotificadas.add(graficaMaisProxima.id); // Marca a gráfica como notificada
-                  break;
+                  if (!enderecoNotificado) {
+                    let mensagemStatus = '';
+
+                    if (pedidoAssociado.statusPed === 'Aguardando') {
+                      mensagemStatus = 'Você tem um novo pedido em Aguardo para ser atendido. Abra o seu Painel de Pedidos!';
+                    } else {
+                      mensagemStatus = 'Você tem um novo pedido em Aberto para ser atendido. Fique atento ao seu Painel de Pedidos!';
+                    }
+
+                    await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, mensagemStatus);
+                    await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ${mensagemStatus}`);
+
+                    enderecoNotificado = true; // Marca o endereço como notificado
+                    graficasNotificadas.add(graficaMaisProxima.id); // Marca a gráfica como notificada
+                    break;
+                  }
                 }
               }
             }
@@ -2348,6 +2358,60 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
   } catch (error) {
     console.error('Erro durante o upload para o Google Drive:', error);
     res.status(500).send('Erro durante o upload para o Google Drive');
+  }
+});
+
+app.get('/detalhes-pedidoUser/:idPedido', async (req, res) => {
+  try {
+    const idPedido = req.params.idPedido;
+
+    // Consulte o banco de dados para buscar os detalhes do pedido com base no idPedido
+    const detalhesPedido = await Pedidos.findByPk(idPedido, {
+      include: [
+        {
+          model: ItensPedidos,
+          include: [
+            {
+              model: Produtos,
+              attributes: ['imgProd'], // Inclua apenas a coluna imgProd da tabela Produtos
+            },
+          ],
+        },
+        { model: Enderecos },
+      ],
+    });
+
+    if (!detalhesPedido) {
+      // Se o pedido não for encontrado, retorne um erro 404
+      return res.status(404).json({ error: 'Pedido não encontrado' });
+    }
+
+    // Filtrar apenas os endereços associados ao pedido
+    const enderecosDoPedido = detalhesPedido.enderecos;
+
+    // Filtrar apenas os itens pedidos associados ao pedido
+    const itensDoPedido = detalhesPedido.itenspedidos.map((item) => ({
+      id: item.id,
+      idProduto: item.idProduto,
+      nomeProd: item.nomeProd,
+      quantidade: item.quantidade,
+      valorProd: item.valorProd,
+      acabamento: item.acabamento,
+      cor: item.cor,
+      enobrecimento: item.enobrecimento,
+      formato: item.formato,
+      material: item.material,
+      linkDownload: item.linkDownload,
+      imgProd: item.produto.imgProd,
+    }));
+
+    // Enviar para o cliente os endereços e itens associados ao pedido
+    res.json({ enderecos: enderecosDoPedido, itens: itensDoPedido });
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do pedido:', error);
+    res
+      .status(500)
+      .json({ error: 'Erro ao buscar detalhes do pedido', message: error.message });
   }
 });
 
