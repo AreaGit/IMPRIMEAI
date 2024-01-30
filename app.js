@@ -1815,31 +1815,30 @@ app.get('/pagamento', (req, res) => {
   res.sendFile(filePath);
 });
 
-    app.post('/criar-pedidos', async (req, res) => {
-      try {
-        console.log('1');
-        const carrinhoQuebrado = req.session.carrinho || [];
-        const enderecoDaSessao = req.session.endereco;
-
-        const temProdutoComArtePendente = carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois");
-        
-        if (carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {
+  app.post('/criar-pedidos', async (req, res) => {
+    try {
+      console.log('1')
+      const carrinhoQuebrado = req.session.carrinho || [];
+      const enderecoDaSessao = req.session.endereco;
+        if (/*carrinhoQuebrado.length > 1*/ carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {
           const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoQuebrado) => {
             const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
             return produto.valorProd * produtoQuebrado.quantidade;
           })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
           
-          const statusPedido = temProdutoComArtePendente ? 'Pedido em Aberto' : 'Aguardando';
-
+          // Criar o pedido na tabela de Pedidos
           const pedido = await Pedidos.create({
             idUserPed: req.cookies.userId,
             nomePed: 'Pedido Geral',
             quantPed: carrinhoQuebrado.length,
             valorPed: totalAPagar,
-            statusPed: statusPedido,
+            statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
+            ? 'Pedido em Aberto'
+            : 'Aguardando',
             // ... outros campos relevantes ...
           });
-
+          
+          // Criar os itens de pedido na tabela de ItensPedidos
           const itensPedidoPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
             const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
             return ItensPedido.create({
@@ -1855,14 +1854,17 @@ app.get('/pagamento', (req, res) => {
               formato: produtoQuebrado.formato,
               material: produtoQuebrado.material,
               arquivo: produtoQuebrado.arquivo,
-              statusPed: statusPedido,
+              statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
+              ? 'Pedido em Aberto'
+              : 'Aguardando',
               linkDownload: produtoQuebrado.downloadLink,
               // ... outros campos relevantes ...
             });
           });
           
           const itensPedido = await Promise.all(itensPedidoPromises);
-
+          
+          // Criar os endereços na tabela de Enderecos
           const enderecosPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
             return Enderecos.create({
               idPed: pedido.id,
@@ -1883,31 +1885,32 @@ app.get('/pagamento', (req, res) => {
               // ... outros campos relevantes ...
             });
           });
-
+          
           const enderecos = await Promise.all(enderecosPromises);
-
+          
           await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
           req.session.carrinho = [];
           req.session.endereco = {};
-
+  
           res.json({ message: 'Mini Pedido criado com sucesso', pedido /*,endereco, itensPedido */});
         } else {
-          console.log('2');
+          console.log('2')
           const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoNoCarrinho) => {
             const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
             return produto.valorProd * produtoNoCarrinho.quantidade;
           })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
-
-          const statusPedido = temProdutoComArtePendente ? 'Pedido em Aberto' : 'Aguardando';
-
+          //const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
           const pedido = await Pedidos.create({
             idUserPed: req.cookies.userId,
             nomePed: 'Pedido Geral',
             quantPed: 1,
             valorPed: totalAPagar,
-            statusPed: statusPedido,
+            statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
+            ? 'Pedido em Aberto'
+            : 'Aguardando',
+            //raio: produto.raioProd,
           });
-
+    
           const itensPedidoPromises = carrinhoQuebrado.map(async (produtoNoCarrinho) => {
             const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
             return ItensPedido.create({
@@ -1923,13 +1926,15 @@ app.get('/pagamento', (req, res) => {
               formato: produtoNoCarrinho.formato,
               material: produtoNoCarrinho.material,
               arquivo: produtoNoCarrinho.arquivo,
-              statusPed: statusPedido,
-              linkDownload: produtoNoCarrinho.downloadLink,
+              statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
+              ? 'Pedido em Aberto'
+              : 'Aguardando',
+              linkDownload: produtoNoCarrinho.downloadLink
             });
           });
-
+    
           const itensPedido = await Promise.all(itensPedidoPromises);
-
+    
           const endereco = await Enderecos.create({
             idPed: pedido.id,
             rua: enderecoDaSessao.enderecoCad,
@@ -1946,13 +1951,13 @@ app.get('/pagamento', (req, res) => {
             idProduto: carrinhoQuebrado[0].produtoId,
             tipoEntrega: enderecoDaSessao.tipoEntrega,
           });
-
+    
           await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
 
           req.session.carrinho = [];
           req.session.endereco = {};
-
-          res.json({ message: 'Pedido criado com sucesso', pedido /*, endereco, itensPedido*/});
+    
+          res.json({ message: 'Pedido criado com sucesso', pedido/*, endereco, itensPedido*/});
         }
       } catch (error) {
         console.error('Erro ao criar pedidos:', error);
