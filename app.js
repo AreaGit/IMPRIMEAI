@@ -2046,7 +2046,7 @@ app.get('/pagamento', (req, res) => {
                   pedidosProximos.push(pedidoAssociado);
     
                   await pedidoCadastrado.update({
-                    graficaId: graficaMaisProxima.id,
+                    graficaAtend: graficaMaisProxima.id,
                   });
     
                   // Notifica a gráfica apenas uma vez
@@ -2256,21 +2256,118 @@ app.get('/graficas-cadastradas', async (req, res) => {
 });
 
 app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
-  const file = req.file; // Check if req.file is defined
-  console.log(file);
+  const file = req.file;
+  const idProduto = req.body.idProduto;
 
-  if (!file) {
-    return res.status(400).send('No file uploaded.');
+  if (!file || !idProduto) {
+    return res.status(400).send('No file or idProduto provided.');
   }
 
   try {
     const result = await uploadFile(file);
+    const pedidoId = req.body.pedidoId;
+    // Atualize o produto no banco de dados com o downloadLink
+    await atualizarProduto(idProduto, result.downloadLink, pedidoId);
+    // Verifique se todos os produtos do pedido têm linkDownload diferente de "Enviar Arte Depois"
+    const todosProdutosEnviados = await verificarTodosProdutosEnviados(pedidoId);
+
+    // Se todos os produtos foram enviados, atualize o status do pedido para "Aguardando"
+    if (todosProdutosEnviados) {
+      await atualizarStatusPedido(pedidoId, 'Aguardando');
+    }
+
     res.json(result);
   } catch (error) {
     console.error('Error during file upload:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+async function atualizarProduto(idProduto, downloadLink, pedidoId) {
+  await ItensPedidos.update({ linkDownload: downloadLink }, { where: { idPed: pedidoId, idProduto: idProduto } });
+}
+// Função para obter o ID do pedido por ID do produto
+async function obterPedidoIdPorIdProduto(idProduto) {
+  const itemPedido = await ItensPedidos.findOne({ where: { idProduto: idProduto } });
+  if (itemPedido) {
+    return itemPedido.idPed;
+  }
+  throw new Error(`Produto com idProduto ${idProduto} não encontrado.`);
+}
+
+async function notificarGrafica(pedidoId) {
+  try {
+    const pedido = await ItensPedidos.findByPk(pedidoId);
+    if (pedido) {
+      const graficaId = pedido.getDataValue('graficaAtend');
+
+      if (graficaId) {
+        const grafica = await Graficas.findByPk(graficaId);
+
+        if (grafica) {
+          console.log(`Notificando a gráfica com ID ${grafica.id} sobre o pedido com ID ${pedidoId}.`);
+
+          // Sua lógica de notificação aqui
+          const destinatarioEmail = grafica.emailCad;
+          const destinatarioWhatsapp = grafica.telefoneCad;
+
+          // Exemplo de notificação por e-mail
+          await enviarEmailNotificacao(destinatarioEmail, 'Novo Pedido a ser Atendido', 'Novo Pedido a ser Atendido - Um pedido acabou de ser liberado, abra seu painel da gráfica.');
+
+          // Exemplo de notificação por WhatsApp
+          await enviarNotificacaoWhatsapp(destinatarioWhatsapp, 'Novo Pedido a ser Atendido - Um pedido acabou de ser liberado, abra seu painel da gráfica.');
+        } else {
+          console.log(`Gráfica com ID ${graficaId} não encontrada.`);
+        }
+      } else {
+        console.log(`Pedido com ID ${pedidoId} não possui gráfica associada.`);
+      }
+    } else {
+      console.log(`Pedido com ID ${pedidoId} não encontrado.`);
+    }
+  } catch (error) {
+    console.error('Erro ao notificar a gráfica:', error);
+  }
+}
+// Função para verificar se todos os produtos do pedido foram enviados
+async function verificarTodosProdutosEnviados(idPedido) {
+  const produtosEnviarArteDepois = await ItensPedidos.findAll({
+    where: {
+      idPed: idPedido,
+      linkDownload: 'Enviar Arte Depois',
+    },
+  });
+
+  // Se há produtos com "Enviar Arte Depois", não atualize o status do pedido
+  if (produtosEnviarArteDepois.length > 0) {
+    return false;
+  }
+
+  const todosEnviados = await ItensPedidos.findAll({
+    where: {
+      idPed: idPedido,
+      linkDownload: {
+        [Sequelize.Op.ne]: 'Enviar Arte Depois',
+      },
+    },
+  });
+
+  // Se todos os produtos foram enviados, atualize o status do pedido para 'Aguardando'
+  if (todosEnviados.length > 0) {
+    await atualizarStatusPedido(idPedido, 'Aguardando');
+    console.log('Notificando a Gráfica!')
+    await notificarGrafica(idPedido);  // Adiciona a notificação para a gráfica
+    return true;
+  }
+
+  return false;
+}
+
+// Função para atualizar o status do pedido
+async function atualizarStatusPedido(pedidoId, novoStatus) {
+  await Pedidos.update({ statusPed: novoStatus }, { where: { id: pedidoId } });
+  await ItensPedidos.update({ statusPed: novoStatus }, { where: { idPed: pedidoId } });
+}
 
 async function uploadFile(file) {
   console.log('File Object:', file);
