@@ -46,6 +46,23 @@
             margin: 15px;
             font-size: 26px;
         }
+        input[type="file"] {
+            position: relative;
+            left: 3%;
+        }
+        button {
+            padding: 12px 28px 12px 28px;
+            border: none;
+            background-color: #EF4126;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            left: 70%;
+            top: -33px;
+        }
     </style>
 </head>
 <body>
@@ -131,12 +148,12 @@
       
             // Exibir detalhes dos itens do pedido
             data.itens.forEach((item) => {
-              const div = document.createElement('div');
-              div.id = `divItem`
-              const imgSrc = `data:image/png;base64,${btoa(
+            const div = document.createElement('div');
+            div.id = `divItem`
+            const imgSrc = `data:image/png;base64,${btoa(
                 String.fromCharCode.apply(null, new Uint8Array(item.imgProd.data))
-              )}`;
-              div.innerHTML += `
+            )}`;
+            div.innerHTML += `
                 <img src=${imgSrc}>
                 <p><strong>ID do Produto:</strong> ${item.idProduto}</p>
                 <p><strong>Nome do Produto:</strong> ${item.nomeProd}</p>
@@ -147,19 +164,31 @@
                 <p><strong>Enobrecimento:</strong> ${item.enobrecimento}</p>
                 <p><strong>Formato:</strong> ${item.formato}</p>
                 <p><strong>Material:</strong> ${item.material}</p>
-                <p>${item.linkDownload}</p>
-              `;
+                <p><strong>Arte do Produto:</strong> ${item.linkDownload}</p>
+            `;
 
-              if (item.linkDownload === 'Enviar Depois') {
-                  const label = document.createElement('label');
-                  label.textContent = 'Escolha um arquivo:';
-                  const inputFile = document.createElement('input');
-                  inputFile.type = 'file';
-                  inputFile.name = `file_${item.idProduto}`; // Definir um nome único para cada input file
-                  label.appendChild(inputFile);
-                  div.appendChild(label);
-                }
-              itensPedidoContainer.appendChild(div);
+            if (item.linkDownload === 'Enviar Arte Depois') {
+                const label = document.createElement('label');
+                label.textContent = 'Escolha um arquivo para o Produto:';
+                
+                const inputFile = document.createElement('input');
+                inputFile.type = 'file';
+                inputFile.name = `file_${item.idProduto}`; // Definir um nome único para cada input file
+                label.appendChild(inputFile);
+
+                const enviarButton = document.createElement('button');
+                enviarButton.textContent = 'Enviar';
+                enviarButton.addEventListener('click', () => {
+                // Adicione a lógica para enviar o arquivo quando o botão for clicado
+                // Você pode chamar uma função para lidar com o envio do arquivo aqui
+                alert(`Enviar arquivo para o produto ${item.nomeProd} com o id ${item.idProduto}`);
+                });
+
+                div.appendChild(label);
+                div.appendChild(enviarButton);
+            }
+
+            itensPedidoContainer.appendChild(div);
             });
           })
           .catch((error) => console.error('Erro ao buscar detalhes do pedido:', error));
