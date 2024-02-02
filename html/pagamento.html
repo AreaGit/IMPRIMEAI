@@ -150,7 +150,7 @@
   }
   .container-right {
     position: relative;
-    top: -50%;
+    top: -64%;
     left: 75%;
     width: 25%;
     height: 25%;
@@ -168,6 +168,44 @@
   .tot {
     border-top: 1px solid black;
     font-size: 25px;
+  }
+  .mtd-carteira {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+    width: 150%;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .mtd-carteira:hover {
+   box-shadow: 1px 1px 6px #ef412693; 
+  }
+  .mtd-carteira > a {
+    text-decoration: none;
+    color: white;
+    background-color: #EF4126;
+    padding: 8px 18px 8px 18px;
+    position: relative;
+    left: 80%;
+    top: -50px;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .mtd-carteira > h2 {
+    position: relative;
+    left: 10%;
+    top: -20px;
+  }
+  .mtd-carteira > img {
+    position: relative;
+    top: 25px;
+    left: 20px;
+  }
+  .mtd-carteira > p {
+    font-size: 14px;
+    font-weight: normal;
+    position: relative;
+    left: 10%;
+    top: -10px;
   }
   @media screen and (min-width:1280px) and (max-width:1360px) {
     .container-right {
@@ -380,6 +418,12 @@ main > h1 {
         <h2>Cartão de Crédito</h2>
         <p>Escolha entre seus cartões de crédito ou cadastre um novo</p>
         <a href="#" id="finalizarCompraBtn3" class="finalizarCompraBtn">Finalizar a Compra</a> 
+      </div>
+      <div class="mtd-carteira">
+        <img src="https://wbl.blob.core.windows.net/public/money.png" alt="...">
+        <h2>Minha Carteira</h2>
+        <p>Efetue o pagamento do seu pedido com o crédido de sua Carteira</p>
+        <a href="#" id="finalizarCompraBtn4" class="finalizarCompraBtn">Finalizar a Compra</a> 
       </div>
     </div>
   </div>
