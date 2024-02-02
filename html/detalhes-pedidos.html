@@ -120,6 +120,7 @@
     </main>
     <script>
       let tipoEntrega;
+      let pId
 document.addEventListener('DOMContentLoaded', () => {
 
   // Obtém o ID do pedido e do produto da URL
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Manipula os detalhes do pedido recebidos do servidor
         const detalhesPedido = data.pedido;
         const detalhesUsuario = data.usuario;
-        const pId = detalhesPedido.itenspedidos[0].id;
+        pId = detalhesPedido.itenspedidos[0].id;
         console.log('ID' , detalhesPedido.itenspedidos[0].id)
 
         // Exibe os detalhes do pedido no console.log do HTML
@@ -275,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Restante do código para exibir os detalhes do pedido no HTML
         const detalhesPedidoDiv = document.getElementById('dados-entrega');
         detalhesPedidoDiv.innerHTML = `
-          <p class="idPed"><strong>Id do Pedido:</strong> ${pId}</p>
+          <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
           <!--<p><strong>Nome do Pedido:</strong> ${detalhesPedido.nomePed}</p>-->
           <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.itenspedidos[0].quantidade}</p>
           <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed}</p>
@@ -395,6 +396,7 @@ btnCancelarPedido.addEventListener('click', async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        idPedido: pId,
         graficaId: graficaId,
       }),
     });

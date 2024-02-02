@@ -129,6 +129,7 @@
             const itensPedidoContainer = document.getElementById('itens-pedido-list');
             const imagesContainer = document.getElementById('images');
             // Exibir detalhes do endereço
+            if(data.itens.statusPed === "Pedido em Aberto")
             data.enderecos.forEach((endereco) => {
                 const div = document.createElement('div');
                 div.id = 'divEnd'

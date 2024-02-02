@@ -784,12 +784,12 @@ app.get('/pedidos-cadastrados', async (req, res) => {
 app.post('/cancelar-pedido/:idPedido/:idGrafica', async (req, res) => {
   try {
     const graficaId = req.params.idGrafica;
-    const idPedido = req.params.idPedido;
+    const idPedido = req.body.idPedido;
 
     console.log('Grafica ID', graficaId, 'Pedido ID', idPedido);
 
     // Atualize o pedido
-    const pedido = await Pedidos.findByPk(idPedido);
+    const pedido = await ItensPedido.findByPk(idPedido);
 
     if (!pedido) {
       return res.status(404).json({ message: 'Pedido não encontrado' });
@@ -1569,15 +1569,29 @@ app.post('/salvar-endereco-no-carrinho', (req, res) => {
 
   // Salve o endereço na sessão
   req.session.endereco = endereco;
-   // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
-   req.session.carrinho = req.session.carrinho || [];
-   req.session.carrinho.forEach(produto => {
-     produto.endereco = endereco;
-   });
 
-  console.log('Endereço Salvo na Sessão:', endereco);
+  // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
+  req.session.carrinho = req.session.carrinho || [];
 
-  console.log('Conteúdo da Sessão:', req.session);
+  // Crie um array para armazenar endereços quebrados com base na quantidade total de produtos no carrinho
+  const enderecosQuebrados = [];
+
+  // Itere sobre o carrinho e adicione os endereços quebrados ao array
+  req.session.carrinho.forEach((produto) => {
+    for (let i = 0; i < produto.quantidade; i++) {
+      const enderecoQuebrado = { ...endereco, tipoEntrega: 'Únicos Endereços' };
+      enderecosQuebrados.push(enderecoQuebrado);
+    }
+  });
+
+  // Atualize cada produto no carrinho com o endereço correspondente
+  req.session.carrinho.forEach((produto, index) => {
+    produto.endereco = enderecosQuebrados[index];
+  });
+
+  req.session.endereco = enderecosQuebrados
+
+  console.log('Endereços Quebrados:', enderecosQuebrados);
 
   res.json({ success: true });
 });
@@ -1610,13 +1624,28 @@ app.post('/salvar-novo-endereco-no-carrinho', (req, res) => {
   // Salve o endereço na sessão
   req.session.endereco = endereco;
 
-    // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
-    req.session.carrinho = req.session.carrinho || [];
-    req.session.carrinho.forEach(produto => {
-      produto.endereco = endereco;
-    });
+  // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
+  req.session.carrinho = req.session.carrinho || [];
 
-  console.log('Endereço Salvo na Sessão:', endereco);
+  // Crie um array para armazenar endereços quebrados com base na quantidade total de produtos no carrinho
+  const enderecosQuebrados = [];
+
+  // Itere sobre o carrinho e adicione os endereços quebrados ao array
+  req.session.carrinho.forEach((produto) => {
+    for (let i = 0; i < produto.quantidade; i++) {
+      const enderecoQuebrado = { ...endereco, tipoEntrega: 'Únicos Endereços' };
+      enderecosQuebrados.push(enderecoQuebrado);
+    }
+  });
+
+  // Atualize cada produto no carrinho com o endereço correspondente
+  req.session.carrinho.forEach((produto, index) => {
+    produto.endereco = enderecosQuebrados[index];
+  });
+
+  req.session.endereco = enderecosQuebrados
+
+  console.log('Endereços Quebrados:', enderecosQuebrados);
 
   res.json({ success: true });
 });
@@ -1649,13 +1678,29 @@ app.post('/salvar-endereco-retirada-no-carrinho', (req, res) => {
 
   // Salve o endereço na sessão
   req.session.endereco = endereco;
-   // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
-   req.session.carrinho = req.session.carrinho || [];
-   req.session.carrinho.forEach(produto => {
-     produto.endereco = endereco;
-   });
 
-  console.log('Endereço Salvo na Sessão:', endereco);
+  // Salve o endereço também no carrinho (você pode adaptar isso de acordo com a lógica do seu aplicativo)
+  req.session.carrinho = req.session.carrinho || [];
+
+  // Crie um array para armazenar endereços quebrados com base na quantidade total de produtos no carrinho
+  const enderecosQuebrados = [];
+
+  // Itere sobre o carrinho e adicione os endereços quebrados ao array
+  req.session.carrinho.forEach((produto) => {
+    for (let i = 0; i < produto.quantidade; i++) {
+      const enderecoQuebrado = { ...endereco, tipoEntrega: 'Únicos' };
+      enderecosQuebrados.push(enderecoQuebrado);
+    }
+  });
+
+  // Atualize cada produto no carrinho com o endereço correspondente
+  req.session.carrinho.forEach((produto, index) => {
+    produto.endereco = enderecosQuebrados[index];
+  });
+
+  req.session.endereco = enderecosQuebrados
+
+  console.log('Endereços Quebrados:', enderecosQuebrados);
 
   console.log('Conteúdo da Sessão:', req.session);
 
@@ -1911,59 +1956,79 @@ app.get('/pagamento', (req, res) => {
             //raio: produto.raioProd,
           });
     
-          const itensPedidoPromises = carrinhoQuebrado.map(async (produtoNoCarrinho) => {
-            const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-            return ItensPedido.create({
-              idPed: pedido.id,
-              idProduto: produtoNoCarrinho.produtoId,
-              nomeProd: produto.nomeProd,
-              quantidade: produtoNoCarrinho.quantidade,
-              valorProd: produto.valorProd,
-              raio: produto.raioProd,
-              acabamento: produtoNoCarrinho.acabamento,
-              cor: produtoNoCarrinho.cor,
-              enobrecimento: produtoNoCarrinho.enobrecimento,
-              formato: produtoNoCarrinho.formato,
-              material: produtoNoCarrinho.material,
-              arquivo: produtoNoCarrinho.arquivo,
-              statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
-              ? 'Pedido em Aberto'
-              : 'Aguardando',
-              linkDownload: produtoNoCarrinho.downloadLink
-            });
-          });
-    
-          const itensPedido = await Promise.all(itensPedidoPromises);
-    
-          const endereco = await Enderecos.create({
-            idPed: pedido.id,
-            rua: enderecoDaSessao.enderecoCad,
-            cep: enderecoDaSessao.cepCad,
-            cidade: enderecoDaSessao.cidadeCad,
-            numero: enderecoDaSessao.numCad,
-            complemento: enderecoDaSessao.compCad,
-            bairro: enderecoDaSessao.bairroCad,
-            quantidade: carrinhoQuebrado.reduce((total, produtoNoCarrinho) => total + produtoNoCarrinho.quantidade, 0),
-            celular: enderecoDaSessao.telefoneCad,
-            estado: enderecoDaSessao.estadoCad,
-            cuidados: enderecoDaSessao.cuidadosCad,
-            raio: carrinhoQuebrado.length > 0 ? carrinhoQuebrado[0].raioProd : 0,
-            idProduto: carrinhoQuebrado[0].produtoId,
-            tipoEntrega: enderecoDaSessao.tipoEntrega,
-          });
-    
-          await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
+      const enderecosQuebradosPromises = carrinhoQuebrado.map(async (produtoNoCarrinho, index) => {
+        const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+        const enderecoQuebrado = {
+          idPed: pedido.id,
+          rua: produtoNoCarrinho.endereco.enderecoCad,
+          cep: produtoNoCarrinho.endereco.cepCad,
+          cidade: produtoNoCarrinho.endereco.cidadeCad,
+          numero: produtoNoCarrinho.endereco.numCad,
+          complemento: produtoNoCarrinho.endereco.compCad,
+          bairro: produtoNoCarrinho.endereco.bairroCad,
+          quantidade: produtoNoCarrinho.quantidade,
+          celular: produtoNoCarrinho.endereco.telefoneCad,
+          estado: produtoNoCarrinho.endereco.estadoCad,
+          cuidados: produtoNoCarrinho.endereco.cuidadosCad,
+          raio: produtoNoCarrinho.raioProd,
+          idProduto: produtoNoCarrinho.produtoId,
+          tipoEntrega: produtoNoCarrinho.endereco.tipoEntrega,
+        };
 
-          req.session.carrinho = [];
-          req.session.endereco = {};
-    
-          res.json({ message: 'Pedido criado com sucesso', pedido/*, endereco, itensPedido*/});
-        }
-      } catch (error) {
-        console.error('Erro ao criar pedidos:', error);
-        res.status(500).json({ error: 'Erro ao criar pedidos' });
-      }
-    });
+        // Crie o endereço no banco de dados
+        const enderecoCriado = await Enderecos.create(enderecoQuebrado);
+
+        return enderecoCriado;
+      });
+
+      // Aguarde todas as promessas de endereços quebrados serem resolvidas
+      const enderecosQuebrados = await Promise.all(enderecosQuebradosPromises);
+
+      // Crie e associe os itens de pedido aos endereços correspondentes
+      const itensPedidoPromises = carrinhoQuebrado.map(async (produtoNoCarrinho, index) => {
+        const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+        const endereco = enderecosQuebrados[index];
+
+        // Crie e associe o item de pedido ao endereço
+        return ItensPedido.create({
+          idPed: pedido.id,
+          idProduto: produtoNoCarrinho.produtoId,
+          nomeProd: produto.nomeProd,
+          quantidade: produtoNoCarrinho.quantidade,
+          valorProd: produto.valorProd,
+          raio: produtoNoCarrinho.raioProd,
+          acabamento: produtoNoCarrinho.acabamento,
+          cor: produtoNoCarrinho.cor,
+          enobrecimento: produtoNoCarrinho.enobrecimento,
+          formato: produtoNoCarrinho.formato,
+          material: produtoNoCarrinho.material,
+          arquivo: produtoNoCarrinho.arquivo,
+          statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
+            ? 'Pedido em Aberto'
+            : 'Aguardando',
+          linkDownload: produtoNoCarrinho.downloadLink,
+          enderecoId: endereco.id, // Associe o ID do endereço criado
+        });
+      });
+
+      // Aguarde todas as promessas de itens de pedido serem resolvidas
+      await Promise.all(itensPedidoPromises.map(verificarGraficaMaisProximaEAtualizar));
+
+      // Atualize cada produto no carrinho com o endereço correspondente
+      req.session.carrinho.forEach((produto, index) => {
+        produto.endereco = enderecosQuebrados[index];
+      });
+
+      req.session.carrinho = [];
+      req.session.endereco = {};
+
+      res.json({ message: 'Pedido criado com sucesso', pedido/*, endereco, itensPedido*/});
+    }
+  } catch (error) {
+    console.error('Erro ao criar pedidos:', error);
+    res.status(500).json({ error: 'Erro ao criar pedidos' });
+  }
+});
 
     async function verificarGraficaMaisProximaEAtualizar(pedido) {
       try {
