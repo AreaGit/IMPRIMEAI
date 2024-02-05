@@ -349,7 +349,7 @@ label.lbl-EnvArtDep {
 
         async function carregarProdutosCarrinho() {
             const loadCount = parseInt(localStorage.getItem('loadCount')) || 0;
-            if (loadCount < 2) {
+            if (loadCount < 5) {
                 // Incrementa o contador de carregamento
                 localStorage.setItem('loadCount', loadCount + 1);
                 // Recarrega a página

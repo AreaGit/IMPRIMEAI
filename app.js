@@ -1863,6 +1863,8 @@ app.get('/pagamento', (req, res) => {
   app.post('/criar-pedidos', async (req, res) => {
     try {
       console.log('1')
+      const metodPag = req.body.metodPag;
+      console.log(metodPag)
       const carrinhoQuebrado = req.session.carrinho || [];
       const enderecoDaSessao = req.session.endereco;
         if (/*carrinhoQuebrado.length > 1*/ carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {
@@ -1880,6 +1882,7 @@ app.get('/pagamento', (req, res) => {
             statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
             ? 'Pedido em Aberto'
             : 'Aguardando',
+            metodPag: metodPag,
             // ... outros campos relevantes ...
           });
           
@@ -1953,6 +1956,7 @@ app.get('/pagamento', (req, res) => {
             statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
             ? 'Pedido em Aberto'
             : 'Aguardando',
+            metodPag: metodPag,
             //raio: produto.raioProd,
           });
     

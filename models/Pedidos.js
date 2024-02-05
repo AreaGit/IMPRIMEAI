@@ -28,6 +28,10 @@ const Pedidos = db.define('pedidos', {
         type: Sequelize.STRING(255),
         allowNull: true
     },
+    metodPag: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+    },
     raio: {
         type: Sequelize.FLOAT,
         allowNull: true,
