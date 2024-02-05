@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/style.css" media="all">
+<link rel="stylesheet" href="../styles/pag-prods.css">
+<link rel="stylesheet" href="styles/medias.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<style>
+    body {
+        color: #212529; 
+    }
+    h1 {
+        position: absolute;
+        left: 15%;
+    }
+    #saldCart {
+        border: 1px solid #E8E8E8;
+        border-radius: 5px;
+        width: 25%;
+        height: 150px;
+        position: relative;
+        left: 15%;
+        top: 100px;
+        padding: 8px;
+    }
+    #saldCart:hover {
+        transition: 1s;
+        border: none;
+        box-shadow: 1px 1px 6px #ef412693; 
+    }
+    .pVl {
+        font-size: 26px;
+        position: relative;
+        top: 15px;
+    }
+    #vlrCart {
+        font-size: 26px;
+    }
+    #saldCart > a {
+        text-decoration: none;
+        color: white;
+        background-color: #EF4126;
+        padding: 8px 18px 8px 18px;
+        position: relative;
+        left: 70%;
+        top: -10px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    #pop-upPag {
+        display: none;
+        border-radius: 5px;
+        border: 1px solid #858383;
+        width: 25%;
+        height: 900px;
+        position: relative;
+        left: 60%;
+        transform: translate(-60%);
+        top: -220px;
+    }
+    #fechPop {
+        font-size: 22px;
+        color: #212529;
+        position: absolute;
+        left: 90%;
+        top: 1%;
+    }
+    #fechPop2 {
+        font-size: 22px;
+        color: #212529;
+        position: absolute;
+        left: 90%;
+        top: 1%;
+    }
+    #pop-upPag > h2 {
+        width: fit-content;
+        position: relative;
+        top: 20px;
+        left: 20px;
+    }
+    #pop-upPag > ul {
+        padding: 8px;
+        list-style: none;
+        position: relative;
+        top: 50px;
+    }
+    #pop-upPag > ul > li {
+        border-radius: 5px;
+        border: 1px solid #929090;
+        padding: 18px;
+        font-weight: bold;
+        font-size: 22px;
+        margin-top: 10px;
+    }
+    .prossRec {
+        text-decoration: none;
+        color: white;
+        background-color: #EF4126;
+        padding: 8px 18px 8px 18px;
+        position: absolute;
+        left: 70%;
+        top: 90%;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    #pagRec {
+        display: none;
+        border-radius: 5px;
+        border: 1px solid #858383;
+        width: 25%;
+        height: 600px;
+        position: relative;
+        left: 60%;
+        transform: translate(-60%);
+        top: -220px;
+    }
+    #pagRec > h2 {
+        width: fit-content;
+        position: relative;
+        top: 20px;
+        left: 20px;
+    } 
+    .vlPg {
+        font-size: 26px;
+        position: relative;
+        top: 35px;
+        left: 20px;
+    }
+    #vlrEsq {
+        font-size: 26px;
+    }
+    #formaPagto {
+        position: absolute;
+        top: 50%;
+    }
+    #pagRec > h3 {
+        font-weight: normal;
+        position: relative;
+        top: 70px;
+        left: 20px;
+    }
+    #pagRec > a {
+        color: #212529;
+    }
+    #mtd-Pix {
+        border-bottom: 1px solid #858383;
+        position: relative;
+        left: 30px;
+        top: 85px;
+        width: 90%;
+    }
+    #mtd-Pix:hover {
+        transition: 1s;
+        border-bottom: 1px solid #EF4126;
+    }
+    #mtd-Pix > img {
+        position: relative;
+        left: 10px;
+        top: 10px;
+    }
+    #mtd-Pix > p {
+        position: relative;
+        left: 60px;
+        top: -25px;
+    }
+    #mtd-Crd {
+        border-bottom: 1px solid #858383;
+        position: relative;
+        left: 30px;
+        top: 85px;
+        width: 90%;
+    }
+    #mtd-Crd:hover {
+        transition: 1s;
+        border-bottom: 1px solid #EF4126;
+    }
+    #mtd-Crd > img {
+        position: relative;
+        left: 10px;
+        top: 10px;
+    }
+    #mtd-Crd > p {
+        position: relative;
+        left: 60px;
+        top: -25px;
+    }
+    #mtd-Boleto {
+        border-bottom: 1px solid #858383;
+        position: relative;
+        left: 30px;
+        top: 85px;
+        width: 90%;
+    }
+    #mtd-Boleto:hover {
+        transition: 1s;
+        border-bottom: 1px solid #EF4126;
+    }
+    #mtd-Boleto > img {
+        position: relative;
+        left: 10px;
+        top: 10px;
+    }
+    #mtd-Boleto > p {
+        position: relative;
+        left: 60px;
+        top: -25px;
+    }
+</style>
+<body>
+    <header>
+        <div class="mini-banner">
+            <!-- IMAGEM <img src="image.jpg" alt="...">-->
+        </div>
+        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <nav>
+            <ul class='menu2'>
+                <a href="pedidos-usuario.html">Meus Pedidos</a>
+                <a href="carteira.html">Minha Carteira</a>
+            </ul>
+            <div class="icons-header">
+                <img class="icons" src="../images/facebook-icon.png" alt="...">
+                <img class="icons" src="../images/youtube-icon.png" alt="...">
+                <img class="icons" src="../images/instagram-icon.png" alt="...">
+            </div>
+        </nav>
+        <div class="elem1">
+           <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+        </div>
+    </header>
+    <main>
+        <h1>Minha Carteira</h1>
+        <div id="saldCart">
+            <h2>Saldo da Carteira:</h2>
+            <p class="pVl">R$ <span id="vlrCart">0,00</span></p>
+            <a href="#" id="btnRec">Recarregar</a>
+        </div>
+        <div id="pop-upPag">
+            <a href="#" id="fechPop">X</a>
+            <h2>Escolha um Valor</h2>
+            <ul>
+                <li>R$ 0,00</li>
+                <li>R$ 0,00</li>
+                <li>R$ 0,00</li>
+                <li>R$ 0,00</li>
+                <li>R$ 0,00</li>
+                <li>R$ 0,00</li>
+                <li>R$ 0,00</li>
+            </ul>
+            <a href="#" class="prossRec" id="prossRec">Continuar</a>
+        </div>
+        <div id="pagRec">
+            <a href="#" id="fechPop2">X</a>
+            <h2>Valor a Pagar</h2>
+            <p class="vlPg">R$ <span id="vlrEsq">0,00</span></p>
+            <h3>Escolha a forma de Pagamento</h3>
+            <a href="#">
+                <div id="mtd-Pix">
+                    <img src="https://wbl.blob.core.windows.net/public/pix.png" alt="...">
+                    <p>Pix</p>
+                </div>
+            </a>
+            <a href="#">
+                <div id="mtd-Crd">
+                    <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
+                    <p>Cartão de Crédito</p>
+                </div>
+            </a>
+            <a href="#">
+                <div id="mtd-Boleto">
+                    <img src="https://wbl.blob.core.windows.net/public/boleto.svg" alt="...">
+                    <p>Boleto Bancário</p>
+                </div>
+            </a>
+        </div>
+    </main>
+    <script>
+        const btnRec = document.getElementById('btnRec');
+        const popupPag = document.getElementById('pop-upPag');
+        const pagRec = document.getElementById('pagRec');
+        const btnProssRec = document.getElementById('prossRec');
+        const btnFechPop = document.getElementById('fechPop');
+        const btnFechPop2 = document.getElementById('fechPop2');
+
+       btnRec.addEventListener('click', () => {
+        popupPag.style.display = 'block'
+       })
+       btnFechPop.addEventListener('click', () => {
+        popupPag.style.display = 'none'
+        pagRec.style.display = 'none'
+       })
+       btnFechPop2.addEventListener('click', () => {
+        popupPag.style.display = 'none'
+        pagRec.style.display = 'none'
+       })
+       btnProssRec.addEventListener('click', () => {
+        popupPag.style.display = 'none'
+        pagRec.style.display = 'block'
+       })
+    </script>
+</body>
+</html>
