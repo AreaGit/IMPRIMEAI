@@ -182,17 +182,17 @@ select#acabamento {
     position: relative;
     left: 16%;
 }
-@media screen and (min-width:320px) and (max-width:425px) {
-        header > p{
-            position: relative;
-            left: 0px;
-            top: 0px;
-            font-size: 12px;
-        }
-        .menu ul li {
-    margin-right: 4px;
-    position: relative;
-}
+@media screen and (min-width:320px) and (max-width:481px) {
+    header > p{
+      position: relative;
+      left: 0px;
+      top: 0px;
+      font-size: 12px;
+   }
+    .menu ul li {
+        margin-right: 4px;
+        position: relative;
+    }
     .icons-header {
       width: fit-content;
       position: relative;
@@ -244,54 +244,62 @@ select#acabamento {
         padding: 9px;
     }
     .produtoCard > img {
-      width: 320px;
-      height: 270px;
-      position: relative;
-      left: 2px;
+        width: 320px;
+        height: 270px;
+        position: relative;
+        left: 0%;
+        transform: translate(-0%);
     }
     .produtoCard > h2 {
       position: relative;
-    top: 30px;
-    left: 15%;
+      top: 30px;
+      left: 15%;
+      transform: translate(-15%);
     }
     .secVar {
-    position: relative;
-    top: 784px;
-    left: -50%;
-}
-#downlArt {
-    border: 1px solid #00000061;
-    width: 61%;
-    position: relative;
-    left: 24%;
-    top: 734px;
-    height: 67px;
-}
+      position: relative;
+      top: 784px;
+      left: -50%;
+      transform: translate(1%);
+    }
+    #downlArt {
+      border: 1px solid #00000061;
+      width: 61%;
+      position: relative;
+      left: 24%;
+      top: 734px;
+      height: 67px;
+      transform: translate(4%);
+    }
     .container {
       position: relative;
       top: 10px;
       left: 15px;
     }
     .lb-num {
-    position: relative;
-    left: 0px;
-    top: 400px;
-}
-#inp-num {
-    position: relative;
-    left: 0px;
-    top: 395px;
-}
-#valor {
-    position: relative;
-    left: 145px;
-    top: 990px;
-}
-.addCart {
-    position: relative;
-    left: -60px;
-    top: 456px;
-}
+      position: relative;
+      left: 2%;
+      top: 400px;
+      transform: translate(-2%);
+    }
+    #inp-num {
+      position: relative;
+      left: 2%;
+      top: 395px;
+      transform: translate(-2%);
+    }
+    #valor {
+      position: relative;
+      left: 17%;
+      top: 990px;
+      transform: translate(-17%);
+    }
+    .addCart {
+      position: relative;
+      left: -20%;
+      top: 456px;
+      transform: translate(0%);
+    }
 .lnk-comp {
     position: absolute;
     top: 152.9%;
@@ -415,7 +423,7 @@ select#acabamento {
     left: -40%;
 }
     }
-    @media screen and (min-width:1280px) and (max-width:1440px) {
+    @media screen and (min-width:1280px) and (max-width:1880px) {
           #desc {
             position: relative;
             top: 700px;
@@ -423,9 +431,10 @@ select#acabamento {
           }
           #valor {
             position: relative;
-            left: 86%;
-            top: 511px;
-          }
+            top: 510px;
+            left: 81%;
+            transform: translate(-81%);
+        }
           .lb-num {
             position: relative;
             left: 73%;
@@ -443,9 +452,10 @@ select#acabamento {
           }
           .lnk-comp {
             position: relative;
-            top: -20px;
+            top: -19px;
             left: 67%;
-          }
+            transform: translate(-67%);
+        }
           #imagemPreview {
             position: absolute;
             left: 295px;

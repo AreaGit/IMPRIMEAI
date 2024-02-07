@@ -364,27 +364,58 @@
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
         left: 0px;
     }
-    @media screen and (min-width:320px) and (max-width:375px) {
+    @media screen and (min-width:320px) and (max-width:481px) {
         .logo-imprimeai {
             position: relative;
-            left: 15%;
+            left: 50%;
+            transform: translate(-50%);
+            top: 15px;
         }
         h1 {
             font-size: 22px;
-            position: relative;
-            top: 60px;
-            left: 102px;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            top: 10%;
         }
-        #msg {
-            font-size: 12px;
-            transform: translate(-36%,-1000%);
+        #locEntr > #msg {
+            width: fit-content;
+            position: relative;
+            left: 55%;
+            top: 78px;
+            transform: translate(-55%);
+        }
+        #locRet {
+            display: none;
+            width: 105%;
+            height: 80px;
+            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+            border-radius: 5px;
+            left: -1%;
+            top: 94px;
+            position: relative;
+        }
+        img#imgRet {
+            position: relative;
+            left: 42%;
+            top: 6px;
+            width: 11%;
+        }
+        a#btnRet {
+            position: relative;
+            top: 25px;
+            left: 20%;
+            color: #F37160;
+            font-size: 14px;
+            text-decoration: none;
         }
         #unEnd {
             position: relative;
             top: 100px;
             width: 80%;
             height: 200px;
-            left: 21%;
+            left: 50%;
+            transform: translate(-50%);
         }
         #unEnd > img {
             position: relative;
@@ -416,7 +447,8 @@
             font-size: 14px;
             padding: 0%;
             position: relative;
-            left: -7px;
+            left: 20%;
+            transform: translate(-20%);
         }
         #novoEnd {
             height: 80px;
@@ -429,7 +461,8 @@
             font-size: 14px;
             padding: 0%;
             position: relative;
-            left: 32px;
+            left: 20%;
+            transform: translate(-20%);
         }
         div#end {
             width: 98%;
@@ -492,24 +525,26 @@
             width: 80%;
             height: 180px;
             position: relative;
-            top: 286px;
-            left: 21%;
+            top: 410px;
+            left: 50%;
             border-radius: 5px;
             padding: 10px;
             box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
+            transform: translate(-50%);
         }
         #globo-icon {
             width: 17%;
         }
         #multEnd > img {
             position: relative;
-            left: 100px;
+            left: 50%;
             top: 1px;
+            transform: translate(-50%);
         }
         #multEnd > h2 {
             position: relative;
             top: 3px;
-            left: 8%;
+            left: 22%;
             font-size: 21px;
         }
         #multEnd > p {
@@ -584,229 +619,7 @@
             font-size: 18px;
         }
     }
-    @media screen and (min-width:376px) and (max-width:424px) {
-        .logo-imprimeai {
-            position: relative;
-            left: 29%;
-        }
-        h1 {
-            font-size: 22px;
-            position: relative;
-            top: 60px;
-            left: 129px;
-        }
-        #locEntr > #msg {
-            width: fit-content;
-            position: relative;
-            left: 31%;
-            top: 69px;
-        }
-        #unEnd {
-            position: relative;
-            width: 80%;
-            height: 200px;
-            left: 21%;
-            top: 100px;
-        }
-        #unEnd > img {
-            position: relative;
-            left: 42%;
-            top: -1px;
-        }
-        #unEnd > h2 {
-            font-size: 18px;
-            position: relative;
-            left: 25%;
-            top: 3px;
-        }
-        #unEnd > p {
-            position: relative;
-            left: 10px;
-        }
-        #unEnd > a {
-            position: relative;
-            left: 30%;
-            top: 50px;
-        }
-        #endCad {
-            height: 80px;
-            width: 105%;
-            position: relative;
-            left: -5px;
-        }
-        #endCad > a {
-            font-size: 14px;
-            position: relative;
-            left: -7px;
-            padding: 0%;
-        }
-        #novoEnd {
-            height: 80px;
-            position: relative;
-            top: 87px;
-            left: -4px;
-            width: 105%;
-        }
-        #novoEnd > a {
-            font-size: 14px;
-            padding: 0%;
-            position: relative;
-            left: 52px;
-        }
-        div#end {
-            width: 98%;
-            position: relative;
-            left: 1%;
-            top: 164px;
-            height: 167px;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-            border-radius: 5px;
-            display: none;
-        }
-        img#imgEnd {
-            top: 61px;
-            left: 25px;
-            width: 17%;
-            position: relative;
-        }
-        p#endP {
-            position: relative;
-            left: 38px;
-            font-size: 13px;
-            padding: 18%;
-            top: -66px;
-        }
-        #confEndCad {
-            background-color: #EF4126;
-            color: white;
-            position: relative;
-            padding: 8px 18px 8px 18px;
-            top: -10px;
-            font-size: 13px;
-            font-weight: bold;
-            left: 38%;
-            top: -100px;
-            text-decoration: none;
-        }
-        #formAdicionarEnd {
-            width: 98%;
-            height: 966px;
-            position: relative;
-            left: 2%;
-            top: 58px;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-            border-radius: 5px;
-            display: none;
-        }
-        #formAdicionarEnd > input, label {
-            left: 14px;
-            top: 25px;
-            width: 86%;
-            position: relative;
-        }
-        #formAdicionarEnd > button {
-            left: -5px;
-            top: 60px;
-            width: 96%;
-            position: relative;
-        }
-        #multEnd {
-            width: 80%;
-            height: 180px;
-            position: relative;
-            top: 286px;
-            left: 21%;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-        }
-        #globo-icon {
-            width: 17%;
-        }
-        #multEnd > img {
-            position: relative;
-            left: 116px;
-            top: 1px;
-        }
-        #multEnd > h2 {
-            position: relative;
-            top: 3px;
-            left: 12%;
-            font-size: 21px;
-        }
-        #multEnd > p {
-            font-size: 14px;
-            font-weight: normal;
-            position: relative;
-            left: 7%;
-            top: 4px;
-        }
-        #multEnd > a {
-            text-decoration: none;
-            background-color: #EF4126;
-            color: white;
-            position: relative;
-            padding: 8px 18px 8px 18px;
-            top: 21px;
-            font-size: 13px;
-            font-weight: bold;
-            left: 32%;
-        }
-        #enviarPl {
-            display: none;
-            width: 101%;
-            height: 80px;
-            border-radius: 5px;
-            left: 1%;
-            top: 61px;
-            position: relative;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-        }
-        #enviarPl > a {
-            font-size: 18px;
-            position: relative;
-            left: 14%;
-            top: 35px;
-            color: #F37160;
-        }
-        input#filePlanilha {
-            position: relative;
-            left: -26px;
-            top: 19px;
-            width: 108%;
-        }
-        button#btnPl {
-            width: 230px;
-            position: relative;
-            left: 11px;
-            top: 18px;
-        }
-        form#formEnviarPlanilha {
-            display: none;
-            height: 156px;
-            position: relative;
-            top: 56px;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-            left: 0px;
-        }
-        #baixarPl {
-            width: 101%;
-            position: relative;
-            top: 47px;
-            height: 80px;
-            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-            border-radius: 5px;
-            display: none;
-        }
-        #baixarPl > a {
-            position: relative;
-            left: 15%;
-            top: 35px;
-            color: #F37160;
-            font-size: 18px;
-        }
-    }
-    @media screen and (min-width:425px) and (max-width:767px) {
+    @media screen and (min-width:482px) and (max-width:767px) {
         .logo-imprimeai {
             position: absolute;
             left: 25%;

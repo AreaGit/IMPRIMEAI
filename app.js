@@ -70,7 +70,7 @@ const { error } = require('console');
 const ItensPedidos = require('./models/ItensPedido');
 
 
-const PORT = 8080;
+const PORT = 8081;
 
 app.use(express.static('public'));
 app.use(express.json());
@@ -2581,6 +2581,6 @@ app.get('/detalhes-pedidoUser/:idPedido', async (req, res) => {
   }
 });
 
-httpServer.listen(8080, () => {
-    console.log(`Servidor rodando na porta ${PORT}  http://localhost:8080`);
+httpServer.listen(8081, () => {
+    console.log(`Servidor rodando na porta ${PORT}  http://localhost:8081`);
 });

@@ -3,8 +3,8 @@ const DataTypes = require('sequelize')
 
 
 
-const sequelize = new Sequelize("listauser", "root", "", {
-    host: "localhost",
+const sequelize = new Sequelize("infoimprimeai", "infoimprimeai", "admBancoD@dos2", {
+    host: "infoimprimeai.mysql.dbaas.com.br",
     dialect: 'mysql'
 })
 sequelize.authenticate()
