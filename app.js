@@ -37,6 +37,8 @@ const mime = require('mime-types');
 const stream = require('stream');
 const { google } = require('googleapis');
 const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
+const pagarme = require('pagarme');
+const apiKeyPagarme = 'ak_live_jwKlzEMVPvAlxpSXfmbApdW4L0Ra6X';
 
 const httpServer = http.createServer(app);
 const io = socket(httpServer, {
@@ -2578,6 +2580,23 @@ app.get('/detalhes-pedidoUser/:idPedido', async (req, res) => {
     res
       .status(500)
       .json({ error: 'Erro ao buscar detalhes do pedido', message: error.message });
+  }
+});
+
+app.post('/gerar-pix', async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    // Nesta parte, você pode realizar validações adicionais, como verificar se o valor é válido, etc.
+
+    // Aqui, você pode usar a chave Pix recebida da instituição financeira ou um valor fixo para testes
+    // Substitua a lógica abaixo pela obtenção da chave Pix da sua instituição financeira ou sistema
+    const pixKey = '567.099.568-65'; // Chave Pix para teste, substitua pela sua chave Pix real
+
+    res.status(200).json({ pixKey });
+  } catch (error) {
+    console.error('Erro ao gerar código Pix:', error);
+    res.status(500).json({ error: 'Erro ao gerar código Pix. Por favor, tente novamente mais tarde.' });
   }
 });
 

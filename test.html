@@ -19,57 +19,62 @@ socket.on('msg', (msg) => {
 </body>
 </html>-->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload to Google Drive</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de QR Code Pix</title>
 </head>
 <body>
-    <h1>Upload a File</h1>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" name="file" id="fileInput" />
-        <button type="button" onclick="uploadFile()">Upload</button>
-    </form>
+  <h1>Gerador de QR Code Pix</h1>
+  
+  <label for="amount">Valor do pagamento (em centavos):</label>
+  <input type="number" id="amount" name="amount" required>
+  
+  <button id="generateButton">Gerar QR Code Pix</button>
 
-    <div id="result">
-        <!-- Resultado do upload será exibido aqui -->
-    </div>
+  <div id="qrCode"></div>
 
-    <script>
-        async function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+  <!-- Adicione a biblioteca qrcode.js -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/qrcode.min.js" onload="init()"></script>
+  <script>
+    function init() {
+      // Código para ser executado após a biblioteca qrcode.js ser carregada
+      document.getElementById('generateButton').addEventListener('click', async () => {
+        //const amount = document.getElementById('amount').value;
+        const amount = '100'
+        // Enviar o valor para o servidor
+        const response = await fetch('/gerar-pix', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ amount: amount })
+        });
 
-            const formData = new FormData();
-            formData.append('file', file);
+        const data = await response.json();
 
-            try {
-                const response = await fetch('/uploadGoogleDrive', {
-                    method: 'POST',
-                    body: formData
-                });
+        // Gerar e exibir o código QR Pix
+        generatePixQrCode(data.pixKey, amount);
+      });
 
-                if (response.ok) {
-                    const result = await response.json();
-                    displayResult(result);
-                } else {
-                    console.error('Erro ao fazer upload do arquivo:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Erro na requisição ao fazer upload do arquivo:', error);
-            }
+      function generatePixQrCode(pixKey, amount) {
+        const url = `https://pix.example.com/?chave=${pixKey}&amount=${amount}`;
+
+        const qrCodeDiv = document.getElementById('qrCode');
+        qrCodeDiv.innerHTML = ''; // Limpar o conteúdo anterior, se houver
+
+        if (typeof QRCode !== 'undefined') {
+          new QRCode(qrCodeDiv, {
+            text: url,
+            width: 256,
+            height: 256
+          });
+        } else {
+          console.error('Biblioteca QRCode não está disponível.');
         }
-
-        function displayResult(result) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `
-                <p>File ID: ${result.fileId}</p>
-                <p>Web View Link: <a href="${result.webViewLink}" target="_blank">${result.webViewLink}</a></p>
-                <p>Download Link: <a href="${result.downloadLink}" target="_blank">${result.downloadLink}</a></p>
-            `;
-        }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
