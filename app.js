@@ -2596,6 +2596,13 @@ app.get('/detalhes-pedidoUser/:idPedido', async (req, res) => {
 
 async function gerarQRPixPagarme(valor, descricao) {
   try {
+    const currentDate = new Date();
+    
+    // Adiciona 3 horas à data atual
+    const expirationDate = new Date(currentDate.getTime() + (3 * 3600000)); // 3 horas em milissegundos
+    
+    // Formata a data de expiração no formato esperado (YYYY-MM-DDTHH:MM:SSZ)
+    const formattedExpirationDate = expirationDate.toISOString().split('.')[0];
     // Limita a descrição a no máximo 200 caracteres
     const descricaoLimitada = descricao.substring(0, 200);
 
@@ -2606,7 +2613,7 @@ async function gerarQRPixPagarme(valor, descricao) {
     const transaction = await client.transactions.create({
       amount: valor * 100, // Valor em centavos
       payment_method: 'pix',
-      pix_expiration_date: '2025-12-31',
+      pix_expiration_date: formattedExpirationDate,
       pix_additional_fields: [
         { name: 'custom_label', value: descricaoLimitada }
       ]
@@ -2618,9 +2625,12 @@ async function gerarQRPixPagarme(valor, descricao) {
 
     // Transforma o pixPayload em um código QR
     const qrDataURL = await qr.toDataURL(pixPayload);
-
+    const idPix = transaction.id
+    
+    const expirationDatePix = transaction.pix_expiration_date;
+    console.log('DATA DE EXPIRAÇÃO DO PIX', expirationDatePix)
     // Retorna o código QR em formato de dados de URL
-    return { qrDataURL, pixPayload };
+    return { qrDataURL, pixPayload, idPix, expirationDatePix };
   } catch (error) {
     console.error('Erro ao gerar QR Code PIX pelo Pagarme:', error);
 
@@ -2636,8 +2646,8 @@ app.post('/gerarQRPix', async (req, res) => {
   const { valor, descricao } = req.body;
 
   try {
-    const { qrDataURL, pixPayload } = await gerarQRPixPagarme(valor, descricao);
-    res.send({ qrDataURL, pixPayload });
+    const { qrDataURL, pixPayload, idPix, expirationDatePix } = await gerarQRPixPagarme(valor, descricao);
+    res.send({ qrDataURL, pixPayload, idPix, expirationDatePix });
   } catch (error) {
     console.error('Erro ao gerar QR Code PIX pelo Pagarme:', error);
     

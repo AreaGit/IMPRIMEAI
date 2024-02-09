@@ -11,8 +11,52 @@
 <link rel="stylesheet" href="../styles/pag-prods.css">
 <link rel="stylesheet" href="styles/medias.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://assets.pagar.me/pagarme-js/3.0/pagarme.min.js"></script>
 </head>
 <style>
+  div#qrCodeContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 27%;
+    left: 50%;
+    transform: translate(-50%);
+    height: 627px;
+    border-radius: 5px;
+    background-color: white;
+}
+img#imgPix {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    top: 111px;
+}
+button#copiarPayloadBtn {
+    padding: 18px 28px 18px 28px;
+    position: relative;
+    top: 25%;
+    left: -109px;
+    transform: translate(16%);
+    border: 1px solid #EF4126;
+    color: #F37160;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+h2#h2Container {
+    position: relative;
+    top: -36%;
+    left: 50%;
+    transform: translate(-50%);
+}
+p#expirationDateParagraph {
+    position: relative;
+    top: 147px;
+    left: 50%;
+    transform: translate(-50%);
+    color: #EF4126;
+}
   main > h1 {
     font-size: 30px;
     font-weight: normal;
@@ -435,8 +479,11 @@ main > h1 {
       <p class="tot">Total <span id="totalAPagar">0.00</span></p>
     </div>
   </div>
+  <div id="qrCodeContainer"></div>
+  <div id="pixPayloadContainer"></div>
 </main>
 <script>
+  const qrCodeContainer = document.getElementById('qrCodeContainer');
   document.addEventListener('DOMContentLoaded', function () {
     const loadCount = parseInt(localStorage.getItem('loadCount')) || 0;
             if (loadCount < 5) {
@@ -521,61 +568,165 @@ function atualizarTotalAPagar() {
 // Por exemplo, após adicionar ou remover um produto do carrinho
 atualizarTotalAPagar();
 
-// Evento de clique no botão "Finalizar Compra"
-document.getElementById('finalizarCompraBtn').addEventListener('click', function () {
-  // Obtenha o total de itens e o total a pagar do resumo da compra
-  const totalItens = document.getElementById('totalItensCarrinho').textContent;
-  const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
-  const metodPag = 'Pix';
+async function verificarStatusPix(idPix) {
+  try {
+    // Inicialize o cliente Pagarme com sua chave de API
+    const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
 
-  // Crie um objeto XMLHttpRequest
-  const xhr = new XMLHttpRequest();
+    // Consulte a transação PIX usando o ID do PIX
+    const transaction = await client.transactions.find({ id: idPix });
 
-  // Configure a solicitação POST
-  xhr.open('POST', '/criar-pedidos', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
+    // Verifique o status da transação
+    const status = transaction.status;
+    
+    // Retorna o status da transação PIX
+    return status;
+  } catch (error) {
+    console.error('Erro ao verificar o status do PIX pelo Pagarme:', error);
 
-  // Defina o manipulador de eventos para a resposta da solicitação
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      // A solicitação foi bem-sucedida, você pode processar a resposta aqui
-      const response = JSON.parse(xhr.responseText);
-      alert(response.message);
-
-      // Exiba a mensagem de confirmação
-      document.getElementById('confirmacaoCompra').style.display = 'block';
-
-      // Limpe o carrinho (se desejar)
-      // ...
-
-      // Atualize o resumo da compra (se desejar)
-      // ...
-    } else {
-      // A solicitação não foi bem-sucedida, trate o erro aqui
-      console.error('Erro ao finalizar a compra:', xhr.statusText);
-      alert('Erro ao finalizar a compra');
+    if (error.response && error.response.errors) {
+      console.error('Detalhes do erro:', error.response.errors);
     }
-  };
 
-  // Trate erros de rede
-  xhr.onerror = function () {
-    console.error('Erro de rede ao finalizar a compra');
-    alert('Erro de rede ao finalizar a compra');
-  };
+    throw new Error('Erro ao verificar o status do PIX pelo Pagarme');
+  }
+}
 
-  // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
-  const pedidoData = {
-    totalItens,
-    valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-    metodPag
-  };
+// Função para verificar continuamente o status do PIX
+async function monitorarStatusPix(idPix) {
+  try {
+    // Definir um intervalo de polling (em milissegundos)
+    const pollingInterval = 5000; // 5 segundos
 
-  // Envie os dados como JSON
-  const requestData = JSON.stringify(pedidoData);
-  xhr.send(requestData);
-});
+    while (true) {
+      // Verificar o status do PIX
+      const status = await verificarStatusPix(idPix);
+      console.log('Status do PIX:', status);
 
+      if (status === 'paid') {
+        qrCodeContainer.style.display = 'none'
+        // Se o PIX estiver pago, sair do loop de polling
+        console.log('O PIX foi pago!, CRIANDO O PEDIDO');
+        const totalItens = document.getElementById('totalItensCarrinho').textContent;
+        const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+        const metodPag = 'Pix';
 
+        // Crie um objeto XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+
+        // Configure a solicitação POST
+        xhr.open('POST', '/criar-pedidos', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // Defina o manipulador de eventos para a resposta da solicitação
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            // A solicitação foi bem-sucedida, você pode processar a resposta aqui
+            const response = JSON.parse(xhr.responseText);
+            alert(response.message);
+
+            // Exiba a mensagem de confirmação
+            document.getElementById('confirmacaoCompra').style.display = 'block';
+
+            // Limpe o carrinho (se desejar)
+            // ...
+
+            // Atualize o resumo da compra (se desejar)
+            // ...
+          } else {
+            // A solicitação não foi bem-sucedida, trate o erro aqui
+            console.error('Erro ao finalizar a compra:', xhr.statusText);
+            alert('Erro ao finalizar a compra');
+          }
+        };
+
+        // Trate erros de rede
+        xhr.onerror = function () {
+          console.error('Erro de rede ao finalizar a compra');
+          alert('Erro de rede ao finalizar a compra');
+        };
+
+        // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+        const pedidoData = {
+          totalItens,
+          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+          metodPag
+        };
+        console.log('PEDIDO CRIADO')
+        // Envie os dados como JSON
+        const requestData = JSON.stringify(pedidoData);
+        xhr.send(requestData);
+        break;
+      }
+
+      // Aguardar o intervalo de polling antes de fazer a próxima verificação
+      await new Promise(resolve => setTimeout(resolve, pollingInterval));
+    }
+  } catch (error) {
+    console.error('Erro ao monitorar o status do PIX:', error);
+  }
+}
+
+// Evento de clique no botão "Finalizar Compra"
+document.getElementById('finalizarCompraBtn').addEventListener('click', async function () {
+  try {
+    // Obtenha o total de itens e o total a pagar do resumo da compra
+    const totalItens = document.getElementById('totalItensCarrinho').textContent;
+    const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+    const valor = 0.01 //totalAPagar;
+    const descricao = 'pedido'
+    console.log(valor)
+
+    const response = await fetch('/gerarQRPix', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ valor, descricao })
+          });
+
+if (!response.ok) {
+            throw new Error('Erro ao gerar QR Code PIX');
+          }
+          
+        const { qrDataURL, pixPayload, idPix, expirationDatePix } = await response.json();
+          console.log('PIX ID:', idPix)
+        // Exibir o QR Code na página
+          qrCodeContainer.style.display = 'block'
+          const qrCodeImg = document.createElement('img');
+          qrCodeImg.src = qrDataURL;
+          qrCodeImg.id = 'imgPix'
+          document.getElementById('qrCodeContainer').innerHTML = '';
+          document.getElementById('qrCodeContainer').appendChild(qrCodeImg);
+          const copiarPayloadBtn = document.createElement('button');
+          copiarPayloadBtn.id = 'copiarPayloadBtn';
+          copiarPayloadBtn.innerText = 'PIX Copia e Cola';
+          copiarPayloadBtn.addEventListener('click', async() => {
+            // Copiar o payload PIX para a área de transferência
+            await navigator.clipboard.writeText(pixPayload);
+            alert('Código PIX copiado com sucesso!');
+
+          })
+          qrCodeContainer.appendChild(copiarPayloadBtn);
+          
+          const h2Container = document.createElement('h2');
+          h2Container.innerText = 'Pagamento Pix';
+          h2Container.id = 'h2Container';
+          qrCodeContainer.appendChild(h2Container);
+
+          // Exibir a data de expiração do PIX formatada
+          const expirationDateFormatted = new Date(expirationDatePix).toLocaleString('pt-BR', { timeZone: 'UTC' });
+          const expirationDateParagraph = document.createElement('p');
+          expirationDateParagraph.id = 'expirationDateParagraph';
+          expirationDateParagraph.innerText = `O PIX irá expirar em ${expirationDateFormatted}`;
+          qrCodeContainer.appendChild(expirationDateParagraph);
+
+        monitorarStatusPix(idPix);
+      } catch (error) {
+        console.error('Erro ao gerar o código PIX:', error);
+        alert('Erro ao gerar o código PIX. Por favor, tente novamente mais tarde.');
+      }
+    })
 document.getElementById('finalizarCompraBtn2').addEventListener('click', function () {
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
