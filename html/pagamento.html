@@ -673,7 +673,7 @@ document.getElementById('finalizarCompraBtn').addEventListener('click', async fu
     // Obtenha o total de itens e o total a pagar do resumo da compra
     const totalItens = document.getElementById('totalItensCarrinho').textContent;
     const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
-    const valor = 0.01 //totalAPagar;
+    const valor = totalAPagar;
     const descricao = 'pedido'
     console.log(valor)
 
