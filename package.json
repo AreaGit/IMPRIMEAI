@@ -46,6 +46,7 @@
     "pagarme": "^4.34.0",
     "parse": "^4.3.1",
     "pipe": "^1.1.0",
+    "qrcode": "^1.5.3",
     "sequelize": "^6.32.1",
     "socket.io": "^4.7.3",
     "stringify": "^5.2.0",

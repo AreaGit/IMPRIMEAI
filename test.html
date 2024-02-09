@@ -1,80 +1,58 @@
-<!--<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket.io TESTE</title>
+    <title>Gerador de QR Code PIX</title>
 </head>
 <body>
-    <h1>TESTE</h1>
-    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+    <label for="valor">Valor:</label>
+    <input type="number" id="valor" name="valor" placeholder="Digite o valor">
+    <br>
+    <label for="descricao">Descrição:</label>
+    <input type="text" id="descricao" name="descricao" placeholder="Digite a descrição">
+    <br>
+    <button id="gerarQR">Gerar QR Code PIX</button>
+    <br>
+    <div id="qrCodeContainer"></div>
+    <div id="pixPayloadContainer"></div>
+
     <script>
-    const socket = io(window.location.origin);
+        document.getElementById('gerarQR').addEventListener('click', async () => {
+            try {
+                const valor = document.getElementById('valor').value;
+                const descricao = document.getElementById('descricao').value;
 
-socket.on('msg', (msg) => {
-    alert(msg);
-});
-    </script>
-</body>
-</html>-->
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de QR Code Pix</title>
-</head>
-<body>
-  <h1>Gerador de QR Code Pix</h1>
-  
-  <label for="amount">Valor do pagamento (em centavos):</label>
-  <input type="number" id="amount" name="amount" required>
-  
-  <button id="generateButton">Gerar QR Code Pix</button>
+                const response = await fetch('/gerarQRPix', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ valor, descricao })
+                });
 
-  <div id="qrCode"></div>
+                if (!response.ok) {
+                    throw new Error('Erro ao gerar QR Code PIX');
+                }
+                
+                const { qrDataURL, pixPayload } = await response.json();
 
-  <!-- Adicione a biblioteca qrcode.js -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/qrcode.min.js" onload="init()"></script>
-  <script>
-    function init() {
-      // Código para ser executado após a biblioteca qrcode.js ser carregada
-      document.getElementById('generateButton').addEventListener('click', async () => {
-        //const amount = document.getElementById('amount').value;
-        const amount = '100'
-        // Enviar o valor para o servidor
-        const response = await fetch('/gerar-pix', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ amount: amount })
+                // Exibir o QR Code na página
+                const qrCodeImg = document.createElement('img');
+                qrCodeImg.src = qrDataURL;
+                document.getElementById('qrCodeContainer').innerHTML = '';
+                document.getElementById('qrCodeContainer').appendChild(qrCodeImg);
+
+                // Exibir o payload PIX na página
+                const pixPayloadElement = document.createElement('p');
+                pixPayloadElement.textContent = 'Payload PIX: ' + pixPayload;
+                document.getElementById('pixPayloadContainer').innerHTML = '';
+                document.getElementById('pixPayloadContainer').appendChild(pixPayloadElement);
+            } catch (error) {
+                console.error('Erro ao gerar QR Code PIX:', error);
+               // alert('Erro ao gerar QR Code PIX. Por favor, tente novamente mais tarde.');
+            }
         });
-
-        const data = await response.json();
-
-        // Gerar e exibir o código QR Pix
-        generatePixQrCode(data.pixKey, amount);
-      });
-
-      function generatePixQrCode(pixKey, amount) {
-        const url = `https://pix.example.com/?chave=${pixKey}&amount=${amount}`;
-
-        const qrCodeDiv = document.getElementById('qrCode');
-        qrCodeDiv.innerHTML = ''; // Limpar o conteúdo anterior, se houver
-
-        if (typeof QRCode !== 'undefined') {
-          new QRCode(qrCodeDiv, {
-            text: url,
-            width: 256,
-            height: 256
-          });
-        } else {
-          console.error('Biblioteca QRCode não está disponível.');
-        }
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>

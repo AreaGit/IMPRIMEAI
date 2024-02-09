@@ -37,8 +37,19 @@ const mime = require('mime-types');
 const stream = require('stream');
 const { google } = require('googleapis');
 const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
-const pagarme = require('pagarme');
-const apiKeyPagarme = 'ak_live_jwKlzEMVPvAlxpSXfmbApdW4L0Ra6X';
+const pagarme = require('pagarme')
+const pagarmeApiKey = 'ak_live_rOB01jgMzb6rN7urTNZ6ylweWVYRpD';
+const qr = require('qrcode');
+
+app.get('/set-cookie', (req, res) => {
+  res.cookie('exampleCookie', 'exampleValue', {
+    maxAge: 86400000, // 1 day
+    httpOnly: true,
+    secure: true, // Cookie enviado apenas em conexões HTTPS
+    sameSite: 'none' // Permitir envio em solicitações de terceiros
+  });
+  res.send('Cookie definido com sucesso!');
+});
 
 const httpServer = http.createServer(app);
 const io = socket(httpServer, {
@@ -2583,20 +2594,58 @@ app.get('/detalhes-pedidoUser/:idPedido', async (req, res) => {
   }
 });
 
-app.post('/gerar-pix', async (req, res) => {
+async function gerarQRPixPagarme(valor, descricao) {
   try {
-    const { amount } = req.body;
+    // Limita a descrição a no máximo 200 caracteres
+    const descricaoLimitada = descricao.substring(0, 200);
 
-    // Nesta parte, você pode realizar validações adicionais, como verificar se o valor é válido, etc.
+    // Inicialize o cliente Pagarme com sua chave de API
+    const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
 
-    // Aqui, você pode usar a chave Pix recebida da instituição financeira ou um valor fixo para testes
-    // Substitua a lógica abaixo pela obtenção da chave Pix da sua instituição financeira ou sistema
-    const pixKey = '567.099.568-65'; // Chave Pix para teste, substitua pela sua chave Pix real
+    // Crie uma transação PIX no Pagarme com os detalhes fornecidos
+    const transaction = await client.transactions.create({
+      amount: valor * 100, // Valor em centavos
+      payment_method: 'pix',
+      pix_expiration_date: '2025-12-31',
+      pix_additional_fields: [
+        { name: 'custom_label', value: descricaoLimitada }
+      ]
+    });
 
-    res.status(200).json({ pixKey });
+    console.log(transaction)
+    const pixPayload = transaction.pix_qr_code;
+    console.log(pixPayload)
+
+    // Transforma o pixPayload em um código QR
+    const qrDataURL = await qr.toDataURL(pixPayload);
+
+    // Retorna o código QR em formato de dados de URL
+    return { qrDataURL, pixPayload };
   } catch (error) {
-    console.error('Erro ao gerar código Pix:', error);
-    res.status(500).json({ error: 'Erro ao gerar código Pix. Por favor, tente novamente mais tarde.' });
+    console.error('Erro ao gerar QR Code PIX pelo Pagarme:', error);
+
+    if (error.response && error.response.errors) {
+      console.error('Detalhes do erro:', error.response.errors);
+    }
+
+    throw new Error('Erro ao gerar QR Code PIX pelo Pagarme');
+  }
+}
+
+app.post('/gerarQRPix', async (req, res) => {
+  const { valor, descricao } = req.body;
+
+  try {
+    const { qrDataURL, pixPayload } = await gerarQRPixPagarme(valor, descricao);
+    res.send({ qrDataURL, pixPayload });
+  } catch (error) {
+    console.error('Erro ao gerar QR Code PIX pelo Pagarme:', error);
+    
+    if (error.response && error.response.errors) {
+        console.error('Detalhes do erro:', error.response.errors);
+    }
+    
+    res.status(500).send('Erro ao gerar QR Code PIX pelo Pagarme');
   }
 });
 
