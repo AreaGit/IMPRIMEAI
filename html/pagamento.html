@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles/style.css" media="all">
 <link rel="stylesheet" href="../styles/pag-prods.css">
-<link rel="stylesheet" href="styles/medias.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://assets.pagar.me/pagarme-js/3.0/pagarme.min.js"></script>
 </head>
@@ -56,6 +55,48 @@ p#expirationDateParagraph {
     left: 50%;
     transform: translate(-50%);
     color: #EF4126;
+}
+#boletoPayContainer {
+  display: none;
+  border: 1px solid #858383;
+  position: relative;
+  top: -110%;
+  width: 27%;
+  left: 50%;
+  transform: translate(-50%);
+  height: 627px;
+  border-radius: 5px;
+  background-color: white;
+}
+h2#h2BolCont {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    top: 32px;
+}
+a#lnkBol {
+    position: relative;
+    left: 2%;
+    top: 17%;
+}
+#btnCopCodBol {
+    padding: 18px 28px 18px 28px;
+    border: 1px solid #EF4126;
+    color: #F37160;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    top: 25%;
+    left: 36%;
+}
+.pAcessBol {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    top: 11%;
+    font-weight: bold;
+    color: #F37160;
 }
   main > h1 {
     font-size: 30px;
@@ -481,10 +522,72 @@ main > h1 {
   </div>
   <div id="qrCodeContainer"></div>
   <div id="pixPayloadContainer"></div>
+  <div id="boletoPayContainer"></div>
 </main>
 <script>
   const qrCodeContainer = document.getElementById('qrCodeContainer');
+  async function carregarPerfil() {
+    try {
+        // Obtém o userId do cookie
+        const userId = getCookie('userId');
+
+        // Verifique se o cookie "userId" está definido
+        if (!userId) {
+            console.log('Usuário não autenticado');
+            // Lidar com o caso de usuário não autenticado, redirecionar, exibir mensagem, etc.
+            return;
+        }
+
+        // Opções da requisição, incluindo o cookie no cabeçalho
+        const options = {
+            headers: {
+                'Cookie': `userId=${userId}`
+            }
+        };
+
+        // Faça uma solicitação para a rota que retorna os dados do perfil
+        const response = await fetch('/perfil/dados', options);
+
+        // Verifique se a resposta da solicitação está OK (200)
+        if (response.ok) {
+            // Parse a resposta como JSON
+            const data = await response.json();
+
+            // Aqui você pode manipular os dados do perfil, por exemplo:
+            console.log('Dados do perfil:', data);
+            let cpfUser = data.cpfCad;
+            let cepUser = data.cepCad;
+            let bairroUser = data.bairroCad;
+            let cidadeUser = data.cidadeCad;
+            let compUser = data.compCad;
+            let emailUser = data.emailCad;
+            let enderecoUser = data.endereçoCad;
+            let estadoUser = data.estadoCad;
+            let numUser = data.numCad;
+            let telefoneUser = data.telefoneCad;
+
+        } else if (response.status === 404) {
+            console.log('Usuário não encontrado');
+            // Lidar com o caso de usuário não encontrado, redirecionar, exibir mensagem, etc.
+        } else {
+            console.error('Erro ao carregar perfil:', response.statusText);
+            // Lidar com outros códigos de status de erro, exibir mensagem, etc.
+        }
+    } catch (error) {
+        console.error('Erro ao carregar perfil:', error);
+        // Lidar com erros de rede, exibir mensagem, etc.
+    }
+}
+
+// Função auxiliar para obter um cookie pelo seu nome
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
   document.addEventListener('DOMContentLoaded', function () {
+    const boletoPayContainer = document.getElementById('boletoPayContainer');
+    carregarPerfil();
     const loadCount = parseInt(localStorage.getItem('loadCount')) || 0;
             if (loadCount < 5) {
                 // Incrementa o contador de carregamento
@@ -727,57 +830,168 @@ if (!response.ok) {
         alert('Erro ao gerar o código PIX. Por favor, tente novamente mais tarde.');
       }
     })
-document.getElementById('finalizarCompraBtn2').addEventListener('click', function () {
+
+    async function verificarStatusBoleto(idBoleto) {
+  try {
+    const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+    const transaction = await client.transactions.find({ id: idBoleto });
+    return transaction.status;
+  } catch (error) {
+    console.error('Erro ao verificar o status do Boleto pelo Pagarme:', error);
+    throw new Error('Erro ao verificar o status do Boleto pelo Pagarme');
+  }
+}
+// Função para verificar continuamente o status do Boleto
+async function monitorarStatusBoleto(idBoleto) {
+  const boletoPayContainer = document.getElementById('boletoPayContainer');
+  try {
+    // Definir um intervalo de polling (em milissegundos)
+    const pollingInterval = 5000; // 5 segundos
+
+    while (true) {
+      // Verificar o status do Boleto
+      const status = await verificarStatusBoleto(idBoleto);
+      console.log('Status do Boleto:', status);
+
+      if (status === 'paid') {
+        boletoPayContainer.style.display = 'none'
+        // Se o PIX estiver pago, sair do loop de polling
+        console.log('O Boleto foi pago!, CRIANDO O PEDIDO');
+        const totalItens = document.getElementById('totalItensCarrinho').textContent;
+        const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+        const metodPag = 'Boleto';
+
+        // Crie um objeto XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+
+        // Configure a solicitação POST
+        xhr.open('POST', '/criar-pedidos', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // Defina o manipulador de eventos para a resposta da solicitação
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            // A solicitação foi bem-sucedida, você pode processar a resposta aqui
+            const response = JSON.parse(xhr.responseText);
+            alert(response.message);
+
+            // Exiba a mensagem de confirmação
+            document.getElementById('confirmacaoCompra').style.display = 'block';
+
+            // Limpe o carrinho (se desejar)
+            // ...
+
+            // Atualize o resumo da compra (se desejar)
+            // ...
+          } else {
+            // A solicitação não foi bem-sucedida, trate o erro aqui
+            console.error('Erro ao finalizar a compra:', xhr.statusText);
+            alert('Erro ao finalizar a compra');
+          }
+        };
+
+        // Trate erros de rede
+        xhr.onerror = function () {
+          console.error('Erro de rede ao finalizar a compra');
+          alert('Erro de rede ao finalizar a compra');
+        };
+
+        // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+        const pedidoData = {
+          totalItens,
+          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+          metodPag
+        };
+        console.log('PEDIDO CRIADO')
+        // Envie os dados como JSON
+        const requestData = JSON.stringify(pedidoData);
+        xhr.send(requestData);
+        break;
+      }
+
+      // Aguardar o intervalo de polling antes de fazer a próxima verificação
+      await new Promise(resolve => setTimeout(resolve, pollingInterval));
+    }
+  } catch (error) {
+    console.error('Erro ao monitorar o status do PIX:', error);
+  }
+}
+
+    document.getElementById('finalizarCompraBtn2').addEventListener('click', async function () {
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
   const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+  const valor = totalAPagar;
   const metodPag = 'Boleto';
+  const descricao = 'pedido'
 
-  // Crie um objeto XMLHttpRequest
-  const xhr = new XMLHttpRequest();
+  // Obtenha os dados do perfil do usuário
+  const userId = getCookie('userId');
+  if (!userId) {
+    console.log('Usuário não autenticado');
+    // Lidar com o caso de usuário não autenticado, redirecionar, exibir mensagem, etc.
+    return;
+  }
 
-  // Configure a solicitação POST
-  xhr.open('POST', '/criar-pedidos', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-
-  // Defina o manipulador de eventos para a resposta da solicitação
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      // A solicitação foi bem-sucedida, você pode processar a resposta aqui
-      const response = JSON.parse(xhr.responseText);
-      alert(response.message);
-
-      // Exiba a mensagem de confirmação
-      document.getElementById('confirmacaoCompra').style.display = 'block';
-
-      // Limpe o carrinho (se desejar)
-      // ...
-
-      // Atualize o resumo da compra (se desejar)
-      // ...
-    } else {
-      // A solicitação não foi bem-sucedida, trate o erro aqui
-      console.error('Erro ao finalizar a compra:', xhr.statusText);
-      alert('Erro ao finalizar a compra');
+  const perfilResponse = await fetch('/perfil/dados', {
+    headers: {
+      'Cookie': `userId=${userId}`
     }
-  };
+  });
 
-  // Trate erros de rede
-  xhr.onerror = function () {
-    console.error('Erro de rede ao finalizar a compra');
-    alert('Erro de rede ao finalizar a compra');
-  };
+  if (!perfilResponse.ok) {
+    console.error('Erro ao obter dados do perfil:', perfilResponse.statusText);
+    // Lidar com o erro ao obter dados do perfil
+    return;
+  }
 
-  // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
-  const pedidoData = {
-    totalItens,
-    valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-    metodPag
-  };
+  const perfilData = await perfilResponse.json();
 
-  // Envie os dados como JSON
-  const requestData = JSON.stringify(pedidoData);
-  xhr.send(requestData);
+  // Extrair dados do perfil
+  const { userCad ,cpfCad, emailCad, telefoneCad } = perfilData;
+
+  const nomeCliente = userCad;
+  const numeroDocumento = cpfCad;
+  const telefoneCliente = telefoneCad;
+  const emailCliente = emailCad
+
+  console.log(nomeCliente, numeroDocumento)
+
+  
+  const response = await fetch('/gerarBoleto', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ valor, descricao, nomeCliente, numeroDocumento })
+  });
+  
+  if (!response.ok) {
+    throw new Error('Erro ao gerar o boleto');
+  }
+  
+  const { boletoURL, boletoExpirationDate, boletoCod, idBoleto } = await response.json();
+  console.log(boletoCod)
+  const boletoPayContainer = document.getElementById('boletoPayContainer');
+
+
+  boletoPayContainer.style.display = 'block';
+  boletoPayContainer.innerHTML = `
+    <h2 id="h2BolCont">Pagamento Boleto</h2>
+    <p class="pAcessBol">Acessar Boleto</p>
+    <a href="${boletoURL}" target="_blank" id="lnkBol">${boletoURL}</a>
+    <button id="btnCopCodBol">Copiar Código</button>
+  `;
+
+  const btnCopCodBol = document.getElementById('btnCopCodBol');
+  
+  btnCopCodBol.addEventListener('click', async() => {
+    // Copiar o payload PIX para a área de transferência
+    await navigator.clipboard.writeText(boletoCod);
+    alert('Código do Boleto copiado com sucesso!');
+  })
+  console.log('ID DO BOLETO', idBoleto)
+  monitorarStatusBoleto(idBoleto);
 });
 
 document.getElementById('finalizarCompraBtn3').addEventListener('click', function () {

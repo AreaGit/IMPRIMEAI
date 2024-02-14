@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de QR Code PIX</title>
+    <title>Gerador de Boleto Bancário</title>
 </head>
 <body>
     <label for="valor">Valor:</label>
@@ -12,45 +12,45 @@
     <label for="descricao">Descrição:</label>
     <input type="text" id="descricao" name="descricao" placeholder="Digite a descrição">
     <br>
-    <button id="gerarQR">Gerar QR Code PIX</button>
+    <label for="nomeCliente">Nome do Cliente:</label>
+    <input type="text" id="nomeCliente" name="nomeCliente" placeholder="Digite o nome do cliente">
     <br>
-    <div id="qrCodeContainer"></div>
-    <div id="pixPayloadContainer"></div>
+    <label for="numeroDocumento">Número do Documento:</label>
+    <input type="text" id="numeroDocumento" name="numeroDocumento" placeholder="Digite o número do documento">
+    <br>
+    <button id="gerarBoleto">Gerar Boleto</button>
+    <br>
+    <div id="boletoInfo"></div>
 
     <script>
-        document.getElementById('gerarQR').addEventListener('click', async () => {
+        document.getElementById('gerarBoleto').addEventListener('click', async () => {
             try {
                 const valor = document.getElementById('valor').value;
                 const descricao = document.getElementById('descricao').value;
+                const nomeCliente = document.getElementById('nomeCliente').value;
+                const numeroDocumento = document.getElementById('numeroDocumento').value;
 
-                const response = await fetch('/gerarQRPix', {
+                const response = await fetch('/gerarBoleto', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ valor, descricao })
+                    body: JSON.stringify({ valor, descricao, nomeCliente, numeroDocumento })
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro ao gerar QR Code PIX');
+                    throw new Error('Erro ao gerar o boleto');
                 }
                 
-                const { qrDataURL, pixPayload } = await response.json();
-
-                // Exibir o QR Code na página
-                const qrCodeImg = document.createElement('img');
-                qrCodeImg.src = qrDataURL;
-                document.getElementById('qrCodeContainer').innerHTML = '';
-                document.getElementById('qrCodeContainer').appendChild(qrCodeImg);
-
-                // Exibir o payload PIX na página
-                const pixPayloadElement = document.createElement('p');
-                pixPayloadElement.textContent = 'Payload PIX: ' + pixPayload;
-                document.getElementById('pixPayloadContainer').innerHTML = '';
-                document.getElementById('pixPayloadContainer').appendChild(pixPayloadElement);
+                const { boletoURL, boletoExpirationDate } = await response.json();
+                document.getElementById('boletoInfo').innerHTML = `
+                    <p>Boleto gerado com sucesso!</p>
+                    <p><strong>URL do Boleto:</strong> <a href="${boletoURL}" target="_blank">${boletoURL}</a></p>
+                    <p><strong>Data de Expiração:</strong> ${boletoExpirationDate}</p>
+                `;
             } catch (error) {
-                console.error('Erro ao gerar QR Code PIX:', error);
-               // alert('Erro ao gerar QR Code PIX. Por favor, tente novamente mais tarde.');
+                console.error('Erro ao gerar o boleto:', error);
+                alert('Erro ao gerar o boleto. Por favor, tente novamente mais tarde.');
             }
         });
     </script>

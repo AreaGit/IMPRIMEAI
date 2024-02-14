@@ -2317,7 +2317,9 @@ app.get("/perfil/dados", async (req, res) => {
       telefoneCad: user.telefoneCad,
       numCad: user.numCad,
       compCad: user.compCad,
-      bairroCad: user.bairroCad
+      bairroCad: user.bairroCad,
+      cpfCad: user.cpfCad,
+      userCad: user.userCad,
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
@@ -2656,6 +2658,58 @@ app.post('/gerarQRPix', async (req, res) => {
     }
     
     res.status(500).send('Erro ao gerar QR Code PIX pelo Pagarme');
+  }
+});
+
+async function gerarBoletoPagarme(valor, descricao, nomeCliente, numeroDocumento) {
+  try {
+    // Inicialize o cliente Pagarme com sua chave de API
+    const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+
+    // Calcular a data de vencimento como 1 dia a partir da data de criação da transação
+    const dataAtual = new Date();
+    const umDiaEmMilissegundos = 24 * 60 * 60 * 1000; // 1 dia em milissegundos
+    const dataVencimento = new Date(dataAtual.getTime() + umDiaEmMilissegundos).toISOString();
+    const transaction = await client.transactions.create({
+      amount: valor * 100, 
+      payment_method: 'boleto',
+      boleto_expiration_date: dataVencimento,
+      customer: {
+          type: 'individual',
+          country: 'br',
+          name: nomeCliente,
+          documents: [
+              {
+                  type: 'cpf',
+                  number: numeroDocumento,
+              },
+          ],
+      },
+  });
+  console.log('Transação de boleto criada:', transaction);
+  
+  // Extrair a URL do boleto e a data de vencimento
+  const boletoURL = transaction.boleto_url;
+  const boletoExpirationDate = transaction.boleto_expiration_date;
+  const boletoCod = transaction.boleto_barcode
+  const idBoleto = transaction.id
+  return { boletoURL, boletoExpirationDate, boletoCod, idBoleto };  
+
+  } catch (error) {
+    console.error('Erro ao gerar o boleto pelo Pagarme:', error);
+    throw new Error('Erro ao gerar o boleto pelo Pagarme');
+  }
+}
+
+app.post('/gerarBoleto', async (req, res) => {
+  const { valor, descricao, nomeCliente, numeroDocumento } = req.body;
+  console.log(valor, descricao, nomeCliente, numeroDocumento,)
+  try {
+    const { boletoURL, boletoExpirationDate, boletoCod, idBoleto } = await gerarBoletoPagarme(valor, descricao, nomeCliente, numeroDocumento);
+    res.status(200).send({ boletoURL, boletoExpirationDate, boletoCod, idBoleto }); // Correção aqui
+  } catch (error) {
+    console.error('Erro ao gerar o boleto:', error);
+    res.status(500).send('Erro ao gerar o boleto');
   }
 });
 
