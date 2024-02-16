@@ -38,8 +38,8 @@ const stream = require('stream');
 const { google } = require('googleapis');
 const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
 const pagarme = require('pagarme')
-const pagarmeApiKey = 'ak_live_rOB01jgMzb6rN7urTNZ6ylweWVYRpD';
 const qr = require('qrcode');
+const cron = require('node-cron');
 
 app.get('/set-cookie', (req, res) => {
   res.cookie('exampleCookie', 'exampleValue', {
@@ -1877,6 +1877,8 @@ app.get('/pagamento', (req, res) => {
     try {
       console.log('1')
       const metodPag = req.body.metodPag;
+      const idTransacao = req.body.idTransacao;
+      console.log(idTransacao);
       console.log(metodPag)
       const carrinhoQuebrado = req.session.carrinho || [];
       const enderecoDaSessao = req.session.endereco;
@@ -1892,10 +1894,9 @@ app.get('/pagamento', (req, res) => {
             nomePed: 'Pedido Geral',
             quantPed: carrinhoQuebrado.length,
             valorPed: totalAPagar,
-            statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
-            ? 'Pedido em Aberto'
-            : 'Aguardando',
+            statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
             metodPag: metodPag,
+            idTransacao: idTransacao
             // ... outros campos relevantes ...
           });
           
@@ -1966,10 +1967,9 @@ app.get('/pagamento', (req, res) => {
             nomePed: 'Pedido Geral',
             quantPed: 1,
             valorPed: totalAPagar,
-            statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
-            ? 'Pedido em Aberto'
-            : 'Aguardando',
+            statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
             metodPag: metodPag,
+            idTransacao: idTransacao,
             //raio: produto.raioProd,
           });
     
@@ -2021,8 +2021,8 @@ app.get('/pagamento', (req, res) => {
           material: produtoNoCarrinho.material,
           arquivo: produtoNoCarrinho.arquivo,
           statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
-            ? 'Pedido em Aberto'
-            : 'Aguardando',
+          ? 'Pedido em Aberto'
+          : 'Aguardando',
           linkDownload: produtoNoCarrinho.downloadLink,
           enderecoId: endereco.id, // Associe o ID do endereço criado
         });
@@ -2711,6 +2711,56 @@ app.post('/gerarBoleto', async (req, res) => {
     console.error('Erro ao gerar o boleto:', error);
     res.status(500).send('Erro ao gerar o boleto');
   }
+});
+
+// Função para conectar ao cliente Pagarme
+async function connectPagarme() {
+  try {
+      const pag = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+      return pag;
+  } catch (error) {
+      console.error('Erro ao conectar ao Pagarme:', error);
+      throw error;
+  }
+}
+
+async function verificarPagamentosPendentes() {
+  try {
+      const pag = await connectPagarme();
+      // Consultar pedidos com status 'Esperando Pagamento' no seu banco de dados
+      const pedidosAguardandoPagamento = await Pedidos.findAll({ where: { statusPed: 'Esperando Pagamento' } });
+
+      // Iterar sobre os pedidos encontrados
+      for (const pedido of pedidosAguardandoPagamento) {
+          // Verificar o status do pagamento no Pagarme usando o ID da transação
+          const transactionId = pedido.idTransacao;
+          try {
+              const transaction = await pag.transactions.find({ id: transactionId });
+              // Verificar se a transação está paga
+              if (transaction.status === 'paid') {
+                  // Atualizar o status do pedido para 'Pago'
+                  pedido.statusPed = 'Pago';
+                  await pedido.save();
+              }
+          } catch (error) {
+              // Verificar se o erro é de transação não encontrada
+              if (error.response && error.response.status === 404) {
+                  console.error(`Transação não encontrada para o pedido ${pedido.id}:`, error);
+              } else {
+                  throw error; // Rejeitar erro para tratamento superior
+              }
+          }
+      }
+  } catch (error) {
+      console.error('Erro ao verificar pagamentos pendentes:', error);
+  }
+}
+
+// Agendar a tarefa para ser executada a cada 5 segundos
+cron.schedule('0 * * * *', async () => {
+  console.log('Verificando pagamentos pendentes...');
+  await verificarPagamentosPendentes();
+  console.log('Verificação de pagamentos concluída.');
 });
 
 httpServer.listen(8081, () => {

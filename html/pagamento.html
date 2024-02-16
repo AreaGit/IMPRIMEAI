@@ -753,7 +753,8 @@ async function monitorarStatusPix(idPix) {
         const pedidoData = {
           totalItens,
           valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-          metodPag
+          metodPag,
+          idTransacao: idPix,
         };
         console.log('PEDIDO CRIADO')
         // Envie os dados como JSON
@@ -848,70 +849,71 @@ async function monitorarStatusBoleto(idBoleto) {
     // Definir um intervalo de polling (em milissegundos)
     const pollingInterval = 5000; // 5 segundos
 
-    while (true) {
-      // Verificar o status do Boleto
-      const status = await verificarStatusBoleto(idBoleto);
-      console.log('Status do Boleto:', status);
+// Defina um limite de tempo em milissegundos (15 segundos)
+const limiteTempo = 15000; // 15 segundos
 
-      if (status === 'paid') {
+// Defina o horário inicial
+const horarioInicial = Date.now();
+
+while (true) {
+    // Verificar o status do Boleto
+    const status = await verificarStatusBoleto(idBoleto);
+    console.log('Status do Boleto:', status);
+
+    // Verifica se o status é 'paid'
+    if (status === 'paid') {
+        // Código para criar o pedido quando o boleto é pago
+        break;
         boletoPayContainer.style.display = 'none'
-        // Se o PIX estiver pago, sair do loop de polling
-        console.log('O Boleto foi pago!, CRIANDO O PEDIDO');
+    }
+
+    // Verifica se o tempo limite foi atingido
+    if (Date.now() - horarioInicial > limiteTempo) {
+        console.log('Tempo limite atingido. Criando o pedido mesmo sem o pagamento confirmado.');
+        boletoPayContainer.style.display = 'none'
+        // Código para criar o pedido mesmo sem o pagamento confirmado
+        // Neste caso, você pode definir o status do pedido como 'Esperando Pagamento'
         const totalItens = document.getElementById('totalItensCarrinho').textContent;
         const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
         const metodPag = 'Boleto';
 
-        // Crie um objeto XMLHttpRequest
         const xhr = new XMLHttpRequest();
-
-        // Configure a solicitação POST
         xhr.open('POST', '/criar-pedidos', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
-        // Defina o manipulador de eventos para a resposta da solicitação
         xhr.onload = function () {
-          if (xhr.status === 200) {
-            // A solicitação foi bem-sucedida, você pode processar a resposta aqui
-            const response = JSON.parse(xhr.responseText);
-            alert(response.message);
-
-            // Exiba a mensagem de confirmação
-            document.getElementById('confirmacaoCompra').style.display = 'block';
-
-            // Limpe o carrinho (se desejar)
-            // ...
-
-            // Atualize o resumo da compra (se desejar)
-            // ...
-          } else {
-            // A solicitação não foi bem-sucedida, trate o erro aqui
-            console.error('Erro ao finalizar a compra:', xhr.statusText);
-            alert('Erro ao finalizar a compra');
-          }
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                alert(response.message);
+                document.getElementById('confirmacaoCompra').style.display = 'block';
+            } else {
+                console.error('Erro ao finalizar a compra:', xhr.statusText);
+                alert('Erro ao finalizar a compra');
+            }
         };
 
-        // Trate erros de rede
         xhr.onerror = function () {
-          console.error('Erro de rede ao finalizar a compra');
-          alert('Erro de rede ao finalizar a compra');
+            console.error('Erro de rede ao finalizar a compra');
+            alert('Erro de rede ao finalizar a compra');
         };
 
-        // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
         const pedidoData = {
-          totalItens,
-          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-          metodPag
+            totalItens,
+            valorPed: totalAPagar,
+            metodPag,
+            statusPed: 'Esperando Pagamento',
+            idTransacao: idBoleto
         };
-        console.log('PEDIDO CRIADO')
-        // Envie os dados como JSON
+
         const requestData = JSON.stringify(pedidoData);
         xhr.send(requestData);
+        
         break;
-      }
-
-      // Aguardar o intervalo de polling antes de fazer a próxima verificação
-      await new Promise(resolve => setTimeout(resolve, pollingInterval));
     }
+
+    // Aguardar o intervalo de polling antes de fazer a próxima verificação
+    await new Promise(resolve => setTimeout(resolve, pollingInterval));
+}
   } catch (error) {
     console.error('Erro ao monitorar o status do PIX:', error);
   }
@@ -921,7 +923,7 @@ async function monitorarStatusBoleto(idBoleto) {
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
   const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
-  const valor = totalAPagar;
+  const valor = 1 //totalAPagar;
   const metodPag = 'Boleto';
   const descricao = 'pedido'
 
