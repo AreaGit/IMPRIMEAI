@@ -1874,106 +1874,105 @@ app.get('/pagamento', (req, res) => {
   res.sendFile(filePath);
 });
 
-  app.post('/criar-pedidos', async (req, res) => {
-    try {
-      console.log('1')
-      const metodPag = req.body.metodPag;
-      const idTransacao = req.body.idTransacao;
-      console.log(idTransacao);
-      console.log(metodPag)
-      const carrinhoQuebrado = req.session.carrinho || [];
-      const enderecoDaSessao = req.session.endereco;
-        if (/*carrinhoQuebrado.length > 1*/ carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {
-          const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoQuebrado) => {
-            const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
-            return produto.valorProd * produtoQuebrado.quantidade;
-          })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
-          
-          // Criar o pedido na tabela de Pedidos
-          const pedido = await Pedidos.create({
-            idUserPed: req.cookies.userId,
-            nomePed: 'Pedido Geral',
-            quantPed: carrinhoQuebrado.length,
-            valorPed: totalAPagar,
-            statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
-            metodPag: metodPag,
-            idTransacao: idTransacao
-            // ... outros campos relevantes ...
-          });
-          
-          // Criar os itens de pedido na tabela de ItensPedidos
-          const itensPedidoPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
-            const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
-            return ItensPedido.create({
-              idPed: pedido.id,
-              idProduto: produtoQuebrado.produtoId,
-              nomeProd: produto.nomeProd,
-              quantidade: produtoQuebrado.quantidade,
-              valorProd: produto.valorProd,
-              raio: produto.raioProd,
-              acabamento: produtoQuebrado.acabamento,
-              cor: produtoQuebrado.cor,
-              enobrecimento: produtoQuebrado.enobrecimento,
-              formato: produtoQuebrado.formato,
-              material: produtoQuebrado.material,
-              arquivo: produtoQuebrado.arquivo,
-              statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
-              ? 'Pedido em Aberto'
-              : 'Aguardando',
-              linkDownload: produtoQuebrado.downloadLink,
-              // ... outros campos relevantes ...
-            });
-          });
-          
-          const itensPedido = await Promise.all(itensPedidoPromises);
-          
-          // Criar os endereços na tabela de Enderecos
-          const enderecosPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
-            return Enderecos.create({
-              idPed: pedido.id,
-              rua: produtoQuebrado.endereco.enderecoCad,
-              cep: produtoQuebrado.endereco.cepCad,
-              cidade: produtoQuebrado.endereco.cidadeCad,
-              numero: produtoQuebrado.endereco.numCad,
-              complemento: produtoQuebrado.endereco.compCad,
-              bairro: produtoQuebrado.endereco.bairroCad,
-              quantidade: produtoQuebrado.quantidade,
-              celular: produtoQuebrado.endereco.telefoneCad,
-              estado: produtoQuebrado.endereco.estadoCad,
-              cuidados: produtoQuebrado.endereco.cuidadosCad,
-              raio: produtoQuebrado.raioProd,
-              produtos: produtoQuebrado.produtoId,
-              idProduto: produtoQuebrado.produtoId,
-              tipoEntrega: produtoQuebrado.endereco.tipoEntrega,
-              // ... outros campos relevantes ...
-            });
-          });
-          
-          const enderecos = await Promise.all(enderecosPromises);
-          
-          await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
-          req.session.carrinho = [];
-          req.session.endereco = {};
-  
-          res.json({ message: 'Mini Pedido criado com sucesso', pedido /*,endereco, itensPedido */});
-        } else {
-          console.log('2')
-          const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoNoCarrinho) => {
-            const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-            return produto.valorProd * produtoNoCarrinho.quantidade;
-          })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
-          //const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
-          const pedido = await Pedidos.create({
-            idUserPed: req.cookies.userId,
-            nomePed: 'Pedido Geral',
-            quantPed: 1,
-            valorPed: totalAPagar,
-            statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
-            metodPag: metodPag,
-            idTransacao: idTransacao,
-            //raio: produto.raioProd,
-          });
-    
+app.post('/criar-pedidos', async (req, res) => {
+  try {
+    console.log('1');
+    const metodPag = req.body.metodPag;
+    const idTransacao = req.body.idTransacao;
+    console.log(idTransacao);
+    console.log(metodPag);
+    const carrinhoQuebrado = req.session.carrinho || [];
+    const enderecoDaSessao = req.session.endereco;
+    if (carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {
+      const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoQuebrado) => {
+        const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
+        return produto.valorProd * produtoQuebrado.quantidade;
+      })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
+
+      const pedido = await Pedidos.create({
+        idUserPed: req.cookies.userId,
+        nomePed: 'Pedido Geral',
+        quantPed: carrinhoQuebrado.length,
+        valorPed: totalAPagar,
+        statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
+        metodPag: metodPag,
+        idTransacao: idTransacao
+        // ... outros campos relevantes ...
+      });
+
+      const itensPedidoPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
+        const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
+        return ItensPedido.create({
+          idPed: pedido.id,
+          idProduto: produtoQuebrado.produtoId,
+          nomeProd: produto.nomeProd,
+          quantidade: produtoQuebrado.quantidade,
+          valorProd: produto.valorProd,
+          raio: produtoQuebrado.raioProd,
+          acabamento: produtoQuebrado.acabamento,
+          cor: produtoQuebrado.cor,
+          enobrecimento: produtoQuebrado.enobrecimento,
+          formato: produtoQuebrado.formato,
+          material: produtoQuebrado.material,
+          arquivo: produtoQuebrado.arquivo,
+          statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
+            ? 'Pedido em Aberto'
+            : 'Aguardando',
+          linkDownload: produtoQuebrado.downloadLink,
+          // ... outros campos relevantes ...
+        });
+      });
+
+      const itensPedido = await Promise.all(itensPedidoPromises);
+
+      const enderecosPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
+        return Enderecos.create({
+          idPed: pedido.id,
+          rua: produtoQuebrado.endereco.enderecoCad,
+          cep: produtoQuebrado.endereco.cepCad,
+          cidade: produtoQuebrado.endereco.cidadeCad,
+          numero: produtoQuebrado.endereco.numCad,
+          complemento: produtoQuebrado.endereco.compCad,
+          bairro: produtoQuebrado.endereco.bairroCad,
+          quantidade: produtoQuebrado.quantidade,
+          celular: produtoQuebrado.endereco.telefoneCad,
+          estado: produtoQuebrado.endereco.estadoCad,
+          cuidados: produtoQuebrado.endereco.cuidadosCad,
+          raio: produtoQuebrado.raioProd,
+          produtos: produtoQuebrado.produtoId,
+          idProduto: produtoQuebrado.produtoId,
+          tipoEntrega: produtoQuebrado.endereco.tipoEntrega,
+          // ... outros campos relevantes ...
+        });
+      });
+
+      const enderecos = await Promise.all(enderecosPromises);
+
+      // Verifica as gráficas mais próximas para cada item do pedido
+      await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
+
+      req.session.carrinho = [];
+      req.session.endereco = {};
+
+      res.json({ message: 'Mini Pedido criado com sucesso', pedido });
+    } else {
+      console.log('2');
+      const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produtoNoCarrinho) => {
+        const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
+        return produto.valorProd * produtoNoCarrinho.quantidade;
+      })).then((valores) => valores.reduce((total, valor) => total + valor, 0));
+
+      const pedido = await Pedidos.create({
+        idUserPed: req.cookies.userId,
+        nomePed: 'Pedido Geral',
+        quantPed: 1,
+        valorPed: totalAPagar,
+        statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
+        metodPag: metodPag,
+        idTransacao: idTransacao,
+        //raio: produto.raioProd,
+      });
+
       const enderecosQuebradosPromises = carrinhoQuebrado.map(async (produtoNoCarrinho, index) => {
         const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
         const enderecoQuebrado = {
@@ -1993,21 +1992,17 @@ app.get('/pagamento', (req, res) => {
           tipoEntrega: produtoNoCarrinho.endereco.tipoEntrega,
         };
 
-        // Crie o endereço no banco de dados
         const enderecoCriado = await Enderecos.create(enderecoQuebrado);
 
         return enderecoCriado;
       });
 
-      // Aguarde todas as promessas de endereços quebrados serem resolvidas
       const enderecosQuebrados = await Promise.all(enderecosQuebradosPromises);
 
-      // Crie e associe os itens de pedido aos endereços correspondentes
       const itensPedidoPromises = carrinhoQuebrado.map(async (produtoNoCarrinho, index) => {
         const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
         const endereco = enderecosQuebrados[index];
 
-        // Crie e associe o item de pedido ao endereço
         return ItensPedido.create({
           idPed: pedido.id,
           idProduto: produtoNoCarrinho.produtoId,
@@ -2022,17 +2017,15 @@ app.get('/pagamento', (req, res) => {
           material: produtoNoCarrinho.material,
           arquivo: produtoNoCarrinho.arquivo,
           statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
-          ? 'Pedido em Aberto'
-          : 'Aguardando',
+            ? 'Pedido em Aberto'
+            : 'Aguardando',
           linkDownload: produtoNoCarrinho.downloadLink,
-          enderecoId: endereco.id, // Associe o ID do endereço criado
+          enderecoId: endereco.id,
         });
       });
 
-      // Aguarde todas as promessas de itens de pedido serem resolvidas
       await Promise.all(itensPedidoPromises.map(verificarGraficaMaisProximaEAtualizar));
 
-      // Atualize cada produto no carrinho com o endereço correspondente
       req.session.carrinho.forEach((produto, index) => {
         produto.endereco = enderecosQuebrados[index];
       });
@@ -2040,7 +2033,7 @@ app.get('/pagamento', (req, res) => {
       req.session.carrinho = [];
       req.session.endereco = {};
 
-      res.json({ message: 'Pedido criado com sucesso', pedido/*, endereco, itensPedido*/});
+      res.json({ message: 'Pedido criado com sucesso', pedido });
     }
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);
