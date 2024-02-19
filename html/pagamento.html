@@ -923,7 +923,7 @@ while (true) {
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
   const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
-  const valor = 1 //totalAPagar;
+  const valor = totalAPagar;
   const metodPag = 'Boleto';
   const descricao = 'pedido'
 
@@ -1050,6 +1050,87 @@ document.getElementById('finalizarCompraBtn3').addEventListener('click', functio
 });
 
 document.getElementById('finalizarCompraBtn4').addEventListener('click', function () {
+  const totalItens = document.getElementById('totalItensCarrinho').textContent;
+  const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+  const metodPag = 'Carteira Usuário';
+  const userId = getCookie('userId');
+
+  // Verifique o saldo da carteira do usuário
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', '/saldoUsuario', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const saldo = JSON.parse(xhr.responseText).saldo;
+
+      // Verifique se o saldo é suficiente para a compra
+      if (saldo >= totalAPagar) {
+        const descontoData = {
+          valorPed: totalAPagar,
+          metodPag: metodPag
+        };
+
+        // Faça uma solicitação para descontar o valor da compra do saldo da carteira
+        const descontoRequest = new XMLHttpRequest();
+        descontoRequest.open('POST', '/descontarSaldo', true);
+        descontoRequest.setRequestHeader('Content-Type', 'application/json');
+        descontoRequest.onload = function () {
+          if (descontoRequest.status === 200) {
+            // O desconto foi aplicado com sucesso, crie o pedido
+            const pedidoData = {
+              totalItens,
+              valorPed: totalAPagar,
+              metodPag
+            };
+            const pedidoRequest = new XMLHttpRequest();
+            pedidoRequest.open('POST', '/criar-pedidos', true);
+            pedidoRequest.setRequestHeader('Content-Type', 'application/json');
+            pedidoRequest.onload = function () {
+              if (pedidoRequest.status === 200) {
+                // Pedido criado com sucesso
+                const response = JSON.parse(pedidoRequest.responseText);
+                alert(response.message);
+                document.getElementById('confirmacaoCompra').style.display = 'block';
+                // Limpe o carrinho (se necessário)
+                // Atualize o resumo da compra (se necessário)
+              } else {
+                console.error('Erro ao criar o pedido:', pedidoRequest.statusText);
+                alert('Erro ao criar o pedido');
+              }
+            };
+            pedidoRequest.onerror = function () {
+              console.error('Erro de rede ao criar o pedido');
+              alert('Erro de rede ao criar o pedido');
+            };
+            pedidoRequest.send(JSON.stringify(pedidoData));
+          } else {
+            console.error('Erro ao descontar o saldo:', descontoRequest.statusText);
+            alert('Erro ao descontar o saldo');
+          }
+        };
+        descontoRequest.onerror = function () {
+          console.error('Erro de rede ao descontar o saldo');
+          alert('Erro de rede ao descontar o saldo');
+        };
+        descontoRequest.send(JSON.stringify(descontoData));
+      } else {
+        // Saldo insuficiente, redirecione o usuário para recarregar a carteira
+        alert('Saldo insuficiente. Por favor, recarregue sua carteira.');
+        window.location.href = 'carteira.html';
+      }
+    } else {
+      console.error('Erro ao verificar o saldo da carteira:', xhr.statusText);
+      alert('Erro ao verificar o saldo da carteira');
+    }
+  };
+  xhr.onerror = function () {
+    console.error('Erro de rede ao verificar o saldo da carteira');
+    alert('Erro de rede ao verificar o saldo da carteira');
+  };
+  xhr.send();
+});
+
+/*document.getElementById('finalizarCompraBtn4').addEventListener('click', function () {
   // Obtenha o total de itens e o total a pagar do resumo da compra
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
   const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
@@ -1100,7 +1181,7 @@ document.getElementById('finalizarCompraBtn4').addEventListener('click', functio
   // Envie os dados como JSON
   const requestData = JSON.stringify(pedidoData);
   xhr.send(requestData);
-});
+});*/
 
 
 </script>

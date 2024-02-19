@@ -11,6 +11,7 @@ const Pedidos = require('./models/Pedidos');
 const Enderecos = require('./models/Enderecos');
 const ItensPedido = require('./models/ItensPedido');
 const VariacoesProduto = require('./models/VariacoesProduto');
+const Carteira = require('./models/Carteira')
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
@@ -2761,6 +2762,106 @@ cron.schedule('0 * * * *', async () => {
   console.log('Verificando pagamentos pendentes...');
   await verificarPagamentosPendentes();
   console.log('Verificação de pagamentos concluída.');
+});
+
+app.post('/registrarPagamento', async (req, res) => {
+  const { userId, valor, metodoPagamento, status } = req.body;
+  console.log(userId, valor, metodoPagamento, status)
+  try {
+      // Encontre a carteira do usuário pelo userId
+      let carteira = await Carteira.findOne({ where: { userId } });
+
+      // Se a carteira não existir, crie uma nova
+      if (!carteira) {
+          carteira = await Carteira.create({ userId, saldo: 0 }); // Saldo inicial 0
+      }
+
+      // Adicione o valor do pagamento ao saldo da carteira
+      carteira.saldo += valor;
+
+      // Atualize o status do pagamento na carteira
+      carteira.statusPag = status;
+
+      //Salve o ID do usuário
+      carteira.userId = userId;
+
+      // Salve as alterações no banco de dados
+      await carteira.save();
+
+      console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
+
+      res.status(200).send('Pagamento registrado com sucesso!');
+  } catch (error) {
+      console.error('Erro ao registrar o pagamento:', error);
+      res.status(500).send('Erro ao registrar o pagamento');
+  }
+});
+
+// Rota para buscar o saldo do usuário e exibi-lo na página HTML
+// Rota para buscar o saldo do usuário
+app.get('/saldoUsuario', async (req, res) => {
+  const { userId } = req.cookies; // Obtenha o userId dos cookies
+
+  try {
+    // Consulte o banco de dados para obter a soma de todos os depósitos pagos associados ao usuário
+    const saldoDepositosPagos = await Carteira.sum('saldo', {
+      where: {
+        userId: userId,
+        statusPag: 'PAGO' // Apenas transações com status "PAGO"
+      }
+    });
+
+    // Consulte o banco de dados para obter a soma de todos os depósitos de saída associados ao usuário
+    const saldoSaidas = await Carteira.sum('saldo', {
+      where: {
+        userId: userId,
+        statusPag: 'SAIDA' // Apenas transações com status "SAÍDA"
+      }
+    });
+
+    // Calcule o saldo final subtraindo o valor total das saídas do valor total dos depósitos pagos
+    const saldoFinal = saldoDepositosPagos - saldoSaidas;
+
+    // Exiba o saldo final na resposta da API
+    res.json({ saldo: saldoFinal });
+  } catch (error) {
+    console.error('Erro ao buscar saldo do usuário:', error);
+    res.status(500).send('Erro ao buscar saldo do usuário');
+  }
+});
+
+// Rota para descontar o valor da compra do saldo da carteira do usuário
+app.post('/descontarSaldo', async (req, res) => {
+  const { userId } = req.cookies; // Obtenha o userId dos cookies
+  const { valorPed, metodPag } = req.body;
+  console.log(userId);
+  try {
+    // Encontre a carteira do usuário pelo userId
+    let carteira = await Carteira.findOne({ where: { userId } });
+
+    // Verifique se a carteira existe
+    if (!carteira) {
+      throw new Error('Carteira não encontrada para o usuário');
+    }
+
+    // Verifique se o saldo é suficiente para a compra
+    if (carteira.saldo < valorPed) {
+      throw new Error('Saldo insuficiente na carteira');
+    }
+
+    // Crie uma nova entrada de transação de saída na tabela de Carteiras
+    await Carteira.create({
+      userId: userId,
+      saldo: valorPed, // O valor será negativo para indicar uma transação de saída
+      statusPag: 'SAIDA'
+    });
+
+    // Envie uma resposta de sucesso
+    res.status(200).send('Saldo descontado com sucesso da carteira');
+  } catch (error) {
+    console.error('Erro ao descontar saldo da carteira:', error);
+    res.status(500).send('Erro ao descontar saldo da carteira');
+  }
 });
 
 httpServer.listen(8081, () => {

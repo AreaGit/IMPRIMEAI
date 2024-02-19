@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles/style.css" media="all">
 <link rel="stylesheet" href="../styles/pag-prods.css">
-<link rel="stylesheet" href="styles/medias.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://assets.pagar.me/pagarme-js/3.0/pagarme.min.js"></script>
 </head>
 <style>
     body {
@@ -98,6 +98,11 @@
         font-weight: bold;
         font-size: 22px;
         margin-top: 10px;
+    }
+    #pop-upPag ul li.selecionado {
+        transition: 1s;
+        border: none;
+        box-shadow: 1px 1px 6px #ef412693; 
     }
     .prossRec {
         text-decoration: none;
@@ -212,7 +217,49 @@
         left: 60px;
         top: -25px;
     }
-</style>
+    div#qrCodeContainer {
+        display: none;
+        border: 1px solid #858383;
+        position: relative;
+        top: -27%;
+        width: 27%;
+        left: 57%;
+        transform: translate(-50%);
+        height: 627px;
+        border-radius: 5px;
+        background-color: white;
+    }
+        img#imgPix {
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 111px;
+    }
+    button#copiarPayloadBtn {
+        padding: 18px 28px 18px 28px;
+        position: relative;
+        top: 25%;
+        left: -109px;
+        transform: translate(16%);
+        border: 1px solid #EF4126;
+        color: #F37160;
+        background-color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    h2#h2Container {
+        position: relative;
+        top: -36%;
+        left: 31%;
+    }
+    p#expirationDateParagraph {
+        position: relative;
+        top: 147px;
+        left: 68%;
+        transform: translate(-50%);
+        color: #EF4126;
+    }
+    </style>
 <body>
     <header>
         <div class="mini-banner">
@@ -245,13 +292,13 @@
             <a href="#" id="fechPop">X</a>
             <h2>Escolha um Valor</h2>
             <ul>
-                <li>R$ 0,00</li>
-                <li>R$ 0,00</li>
-                <li>R$ 0,00</li>
-                <li>R$ 0,00</li>
-                <li>R$ 0,00</li>
-                <li>R$ 0,00</li>
-                <li>R$ 0,00</li>
+                <li>R$ 30,00</li>
+                <li>R$ 50,00</li>
+                <li>R$ 100,00</li>
+                <li>R$ 150,00</li>
+                <li>R$ 200,00</li>
+                <li>R$ 300,00</li>
+                <li>R$ 400,00</li>
             </ul>
             <a href="#" class="prossRec" id="prossRec">Continuar</a>
         </div>
@@ -260,7 +307,7 @@
             <h2>Valor a Pagar</h2>
             <p class="vlPg">R$ <span id="vlrEsq">0,00</span></p>
             <h3>Escolha a forma de Pagamento</h3>
-            <a href="#">
+            <a href="#" id="btnPix">
                 <div id="mtd-Pix">
                     <img src="https://wbl.blob.core.windows.net/public/pix.png" alt="...">
                     <p>Pix</p>
@@ -279,6 +326,7 @@
                 </div>
             </a>
         </div>
+        <div id="qrCodeContainer"></div>
     </main>
     <script>
         const btnRec = document.getElementById('btnRec');
@@ -287,6 +335,9 @@
         const btnProssRec = document.getElementById('prossRec');
         const btnFechPop = document.getElementById('fechPop');
         const btnFechPop2 = document.getElementById('fechPop2');
+        const vlrEsq = document.getElementById('vlrEsq');
+        const btnPix = document.getElementById('btnPix');
+        const qrCodeContainer = document.getElementById('qrCodeContainer');
 
        btnRec.addEventListener('click', () => {
         popupPag.style.display = 'block'
@@ -303,6 +354,194 @@
         popupPag.style.display = 'none'
         pagRec.style.display = 'block'
        })
+       
+       function getCookie(name) {
+           const value = `; ${document.cookie}`;
+           const parts = value.split(`; ${name}=`);
+           if (parts.length === 2) return parts.pop().split(';').shift();
+        };
+        let userId = getCookie('userId');
+
+        
+        const valores = document.querySelectorAll('#pop-upPag ul li');
+        let valorSelecionado = 0;
+        
+        valores.forEach(valor => {
+            valor.addEventListener('click', () => {
+                // Remover a classe 'selecionado' de todos os valores
+                valores.forEach(item => {
+                    item.classList.remove('selecionado');
+                });
+                
+                // Adicionar a classe 'selecionado' apenas ao valor clicado
+                valor.classList.add('selecionado');
+                
+                // Armazenar o valor selecionado na variável
+                valorSelecionado = parseFloat(valor.textContent.replace('R$ ', ''));
+                console.log('Valor selecionado:', valorSelecionado);
+            });
+        });
+
+        btnProssRec.addEventListener('click', () => {
+            console.log('Continuar com o valor:', valorSelecionado);
+            // Aqui você pode prosseguir com o valor selecionado, como enviar para o servidor ou realizar alguma operação com ele.
+        });
+
+        async function verificarStatusPix(idPix) {
+            try {
+                // Inicialize o cliente Pagarme com sua chave de API
+                const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+
+                // Consulte a transação PIX usando o ID do PIX
+                const transaction = await client.transactions.find({ id: idPix });
+
+                // Verifique o status da transação
+                const status = transaction.status;
+                
+                // Retorna o status da transação PIX
+                return status;
+            } catch (error) {
+                console.error('Erro ao verificar o status do PIX pelo Pagarme:', error);
+                
+                if (error.response && error.response.errors) {
+                    console.error('Detalhes do erro:', error.response.errors);
+                }
+                
+                throw new Error('Erro ao verificar o status do PIX pelo Pagarme');
+            }
+            }
+
+            // Função para verificar continuamente o status do PIX
+            async function monitorarStatusPix(idPix) {
+                try {
+                    // Definir um intervalo de polling (em milissegundos)
+                    const pollingInterval = 5000; // 5 segundos
+                    
+                while (true) {
+                    // Verificar o status do PIX
+                const status = await verificarStatusPix(idPix);
+                console.log('Status do PIX:', status);
+
+                if (status === 'paid') {
+                    qrCodeContainer.style.display = 'none'
+                    // Se o PIX estiver pago, sair do loop de polling
+                    console.log('O PIX foi pago!, DEPOSITANDO NA CARTEIRA');
+                    const metodPag = 'Pix';
+                    
+                    const detalhesPagamento = {
+                        userId: userId,
+                        valor: valorSelecionado,
+                        metodoPagamento: metodPag,
+                        status: "PAGO"
+                    };
+                    
+                    try {
+                        const response = await fetch('/registrarPagamento', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(detalhesPagamento)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error('Erro ao registrar o pagamento');
+                        }
+                        
+                        console.log('Pagamento registrado com sucesso!');
+                    } catch (error) {
+                        console.error('Erro ao registrar o pagamento:', error);
+                    }
+                        break;
+                }
+                
+                // Aguardar o intervalo de polling antes de fazer a próxima verificação
+                await new Promise(resolve => setTimeout(resolve, pollingInterval));
+                }
+            } catch (error) {
+                console.error('Erro ao monitorar o status do PIX:', error);
+            }
+        }
+
+            btnPix.addEventListener('click', async () => {
+                const valor = valorSelecionado;
+                const descricao = "Depósito Carteira";
+                const metodPag = "Pix";
+                
+                
+                try {
+                    const response = await fetch('/gerarQRPix', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ valor, descricao })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Erro ao gerar QR Code PIX');
+                    }
+
+                    const { qrDataURL, pixPayload, idPix, expirationDatePix } = await response.json();
+                    
+                    qrCodeContainer.style.display = 'block'
+                    pagRec.style.display = 'none'
+                    const qrCodeImg = document.createElement('img');
+                    qrCodeImg.src = qrDataURL;
+                    qrCodeImg.id = 'imgPix'
+                    document.getElementById('qrCodeContainer').innerHTML = '';
+                    document.getElementById('qrCodeContainer').appendChild(qrCodeImg);
+                    const copiarPayloadBtn = document.createElement('button');
+                    copiarPayloadBtn.id = 'copiarPayloadBtn';
+                    copiarPayloadBtn.innerText = 'PIX Copia e Cola';
+                    copiarPayloadBtn.addEventListener('click', async() => {
+                        // Copiar o payload PIX para a área de transferência
+                        await navigator.clipboard.writeText(pixPayload);
+                        alert('Código PIX copiado com sucesso!');
+                        
+                    })
+                    qrCodeContainer.appendChild(copiarPayloadBtn);
+            
+                    const h2Container = document.createElement('h2');
+                    h2Container.innerText = 'Pagamento Pix';
+                    h2Container.id = 'h2Container';
+                    qrCodeContainer.appendChild(h2Container);
+                    
+                    // Exibir a data de expiração do PIX formatada
+                    const expirationDateFormatted = new Date(expirationDatePix).toLocaleString('pt-BR', { timeZone: 'UTC' });
+                    const expirationDateParagraph = document.createElement('p');
+                    expirationDateParagraph.id = 'expirationDateParagraph';
+                    expirationDateParagraph.innerText = `O PIX irá expirar em ${expirationDateFormatted}`;
+                    qrCodeContainer.appendChild(expirationDateParagraph);
+                    monitorarStatusPix(idPix);
+
+                } catch (error) {
+                    console.error('Erro:', error);
+                }
+        });
+
+        // Solicitação AJAX para buscar e exibir o saldo do usuário na página HTML
+        async function exibirSaldoUsuario() {
+            try {
+                const response = await fetch('/saldoUsuario');
+                const data = await response.json();
+                const saldoFormatado = formatarSaldo(data.saldo); // Formate o saldo se necessário
+
+                // Atualize o elemento HTML com o saldo do usuário
+                document.getElementById('vlrCart').textContent = saldoFormatado;
+            } catch (error) {
+                console.error('Erro ao buscar saldo do usuário:', error);
+            }
+        }
+
+        // Função para formatar o saldo (adicione R$ e formate para duas casas decimais)
+        function formatarSaldo(saldo) {
+            return `${saldo.toFixed(2)}`;
+        }
+ 
+        // Chame a função para exibir o saldo do usuário quando a página for carregada
+        exibirSaldoUsuario();
+
     </script>
 </body>
 </html>

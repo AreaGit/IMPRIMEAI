@@ -34,7 +34,7 @@ const Pedidos = db.define('pedidos', {
     },
     idTransacao: {
         type: Sequelize.STRING(255),
-        allowNull: false 
+        allowNull: true,
     },
     raio: {
         type: Sequelize.FLOAT,
