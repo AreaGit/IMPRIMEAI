@@ -2764,36 +2764,70 @@ cron.schedule('0 * * * *', async () => {
   console.log('Verificação de pagamentos concluída.');
 });
 
-app.post('/registrarPagamento', async (req, res) => {
-  const { userId, valor, metodoPagamento, status } = req.body;
-  console.log(userId, valor, metodoPagamento, status)
+cron.schedule('0 * * * *', async () => {
+  console.log('Verificação de pagamentos Carteira...');
+  verificarPagamentosPendentesCarteira();
+  console.log('Verificação de pagamentos Carteira concluída.');
+})
+
+async function verificarPagamentosPendentesCarteira() {
   try {
-      // Encontre a carteira do usuário pelo userId
-      let carteira = await Carteira.findOne({ where: { userId } });
+    const pag = await connectPagarme();
+    // Consultar transações pendentes na tabela de Carteiras
+    const transacoesPendentes = await Carteira.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
 
-      // Se a carteira não existir, crie uma nova
-      if (!carteira) {
-          carteira = await Carteira.create({ userId, saldo: 0 }); // Saldo inicial 0
+    // Iterar sobre as transações pendentes encontradas
+    for (const transacao of transacoesPendentes) {
+      // Verificar o status do pagamento no Pagarme usando o ID da transação
+      const transactionId = transacao.idTransacao;
+      try {
+        const transaction = await pag.transactions.find({ id: transactionId });
+        // Verificar se a transação está paga
+        if (transaction.status === 'paid') {
+          // Atualizar o status da transação para 'PAGO'
+          transacao.statusPag = 'PAGO';
+          await transacao.save();
+        }
+      } catch (error) {
+        // Verificar se o erro é de transação não encontrada
+        if (error.response && error.response.status === 404) {
+          console.error(`Transação não encontrada para a transação ${transacao.id}:`, error);
+        } else {
+          throw error; // Rejeitar erro para tratamento superior
+        }
       }
-
-      // Adicione o valor do pagamento ao saldo da carteira
-      carteira.saldo += valor;
-
-      // Atualize o status do pagamento na carteira
-      carteira.statusPag = status;
-
-      //Salve o ID do usuário
-      carteira.userId = userId;
-
-      // Salve as alterações no banco de dados
-      await carteira.save();
-
-      console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
-
-      res.status(200).send('Pagamento registrado com sucesso!');
+    }
   } catch (error) {
-      console.error('Erro ao registrar o pagamento:', error);
-      res.status(500).send('Erro ao registrar o pagamento');
+    console.error('Erro ao verificar pagamentos pendentes:', error);
+  }
+}
+
+app.post('/registrarPagamento', async (req, res) => {
+  const { userId, valor, metodoPagamento, status, idTransacao } = req.body;
+  console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status)
+  try {
+    // Encontre a carteira do usuário pelo userId
+    let carteira = await Carteira.findOne({ where: { userId } });
+
+    // Se a carteira não existir, crie uma nova
+    if (!carteira) {
+      //carteira = await Carteira.create({ userId, saldo: 0 }); // Saldo inicial 0
+    }
+
+    // Crie uma entrada na tabela Carteira para registrar o pagamento
+    const pagamento = await Carteira.create({
+      saldo: valor,
+      statusPag: status,
+      userId: userId,
+      idTransacao: idTransacao
+    });
+
+    console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
+
+    res.status(200).send('Pagamento registrado com sucesso!');
+  } catch (error) {
+    console.error('Erro ao registrar o pagamento:', error);
+    res.status(500).send('Erro ao registrar o pagamento');
   }
 });
 

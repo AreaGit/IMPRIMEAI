@@ -18,7 +18,10 @@ const Carteira = db.define('carteira', {
     statusPag: {
         type: Sequelize.STRING(255),
         allowNull: true,
-    }
+    },
+    idTransacao: {
+        type: Sequelize.STRING(255),
+    },
 });
 
 //Carteira.sync({force:true});

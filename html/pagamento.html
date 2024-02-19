@@ -1130,59 +1130,6 @@ document.getElementById('finalizarCompraBtn4').addEventListener('click', functio
   xhr.send();
 });
 
-/*document.getElementById('finalizarCompraBtn4').addEventListener('click', function () {
-  // Obtenha o total de itens e o total a pagar do resumo da compra
-  const totalItens = document.getElementById('totalItensCarrinho').textContent;
-  const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
-  const metodPag = 'Carteira Usuário';
-
-  // Crie um objeto XMLHttpRequest
-  const xhr = new XMLHttpRequest();
-
-  // Configure a solicitação POST
-  xhr.open('POST', '/criar-pedidos', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-
-  // Defina o manipulador de eventos para a resposta da solicitação
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      // A solicitação foi bem-sucedida, você pode processar a resposta aqui
-      const response = JSON.parse(xhr.responseText);
-      alert(response.message);
-
-      // Exiba a mensagem de confirmação
-      document.getElementById('confirmacaoCompra').style.display = 'block';
-
-      // Limpe o carrinho (se desejar)
-      // ...
-
-      // Atualize o resumo da compra (se desejar)
-      // ...
-    } else {
-      // A solicitação não foi bem-sucedida, trate o erro aqui
-      console.error('Erro ao finalizar a compra:', xhr.statusText);
-      alert('Erro ao finalizar a compra');
-    }
-  };
-
-  // Trate erros de rede
-  xhr.onerror = function () {
-    console.error('Erro de rede ao finalizar a compra');
-    alert('Erro de rede ao finalizar a compra');
-  };
-
-  // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
-  const pedidoData = {
-    totalItens,
-    valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-    metodPag
-  };
-
-  // Envie os dados como JSON
-  const requestData = JSON.stringify(pedidoData);
-  xhr.send(requestData);
-});*/
-
 
 </script>
 </body>

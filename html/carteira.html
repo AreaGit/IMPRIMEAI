@@ -259,6 +259,48 @@
         transform: translate(-50%);
         color: #EF4126;
     }
+    #boletoPayContainer {
+        display: none;
+        border: 1px solid #858383;
+        position: relative;
+        top: -27%;
+        width: 27%;
+        left: 57%;
+        transform: translate(-50%);
+        height: 627px;
+        border-radius: 5px;
+        background-color: white;
+    }
+    h2#h2BolCont {
+        position: relative;
+        left: 80%;
+        transform: translate(-50%);
+        top: 32px;
+    }
+    a#lnkBol {
+        position: relative;
+        left: 2%;
+        top: 17%;
+    }
+    #btnCopCodBol {
+        padding: 18px 28px 18px 28px;
+        border: 1px solid #EF4126;
+        color: #F37160;
+        background-color: white;
+        font-weight: bold;
+        cursor: pointer;
+        position: relative;
+        top: 25%;
+        left: 39%;
+    }
+    .pAcessBol {
+        position: relative;
+        left: 91%;
+        transform: translate(-50%);
+        top: 11%;
+        font-weight: bold;
+        color: #F37160;
+    }
     </style>
 <body>
     <header>
@@ -304,8 +346,6 @@
         </div>
         <div id="pagRec">
             <a href="#" id="fechPop2">X</a>
-            <h2>Valor a Pagar</h2>
-            <p class="vlPg">R$ <span id="vlrEsq">0,00</span></p>
             <h3>Escolha a forma de Pagamento</h3>
             <a href="#" id="btnPix">
                 <div id="mtd-Pix">
@@ -319,7 +359,7 @@
                     <p>Cartão de Crédito</p>
                 </div>
             </a>
-            <a href="#">
+            <a href="#" id="btnBol">
                 <div id="mtd-Boleto">
                     <img src="https://wbl.blob.core.windows.net/public/boleto.svg" alt="...">
                     <p>Boleto Bancário</p>
@@ -327,6 +367,7 @@
             </a>
         </div>
         <div id="qrCodeContainer"></div>
+        <div id="boletoPayContainer"></div>
     </main>
     <script>
         const btnRec = document.getElementById('btnRec');
@@ -338,7 +379,8 @@
         const vlrEsq = document.getElementById('vlrEsq');
         const btnPix = document.getElementById('btnPix');
         const qrCodeContainer = document.getElementById('qrCodeContainer');
-
+        const btnBol = document.getElementById('btnBol');
+        const boletoPayContainer = document.getElementById('boletoPayContainer');
        btnRec.addEventListener('click', () => {
         popupPag.style.display = 'block'
        })
@@ -514,11 +556,153 @@
                     expirationDateParagraph.innerText = `O PIX irá expirar em ${expirationDateFormatted}`;
                     qrCodeContainer.appendChild(expirationDateParagraph);
                     monitorarStatusPix(idPix);
-
+                    
                 } catch (error) {
                     console.error('Erro:', error);
                 }
-        });
+            });
+
+            async function verificarStatusBoleto(idBoleto) {
+                try {
+                    const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+                    const transaction = await client.transactions.find({ id: idBoleto });
+                    return transaction.status;
+                } catch (error) {
+                    console.error('Erro ao verificar o status do Boleto pelo Pagarme:', error);
+                    throw new Error('Erro ao verificar o status do Boleto pelo Pagarme');
+                }
+                }
+                // Função para verificar continuamente o status do Boleto
+                async function monitorarStatusBoleto(idBoleto) {
+                    const boletoPayContainer = document.getElementById('boletoPayContainer');
+                    try {
+                        // Definir um intervalo de polling (em milissegundos)
+                        const pollingInterval = 5000; // 5 segundos
+
+                        // Defina um limite de tempo em milissegundos (15 segundos)
+                        const limiteTempo = 15000; // 15 segundos
+
+                        // Defina o horário inicial
+                        const horarioInicial = Date.now();
+
+                        while (true) {
+                            // Verificar o status do Boleto
+                            const status = await verificarStatusBoleto(idBoleto);
+                            console.log('Status do Boleto:', status);
+
+                            // Verifica se o tempo limite foi atingido
+                            if (Date.now() - horarioInicial > limiteTempo) {
+                                console.log('Tempo limite atingido. Criando o pedido mesmo sem o pagamento confirmado.');
+                                const metodPag = "BOLETO";
+                                const detalhesPagamento = {
+                                    userId: userId,
+                                    valor: valorSelecionado,
+                                    metodoPagamento: metodPag,
+                                    status: "ESPERANDO PAGAMENTO",
+                                    idTransacao: idBoleto,
+                                };
+
+                                try {
+                                    // Registre o pagamento
+                                    const response = await fetch('/registrarPagamento', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(detalhesPagamento)
+                                    });
+                                    
+                                    if (!response.ok) {
+                                        throw new Error('Erro ao registrar o pagamento');
+                                    }
+                                    
+                                    console.log('Pagamento registrado com sucesso!');
+                                    boletoPayContainer.style.display = 'none'
+                                } catch (error) {
+                                    console.error('Erro ao registrar o pagamento:', error);
+                                }
+                                break;
+                            }
+
+                            // Aguardar o intervalo de polling antes de fazer a próxima verificação
+                            await new Promise(resolve => setTimeout(resolve, pollingInterval));
+                        }
+                    } catch (error) {
+                        console.error('Erro ao monitorar o status do Boleto:', error);
+                    }
+                }
+        
+            btnBol.addEventListener('click', async () => {
+                const valor = valorSelecionado;
+                const metodPag = "Boleto";
+                const descricao = "DEPÓSITO CARTEIRA"
+
+                if (!userId) {
+                    console.log('Usuário não autenticado');
+                    // Lidar com o caso de usuário não autenticado, redirecionar, exibir mensagem, etc.
+                    return;
+                }
+                
+                const perfilResponse = await fetch('/perfil/dados', {
+                    headers: {
+                        'Cookie': `userId=${userId}`
+                    }
+                });
+            
+                if (!perfilResponse.ok) {
+                    console.error('Erro ao obter dados do perfil:', perfilResponse.statusText);
+                    // Lidar com o erro ao obter dados do perfil
+                    return;
+                }
+                
+                const perfilData = await perfilResponse.json();
+                
+                // Extrair dados do perfil
+                const { userCad ,cpfCad, emailCad, telefoneCad } = perfilData;
+                
+                const nomeCliente = userCad;
+                const numeroDocumento = cpfCad;
+                const telefoneCliente = telefoneCad;
+                const emailCliente = emailCad
+                console.log(nomeCliente, numeroDocumento)
+            
+            
+                const response = await fetch('/gerarBoleto', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ valor, descricao, nomeCliente, numeroDocumento })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao gerar o boleto');
+                }
+                
+                const { boletoURL, boletoExpirationDate, boletoCod, idBoleto } = await response.json();
+                console.log(boletoCod)
+                const boletoPayContainer = document.getElementById('boletoPayContainer');
+
+
+                boletoPayContainer.style.display = 'block';
+                pagRec.style.display = 'none'
+                boletoPayContainer.innerHTML = `
+                <h2 id="h2BolCont">Pagamento Boleto</h2>
+                <p class="pAcessBol">Acessar Boleto</p>
+                <a href="${boletoURL}" target="_blank" id="lnkBol">${boletoURL}</a>
+                <button id="btnCopCodBol">Copiar Código</button>
+                `;
+
+                const btnCopCodBol = document.getElementById('btnCopCodBol');
+
+                btnCopCodBol.addEventListener('click', async() => {
+                    // Copiar o payload PIX para a área de transferência
+                    await navigator.clipboard.writeText(boletoCod);
+                    alert('Código do Boleto copiado com sucesso!');
+                })
+                console.log('ID DO BOLETO', idBoleto)
+                monitorarStatusBoleto(idBoleto);
+            })
 
         // Solicitação AJAX para buscar e exibir o saldo do usuário na página HTML
         async function exibirSaldoUsuario() {
