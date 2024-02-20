@@ -2246,7 +2246,7 @@ app.post('/enviar-email', (req, res) => {
     from: 'gabrieldiastrin63@gmail.com',
     to: emailEsq,
     subject: 'Assunto do E-mail',
-    html: '<img class="logo-imprimeai" src="https://d1muf25xaso8hp.cloudfront.net/https%3A%2F%2F9b0187d5429aadeb33d266a8f3913fff.cdn.bubble.io%2Ff1630964515068x903204082016482200%2Flogo1.2.png?w=256&h=60&auto=compress&fit=crop&dpr=1" alt="..."><br><h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail para Redefinir sua Senha</p><br> <p>Clique neste link para redefini-lá</p><br><a href="http://localhost:8080/html/redefinicaosenha.html">Redefinir Senha</a>',
+    html: '<img class="logo-imprimeai" src="https://d1muf25xaso8hp.cloudfront.net/https%3A%2F%2F9b0187d5429aadeb33d266a8f3913fff.cdn.bubble.io%2Ff1630964515068x903204082016482200%2Flogo1.2.png?w=256&h=60&auto=compress&fit=crop&dpr=1" alt="..."><br><h1>Olá, Usuário</h1> <p>Você acabou de receber um e-mail para Redefinir sua Senha</p><br> <p>Clique neste link para redefini-lá</p><br><a href="http://localhost:8081/html/redefinicaosenha.html">Redefinir Senha</a>',
     text: "Olá Usuário, Você acabou de receber um e-mail para Redefinir sua Senha"
   };
 
@@ -2895,6 +2895,77 @@ app.post('/descontarSaldo', async (req, res) => {
     res.status(500).send('Erro ao descontar saldo da carteira');
   }
 });
+
+async function pagarCartaoCreditoPagarme(valor, nomeCliente, numeroCartao, cvv, dataExpiracao, enderecoCobranca, enderecoEntrega, taxaEnvio) {
+  try {
+    const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+
+    const transaction = await client.transactions.create({
+      amount: valor * 100, // O valor deve ser fornecido em centavos
+      payment_method: 'credit_card',
+      card_number: numeroCartao,
+      card_cvv: cvv,
+      card_expiration_date: dataExpiracao,
+      card_holder_name: nomeCliente,
+      customer: {
+        name: nomeCliente,
+      },
+      billing: {
+        name: nomeCliente,
+        address: enderecoCobranca,
+      },
+      shipping: {
+        name: nomeCliente,
+        fee: taxaEnvio, // O valor da taxa de envio deve ser fornecido em centavos
+        delivery_date: '2024-02-15', // Data de entrega estimada
+        expedited: false, // Indica se é uma entrega expressa ou não
+        address: enderecoEntrega,
+      },
+    });
+
+    console.log('Transação realizada com sucesso:', transaction);
+    return transaction;
+
+  } catch (error) {
+    console.error('Erro ao realizar transação:', error);
+    throw error;
+  }
+}
+
+// Exemplo de chamada da função pagarCartaoCreditoPagarme
+const valor = 1000; // Exemplo de valor em centavos (R$ 10,00)
+const nomeCliente = "João da Silva";
+const numeroCartao = "1111222233334444";
+const cvv = "123";
+const dataExpiracao = "1024";
+const enderecoCobranca = {
+  street: "Rua Conselheiro Justino",
+  neighborhood: "Campestre",
+  city: "Santo André",
+  state: "São Paulo",
+  zipcode: "09070-580",
+  country: "Brasil",
+};
+const enderecoEntrega = {
+  street: "Rua Conselheiro Justino",
+  neighborhood: "Campestre",
+  city: "Santo André",
+  state: "São Paulo",
+  zipcode: "09070-580",
+  country: "Brasil",
+};
+const taxaEnvio = 0; // Taxa de envio em centavos
+
+pagarCartaoCreditoPagarme(valor, nomeCliente, numeroCartao, cvv, dataExpiracao, enderecoCobranca, enderecoEntrega, taxaEnvio)
+  .then(transaction => {
+    // Lida com o sucesso da transação
+    console.log('Transação realizada com sucesso:', transaction);
+  })
+  .catch(error => {
+    // Lida com o erro da transação
+    console.error('Erro ao realizar transação:', error);
+  });
+
 
 httpServer.listen(8081, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8081`);
