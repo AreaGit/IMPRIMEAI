@@ -591,6 +591,7 @@ app.get('/pedidos-cadastrados', async (req, res) => {
     const pedidosCadastrados = await ItensPedido.findAll({
       where: {
         statusPed: 'Aguardando',
+        statusPag: 'Pago'
       },
     });
 
@@ -1894,7 +1895,7 @@ app.post('/criar-pedidos', async (req, res) => {
         nomePed: 'Pedido Geral',
         quantPed: carrinhoQuebrado.length,
         valorPed: totalAPagar,
-        statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
+        statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
         metodPag: metodPag,
         idTransacao: idTransacao
         // ... outros campos relevantes ...
@@ -1902,7 +1903,7 @@ app.post('/criar-pedidos', async (req, res) => {
 
       const itensPedidoPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
         const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
-        return ItensPedido.create({
+        const itemPedido = await ItensPedido.create({
           idPed: pedido.id,
           idProduto: produtoQuebrado.produtoId,
           nomeProd: produto.nomeProd,
@@ -1918,9 +1919,12 @@ app.post('/criar-pedidos', async (req, res) => {
           statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
             ? 'Pedido em Aberto'
             : 'Aguardando',
+          statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Aguardando',
           linkDownload: produtoQuebrado.downloadLink,
           // ... outros campos relevantes ...
         });
+        await verificarGraficaMaisProximaEAtualizar(itemPedido);
+        return itemPedido;
       });
 
       const itensPedido = await Promise.all(itensPedidoPromises);
@@ -1948,9 +1952,6 @@ app.post('/criar-pedidos', async (req, res) => {
 
       const enderecos = await Promise.all(enderecosPromises);
 
-      // Verifica as gráficas mais próximas para cada item do pedido
-      await Promise.all(itensPedido.map(verificarGraficaMaisProximaEAtualizar));
-
       req.session.carrinho = [];
       req.session.endereco = {};
 
@@ -1967,7 +1968,7 @@ app.post('/criar-pedidos', async (req, res) => {
         nomePed: 'Pedido Geral',
         quantPed: 1,
         valorPed: totalAPagar,
-        statusPed: metodPag === 'Boleto' || carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois") ? 'Esperando Pagamento' : 'Aguardando',
+        statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
         metodPag: metodPag,
         idTransacao: idTransacao,
         //raio: produto.raioProd,
@@ -2003,7 +2004,7 @@ app.post('/criar-pedidos', async (req, res) => {
         const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
         const endereco = enderecosQuebrados[index];
 
-        return ItensPedido.create({
+        const itemPedido = await ItensPedido.create({
           idPed: pedido.id,
           idProduto: produtoNoCarrinho.produtoId,
           nomeProd: produto.nomeProd,
@@ -2019,12 +2020,14 @@ app.post('/criar-pedidos', async (req, res) => {
           statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
             ? 'Pedido em Aberto'
             : 'Aguardando',
+          statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
           linkDownload: produtoNoCarrinho.downloadLink,
           enderecoId: endereco.id,
         });
-      });
 
-      await Promise.all(itensPedidoPromises.map(verificarGraficaMaisProximaEAtualizar));
+        await verificarGraficaMaisProximaEAtualizar(itemPedido);
+        return itemPedido;
+      });
 
       req.session.carrinho.forEach((produto, index) => {
         produto.endereco = enderecosQuebrados[index];
@@ -2735,6 +2738,8 @@ async function verificarPagamentosPendentes() {
                   // Atualizar o status do pedido para 'Pago'
                   pedido.statusPed = 'Pago';
                   await pedido.save();
+
+                  await ItensPedido.update({ statusPag: 'Pago' }, { where: { idPed: pedido.id } });
               }
           } catch (error) {
               // Verificar se o erro é de transação não encontrada

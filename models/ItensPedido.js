@@ -58,6 +58,9 @@ const ItensPedidos = db.define('itenspedidos', {
         type: Sequelize.STRING(255),
         allowNull: true,
     },
+    statusPag: {
+        type: Sequelize.STRING(255),
+    },
     graficaAtend: {
         type: Sequelize.STRING(255),
     },
