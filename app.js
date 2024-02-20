@@ -2898,7 +2898,7 @@ app.post('/descontarSaldo', async (req, res) => {
 
 async function pagarCartaoCreditoPagarme(valor, nomeCliente, numeroCartao, cvv, dataExpiracao, enderecoCobranca, enderecoEntrega, taxaEnvio) {
   try {
-    const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+    const client = await pagarme.client.connect({ api_key: 'sk_ef4bfbf5c1e64036aa21b6506140c474' });
 
     const transaction = await client.transactions.create({
       amount: valor * 100, // O valor deve ser fornecido em centavos
