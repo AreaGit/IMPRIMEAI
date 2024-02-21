@@ -41,6 +41,7 @@ const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
 const pagarme = require('pagarme')
 const qr = require('qrcode');
 const cron = require('node-cron');
+const request = require('request');
 
 app.get('/set-cookie', (req, res) => {
   res.cookie('exampleCookie', 'exampleValue', {
@@ -316,6 +317,28 @@ app.get('/pedidos-enviados-grafica', async (req, res) => {
     const pedidosEnviados = await ItensPedido.findAll({
       where: {
         statusPed: 'Pedido Enviado pela Gráfica',
+        graficaatend: graficaId,
+      },
+    });
+
+    res.json({ success: true, pedidos: pedidosEnviados });
+  } catch (error) {
+    console.error('Erro ao obter pedidos enviados:', error);
+    res.status(500).json({ success: false, message: 'Erro ao obter pedidos enviados.' });
+  }
+});
+
+app.get('/pedidos-entregues-grafica', async (req, res) => {
+  try {
+    const graficaId = req.cookies.userId;
+
+    if (!graficaId) {
+      return res.status(401).json({ message: 'Usuário não autenticado' });
+    }
+
+    const pedidosEnviados = await ItensPedido.findAll({
+      where: {
+        statusPed: 'Pedido Entregue pela Gráfica',
         graficaatend: graficaId,
       },
     });
@@ -2210,6 +2233,13 @@ app.post('/atualizar-status-pedido', async (req, res) => {
     pedido.graficaAtend = graficaId; // Save the graphics company's ID
     await pedido.save();
 
+    if(novoStatus === "Pedido Entregue pela Gráfica") {
+      pedido.statusPed = novoStatus;
+      pedido.graficaAtend = graficaId; // Save the graphics company's ID
+      pedido.graficaFin = graficaId;
+      await pedido.save();
+    }
+
     // Atualize o status do pedido na tabela ItensPedidos
     /*const itensPedidos = await ItensPedido.update(
       { statusPed: novoStatus },
@@ -2896,76 +2926,64 @@ app.post('/descontarSaldo', async (req, res) => {
   }
 });
 
-async function pagarCartaoCreditoPagarme(valor, nomeCliente, numeroCartao, cvv, dataExpiracao, enderecoCobranca, enderecoEntrega, taxaEnvio) {
+app.get('/total-pedidos-grafica/:idGrafica', async (req, res) => {
   try {
-    const client = await pagarme.client.connect({ api_key: 'sk_ef4bfbf5c1e64036aa21b6506140c474' });
+      const idGrafica = req.params.idGrafica;
 
-    const transaction = await client.transactions.create({
-      amount: valor * 100, // O valor deve ser fornecido em centavos
-      payment_method: 'credit_card',
-      card_number: numeroCartao,
-      card_cvv: cvv,
-      card_expiration_date: dataExpiracao,
-      card_holder_name: nomeCliente,
-      customer: {
-        name: nomeCliente,
-      },
-      billing: {
-        name: nomeCliente,
-        address: enderecoCobranca,
-      },
-      shipping: {
-        name: nomeCliente,
-        fee: taxaEnvio, // O valor da taxa de envio deve ser fornecido em centavos
-        delivery_date: '2024-02-15', // Data de entrega estimada
-        expedited: false, // Indica se é uma entrega expressa ou não
-        address: enderecoEntrega,
-      },
-    });
+      // Consulta para somar o total de pedidos finalizados pela gráfica específica
+      const totalPedidos = await ItensPedidos.count({
+          where: {
+              graficaFin: idGrafica
+          }
+      });
 
-    console.log('Transação realizada com sucesso:', transaction);
-    return transaction;
-
+      res.json({ totalPedidos });
   } catch (error) {
-    console.error('Erro ao realizar transação:', error);
-    throw error;
+      console.error('Erro ao buscar total de pedidos por gráfica:', error);
+      res.status(500).json({ error: 'Erro ao buscar total de pedidos por gráfica' });
   }
+});
+
+
+async function conectarPagarme(apiKey) {
+  return new Promise((resolve, reject) => {
+      const options = {
+          method: 'GET',
+          uri: 'https://api.pagar.me/core/v5/orders',
+          headers: {
+              'Authorization': 'Basic ' + Buffer.from(apiKey + ':').toString('base64'),
+              'Content-Type': 'application/json'
+          }
+      };
+
+      request(options, function(error, response, body) {
+          if (error) {
+              reject(error);
+              return;
+          }
+
+          if (response.statusCode >= 200 && response.statusCode < 300) {
+              resolve(true); // Conexão bem-sucedida
+          } else {
+              resolve(false); // Conexão falhou
+          }
+      });
+  });
 }
 
-// Exemplo de chamada da função pagarCartaoCreditoPagarme
-const valor = 1000; // Exemplo de valor em centavos (R$ 10,00)
-const nomeCliente = "João da Silva";
-const numeroCartao = "1111222233334444";
-const cvv = "123";
-const dataExpiracao = "1024";
-const enderecoCobranca = {
-  street: "Rua Conselheiro Justino",
-  neighborhood: "Campestre",
-  city: "Santo André",
-  state: "São Paulo",
-  zipcode: "09070-580",
-  country: "Brasil",
-};
-const enderecoEntrega = {
-  street: "Rua Conselheiro Justino",
-  neighborhood: "Campestre",
-  city: "Santo André",
-  state: "São Paulo",
-  zipcode: "09070-580",
-  country: "Brasil",
-};
-const taxaEnvio = 0; // Taxa de envio em centavos
-
-pagarCartaoCreditoPagarme(valor, nomeCliente, numeroCartao, cvv, dataExpiracao, enderecoCobranca, enderecoEntrega, taxaEnvio)
-  .then(transaction => {
-    // Lida com o sucesso da transação
-    console.log('Transação realizada com sucesso:', transaction);
+// Exemplo de uso:
+const apiKey = 'sk_5956e31434bb4c618a346da1cf6c107b';
+conectarPagarme(apiKey)
+  .then(conexaoBemSucedida => {
+      if (conexaoBemSucedida) {
+          console.log('Conexão bem-sucedida com o Pagar.me');
+      } else {
+          console.log('Falha na conexão com o Pagar.me');
+      }
   })
   .catch(error => {
-    // Lida com o erro da transação
-    console.error('Erro ao realizar transação:', error);
+      console.error('Erro ao conectar ao Pagar.me:', error);
   });
-
 
 httpServer.listen(8081, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8081`);

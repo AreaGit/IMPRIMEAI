@@ -1,58 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Boleto Bancário</title>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/style.css" media="all">
+    <link rel="stylesheet" href="../styles/pag-prods.css">
+    <link rel="stylesheet" href="../styles/medias.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+    .logo-imprimeai {
+        position: relative;
+        top:80px;
+        left: 45%;
+    }
+    .elem1 > h1 {
+        position: relative;
+        top: 87px;
+        left: 42%;
+        width: fit-content;
+    }
+    p{
+        font-weight: normal;
+    }
+    #listaGraficas > div {
+        box-shadow: -1px -1px 8px black;
+        width: 40%;
+        border-radius: 5px;
+        margin: 15px;
+        position: relative;
+        left: 5%;
+        height: 150px;
+        padding: 10px;
+    }
+    #listaGraficas > div:hover {
+        transition: 1s;
+        box-shadow: 1px 1px 6px #ef412693;
+    }
+    #btnEditarGrafica {
+        border: none;
+        color: #EF4126;
+        background-color: transparent;
+        font-size: 16px;
+        font-weight: lighter;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
 <body>
-    <label for="valor">Valor:</label>
-    <input type="number" id="valor" name="valor" placeholder="Digite o valor">
-    <br>
-    <label for="descricao">Descrição:</label>
-    <input type="text" id="descricao" name="descricao" placeholder="Digite a descrição">
-    <br>
-    <label for="nomeCliente">Nome do Cliente:</label>
-    <input type="text" id="nomeCliente" name="nomeCliente" placeholder="Digite o nome do cliente">
-    <br>
-    <label for="numeroDocumento">Número do Documento:</label>
-    <input type="text" id="numeroDocumento" name="numeroDocumento" placeholder="Digite o número do documento">
-    <br>
-    <button id="gerarBoleto">Gerar Boleto</button>
-    <br>
-    <div id="boletoInfo"></div>
-
+    <header>
+        <div class="mini-banner">
+            <!-- IMAGEM <img src="image.jpg" alt="...">-->
+        </div>
+        <!--<p>Tá com pressa? <strong>ImprimeAí</strong></p>-->
+        <nav>
+          <ul class='menu2'>
+            <a href="cad-prods.html">Cadastrar Produtos</a>
+            <a href="lista-produtos.html">Editar Produtos</a>
+            <a href="cadastro-graficas.html">Cadastrar Gráficas</a>
+            <a href="lista-graficas.html">Editar Gráficas</a>
+        </ul>
+        </nav>
+        <div class="elem1">
+           <a href="painelAdm.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
+           <h1>Lista de Graficas</h1>
+        </div>
+    </header>
+    <main>
+        <div id="listaGraficas"></div>
+    </main>
     <script>
-        document.getElementById('gerarBoleto').addEventListener('click', async () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/listar-graficas');
+        const graficas = await response.json();
+
+        const listaGraficas = document.getElementById('listaGraficas');
+        
+        graficas.forEach(async grafica => {
             try {
-                const valor = document.getElementById('valor').value;
-                const descricao = document.getElementById('descricao').value;
-                const nomeCliente = document.getElementById('nomeCliente').value;
-                const numeroDocumento = document.getElementById('numeroDocumento').value;
+                // Obtém o total de pedidos finalizados para esta gráfica
+                const responsePedidos = await fetch(`/total-pedidos-grafica/${grafica.id}`);
+                const { totalPedidos } = await responsePedidos.json();
 
-                const response = await fetch('/gerarBoleto', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ valor, descricao, nomeCliente, numeroDocumento })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erro ao gerar o boleto');
-                }
-                
-                const { boletoURL, boletoExpirationDate } = await response.json();
-                document.getElementById('boletoInfo').innerHTML = `
-                    <p>Boleto gerado com sucesso!</p>
-                    <p><strong>URL do Boleto:</strong> <a href="${boletoURL}" target="_blank">${boletoURL}</a></p>
-                    <p><strong>Data de Expiração:</strong> ${boletoExpirationDate}</p>
+                // Cria um elemento div para exibir as informações da gráfica e o total de pedidos finalizados
+                const graficaDiv = document.createElement('div');
+                graficaDiv.innerHTML = `
+                    <h2>${grafica.userCad}</h2>
+                    <p>Endereço: ${grafica.enderecoCad}, ${grafica.cepCad}, ${grafica.cidadeCad}, ${grafica.estadoCad}</p>
+                    <p>Telefone: ${grafica.telefoneCad}</p>
+                    <p>Email: ${grafica.emailCad}</p>
+                    <p>Total de Pedidos Finalizados: ${totalPedidos}</p>
+                    <a id="btnEditarGrafica" href="editar-graficas.html?id=${grafica.id}">Editar Informações</a>
                 `;
+                listaGraficas.appendChild(graficaDiv);
             } catch (error) {
-                console.error('Erro ao gerar o boleto:', error);
-                alert('Erro ao gerar o boleto. Por favor, tente novamente mais tarde.');
+                console.error('Erro ao carregar total de pedidos:', error);
             }
         });
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+    }
+});
     </script>
 </body>
 </html>
