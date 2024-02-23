@@ -797,6 +797,210 @@
                     pagRec.style.display = 'none';
                 },3000);
             });
+            btnEnvCardCredit.addEventListener('click', async function(event) {
+                event.preventDefault(); // Evita o envio do formulário
+                const totalAPagar = valorSelecionado;
+                const numCar = document.getElementById('numCard').value;
+                const nomeTitular = document.getElementById('nomeTitular').value;
+                const mesExp = document.getElementById('mesExp').value;
+                const anoExp = document.getElementById('anoExp').value;
+                const cvvCard = document.getElementById('cvvCard').value;
+
+                // Crie um objeto para armazenar os dados do formulário
+                const formData = {
+                    numCar: numCar,
+                    nomeTitular: nomeTitular,
+                    mesExp: mesExp,
+                    anoExp: anoExp,
+                    cvvCard: cvvCard
+                };
+
+                // Fetch para obter os dados do perfil do usuário
+                try {
+                    const response = await fetch('/perfil/dados');
+                    if (!response.ok) {
+                        throw new Error('Erro ao obter dados do perfil');
+                    }
+                    const perfilData = await response.json();
+                    // Função para formatar o número de telefone
+                    function formatarTelefone(numero) {
+                        // Remove todos os caracteres não numéricos
+                        const numeroLimpo = numero.replace(/\D/g, '');
+
+                        // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+                        const ddd = numeroLimpo.substring(0, 2);
+                        const numeroTelefone = numeroLimpo.substring(2);
+
+                        // Retorna um objeto com as partes do número formatado
+                        return {
+                            ddd: ddd,
+                            numeroTelefone: numeroTelefone
+                        };
+                    }
+                    function getUF(estadoCompleto) {
+                    const estados = {
+                        'Acre': 'AC',
+                        'Alagoas': 'AL',
+                        'Amapá': 'AP',
+                        'Amazonas': 'AM',
+                        'Bahia': 'BA',
+                        'Ceará': 'CE',
+                        'Distrito Federal': 'DF',
+                        'Espírito Santo': 'ES',
+                        'Goiás': 'GO',
+                        'Maranhão': 'MA',
+                        'Mato Grosso': 'MT',
+                        'Mato Grosso do Sul': 'MS',
+                        'Minas Gerais': 'MG',
+                        'Pará': 'PA',
+                        'Paraíba': 'PB',
+                        'Paraná': 'PR',
+                        'Pernambuco': 'PE',
+                        'Piauí': 'PI',
+                        'Rio de Janeiro': 'RJ',
+                        'Rio Grande do Norte': 'RN',
+                        'Rio Grande do Sul': 'RS',
+                        'Rondônia': 'RO',
+                        'Roraima': 'RR',
+                        'Santa Catarina': 'SC',
+                        'São Paulo': 'SP',
+                        'Sergipe': 'SE',
+                        'Tocantins': 'TO'
+                    };
+
+                    return estados[estadoCompleto];
+                }
+                function formatarCPF(cpf) {
+                    // Remove todos os caracteres não numéricos
+                    return cpf.replace(/\D/g, '');
+                }
+                    const cpfCliente = formatarCPF(perfilData.cpfCad);
+
+                    const estadoCliente = getUF(perfilData.estadoCad);
+                    // Formate o número de telefone
+                    const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+
+                    // Agora você pode acessar as partes formatadas do número de telefone
+                    const codPaisCliente = "55";
+                    const dddCliente = telefoneFormatado.ddd;
+                    const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+
+                    const emailCliente = perfilData.emailCad;
+                    const cepCliente = perfilData.cepCad;
+                    const cidadeCliente = perfilData.cidadeCad;
+                    const ruaCliente = perfilData.endereçoCad;
+                    const numeroResidenciaCliente = perfilData.numCad;
+                    const bairroCliente = perfilData.bairroCad;
+                    const numeroDocumento = perfilData.cpfCad;
+                    const nomeCliente = perfilData.userCad;
+                    const paisCliente = "BR";
+                    const idCliente = perfilData.userId;
+
+                    // Crie um objeto para armazenar os dados do perfil do usuário
+                    const perfilUsuario = {
+                        emailCliente: emailCliente,
+                        cpfCliente: cpfCliente,
+                        cepCliente: cepCliente,
+                        cidadeCliente: cidadeCliente,
+                        estadoCliente: estadoCliente,
+                        ruaCliente: ruaCliente,
+                        numeroResidenciaCliente: numeroResidenciaCliente,
+                        bairroCliente: bairroCliente,
+                        numeroDocumento: numeroDocumento,
+                        nomeCliente: nomeCliente,
+                        paisCliente: paisCliente,
+                        codPaisCliente: codPaisCliente,
+                        dddCliente: dddCliente,
+                        numeroTelefoneCliente: numeroTelefoneCliente,
+                        userId: idCliente,
+                        totalCompra:  totalAPagar
+                    };
+
+                    // Envie os dados do formulário e do perfil do usuário para o backend
+                    const response2 = await fetch('/processarPagamento', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ formData: formData, perfilData: perfilUsuario })
+                    });
+
+                    if (!response2.ok) {
+                        throw new Error('Erro ao processar pagamento');
+                    }
+
+                // Extrair o idTransacao da resposta
+                const responseData = await response2.json();
+                const idTransacao = responseData.idTransacao;
+                console.log('Id da transação:', idTransacao);
+                verificarStatusTransacao(idTransacao);
+                } catch (error) {
+                    console.error('Erro durante o processo:', error);
+                }
+            });
+            // Função para verificar o status da transação a cada 5 segundos
+            function verificarStatusTransacao(idTransacao) {
+                // Define uma função anônima que faz uma solicitação GET ao servidor para verificar o status da transação
+                const verificar = async () => {
+                    try {
+                        // Faz uma solicitação GET ao servidor para verificar o status da transação
+                        const response = await fetch(`/verificarStatusTransacao?chargeId=${idTransacao}`);
+                        if (!response.ok) {
+                            throw new Error('Erro ao verificar status da transação');
+                        }
+                        const data = await response.json();
+                        console.log('Status da transação:', data.status);
+                        // Se o status ainda estiver pendente, chama novamente a função após 5 segundos
+                        if (data.status === 'waiting_capture') {
+                            setTimeout(verificar, 5000);
+                        }else if(data.status === 'captured') {
+                            const detalhesPagamento = {
+                                    userId: userId,
+                                    valor: valorSelecionado,
+                                    metodoPagamento: "Cartão de Crédito",
+                                    status: "PAGO",
+                                    idTransacao: idTransacao,
+                                };
+
+                                try {
+                                    // Registre o pagamento
+                                    const response = await fetch('/registrarPagamento', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(detalhesPagamento)
+                                    });
+                                    
+                                    if (!response.ok) {
+                                        throw new Error('Erro ao registrar o pagamento');
+                                    }
+                                    
+                                    console.log('Pagamento registrado com sucesso!');
+                                }catch {
+                                    console.error('Erro ao registrar o pagamento:', error);
+                                }   
+                        }else if(data.status === "not_authorized") {
+                        alert("Cartão não foi Autorizado!")
+                        }else if (data.status === "refunded") {
+                        alert("O valor da transação foi Estornado!")
+                        }else if(data.status === "voided") {
+                        alert("A transação foi Cancelada")
+                        }else if(data.status === "waiting_cancellation") {
+                        alert("Aguardando o Cancelamento!")
+                        }else if(data.status === "with_error") {
+                        alert("Transação com Erro!")
+                        }else if(data.status === "failed") {
+                        alert("Falha na Transação!")
+                        }
+                    } catch (error) {
+                        console.error('Erro ao verificar status da transação:', error);
+                    }
+                };
+
+                // Inicia a verificação do status da transação
+                verificar();
+            }
         // Solicitação AJAX para buscar e exibir o saldo do usuário na página HTML
         async function exibirSaldoUsuario() {
             try {
