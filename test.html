@@ -1,111 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/style.css" media="all">
-    <link rel="stylesheet" href="../styles/pag-prods.css">
-    <link rel="stylesheet" href="../styles/medias.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<style>
-    .logo-imprimeai {
-        position: relative;
-        top:80px;
-        left: 45%;
-    }
-    .elem1 > h1 {
-        position: relative;
-        top: 87px;
-        left: 42%;
-        width: fit-content;
-    }
-    p{
-        font-weight: normal;
-    }
-    #listaGraficas > div {
-        box-shadow: -1px -1px 8px black;
-        width: 40%;
-        border-radius: 5px;
-        margin: 15px;
-        position: relative;
-        left: 5%;
-        height: 150px;
-        padding: 10px;
-    }
-    #listaGraficas > div:hover {
-        transition: 1s;
-        box-shadow: 1px 1px 6px #ef412693;
-    }
-    #btnEditarGrafica {
-        border: none;
-        color: #EF4126;
-        background-color: transparent;
-        font-size: 16px;
-        font-weight: lighter;
-        text-decoration: underline;
-        cursor: pointer;
-    }
-</style>
 <body>
-    <header>
-        <div class="mini-banner">
-            <!-- IMAGEM <img src="image.jpg" alt="...">-->
-        </div>
-        <!--<p>Tá com pressa? <strong>ImprimeAí</strong></p>-->
-        <nav>
-          <ul class='menu2'>
-            <a href="cad-prods.html">Cadastrar Produtos</a>
-            <a href="lista-produtos.html">Editar Produtos</a>
-            <a href="cadastro-graficas.html">Cadastrar Gráficas</a>
-            <a href="lista-graficas.html">Editar Gráficas</a>
-        </ul>
-        </nav>
-        <div class="elem1">
-           <a href="painelAdm.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.png" alt=""></a>
-           <h1>Lista de Graficas</h1>
-        </div>
-    </header>
-    <main>
-        <div id="listaGraficas"></div>
-    </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const response = await fetch('/listar-graficas');
-        const graficas = await response.json();
+  <h1>Formulário de Pagamento</h1>
+  <form id="payment-form">
+    <label for="card-holder-name">Nome do Titular do Cartão:</label>
+    <input type="text" id="card-holder-name" required><br><br>
+    
+    <label for="card-number">Número do Cartão:</label>
+    <input type="text" id="card-number" required><br><br>
+    
+    <label for="card-expiry">Data de Expiração (MM/AAAA):</label>
+    <input type="text" id="card-expiry" required><br><br>
+    
+    <label for="card-cvv">CVV:</label>
+    <input type="text" id="card-cvv" required><br><br>
+    
+    <button type="submit">Pagar</button>
+  </form>
 
-        const listaGraficas = document.getElementById('listaGraficas');
-        
-        graficas.forEach(async grafica => {
-            try {
-                // Obtém o total de pedidos finalizados para esta gráfica
-                const responsePedidos = await fetch(`/total-pedidos-grafica/${grafica.id}`);
-                const { totalPedidos } = await responsePedidos.json();
+  <div id="payment-message"></div>
 
-                // Cria um elemento div para exibir as informações da gráfica e o total de pedidos finalizados
-                const graficaDiv = document.createElement('div');
-                graficaDiv.innerHTML = `
-                    <h2>${grafica.userCad}</h2>
-                    <p>Endereço: ${grafica.enderecoCad}, ${grafica.cepCad}, ${grafica.cidadeCad}, ${grafica.estadoCad}</p>
-                    <p>Telefone: ${grafica.telefoneCad}</p>
-                    <p>Email: ${grafica.emailCad}</p>
-                    <p>Total de Pedidos Finalizados: ${totalPedidos}</p>
-                    <a id="btnEditarGrafica" href="editar-graficas.html?id=${grafica.id}">Editar Informações</a>
-                `;
-                listaGraficas.appendChild(graficaDiv);
-            } catch (error) {
-                console.error('Erro ao carregar total de pedidos:', error);
-            }
+  <script>
+        document.getElementById('payment-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const cardHolderName = document.getElementById('card-holder-name').value;
+      const cardNumber = document.getElementById('card-number').value;
+      const cardExpiry = document.getElementById('card-expiry').value;
+      const cardCVV = document.getElementById('card-cvv').value;
+
+      try {
+        const response = await axios.post('/pagar', {
+          amount: 1000, // Valor em centavos
+          card_number: cardNumber,
+          card_holder_name: cardHolderName,
+          card_expiration_date: cardExpiry,
+          card_cvv: cardCVV,
+          installments: 1, // Número de parcelas
+          payment_method: 'credit_card',
+          capture: true,
         });
-    } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-    }
-});
-    </script>
+
+        document.getElementById('payment-message').innerText = 'Pagamento realizado com sucesso! ID da Transação: ' + response.data.id;
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+          document.getElementById('payment-message').innerText = 'Erro ao processar o pagamento: ' + error.response.data.error.message;
+        } else {
+          document.getElementById('payment-message').innerText = 'Erro ao processar o pagamento. Por favor, tente novamente mais tarde.';
+        }
+      }
+    });
+  </script>
 </body>
 </html>

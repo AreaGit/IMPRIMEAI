@@ -9,9 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cloudcommerce/app-pagarme": "^2.5.1",
     "@googleapis/docs": "^3.0.0",
     "@googlemaps/google-maps-services-js": "^3.3.37",
     "@microsoft/microsoft-graph-client": "^3.0.7",
+    "api": "^6.1.1",
     "axios": "^1.5.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",

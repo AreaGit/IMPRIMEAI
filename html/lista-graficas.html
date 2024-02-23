@@ -83,8 +83,9 @@
                 
                 graficas.forEach(async grafica => {
                     try {
-                        // Obtém o total de pedidos finalizados para esta gráfica
-                        const responsePedidos = await fetch(`/total-pedidos-grafica/${grafica.id}`);
+                        const anoAtual = new Date().getFullYear();
+                        const mesAtual = new Date().getMonth() + 1;
+                        const responsePedidos = await fetch(`/total-pedidos-grafica/${grafica.id}/${anoAtual}/${mesAtual}`);
                         const { totalPedidos } = await responsePedidos.json();
 
                         // Cria um elemento div para exibir as informações da gráfica e o total de pedidos finalizados
@@ -94,7 +95,7 @@
                             <p>Endereço: ${grafica.enderecoCad}, ${grafica.cepCad}, ${grafica.cidadeCad}, ${grafica.estadoCad}</p>
                             <p>Telefone: ${grafica.telefoneCad}</p>
                             <p>Email: ${grafica.emailCad}</p>
-                            <p>Total de Pedidos Finalizados: ${totalPedidos}</p>
+                            <p>Total de Pedidos Finalizados em <strong>${mesAtual}/${anoAtual}:</strong> ${totalPedidos}</p>
                             <a id="btnEditarGrafica" href="editar-graficas.html?id=${grafica.id}">Editar Informações</a>
                         `;
                         listaGraficas.appendChild(graficaDiv);

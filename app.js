@@ -2347,6 +2347,7 @@ app.get("/perfil/dados", async (req, res) => {
       bairroCad: user.bairroCad,
       cpfCad: user.cpfCad,
       userCad: user.userCad,
+      userId: userId,
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
@@ -2926,14 +2927,21 @@ app.post('/descontarSaldo', async (req, res) => {
   }
 });
 
-app.get('/total-pedidos-grafica/:idGrafica', async (req, res) => {
+app.get('/total-pedidos-grafica/:idGrafica/:ano/:mes', async (req, res) => {
   try {
       const idGrafica = req.params.idGrafica;
+      const ano = req.params.ano;
+      const mes = req.params.mes;
 
-      // Consulta para somar o total de pedidos finalizados pela gráfica específica
+      // Obter o primeiro dia e o último dia do mês
+      const primeiroDia = new Date(ano, mes - 1, 1);
+      const ultimoDia = new Date(ano, mes, 0);
+
+      // Consulta para somar o total de pedidos finalizados pela gráfica específica no mês especificado
       const totalPedidos = await ItensPedidos.count({
           where: {
-              graficaFin: idGrafica
+              graficaFin: idGrafica,
+              createdAt: { [Sequelize.Op.between]: [primeiroDia, ultimoDia] }
           }
       });
 
@@ -2943,7 +2951,6 @@ app.get('/total-pedidos-grafica/:idGrafica', async (req, res) => {
       res.status(500).json({ error: 'Erro ao buscar total de pedidos por gráfica' });
   }
 });
-
 
 async function conectarPagarme(apiKey) {
   return new Promise((resolve, reject) => {
@@ -2984,6 +2991,141 @@ conectarPagarme(apiKey)
   .catch(error => {
       console.error('Erro ao conectar ao Pagar.me:', error);
   });
+
+  app.post('/processarPagamento', (req, res) => {
+    // Obtenha os dados do formulário e do perfil do usuário do corpo da requisição
+    const formData = req.body.formData;
+    const perfilData = req.body.perfilData;
+    const carrinho = req.session.carrinho;
+
+        // Monte o body com os dados do usuário e do carrinho
+        const body = {
+          "items": carrinho.map(item => ({
+              "id": item.produtoId,
+              "amount": item.subtotal,
+              "description": item.nomeProd,
+              "quantity": item.quantidade,
+              "code": item.produtoId
+          })),
+          "customer": {
+              "name": perfilData.nomeCliente,
+              "email": perfilData.emailCliente,
+              "code": perfilData.userId,
+              "type": "individual",
+              "document": perfilData.cpfCliente,
+              "document_type": "CPF",
+              "gender": "male",
+              "address": {
+                  "street": perfilData.ruaCliente,
+                  "city": perfilData.cidadeCliente,
+                  "state": perfilData.estadoCliente,
+                  "country": "BR",
+                  "zip_code": perfilData.cepCliente,
+                  "neighborhood": perfilData.bairroCliente
+              },
+              "phones": {
+                  "home_phone": {
+                      "country_code": "55",
+                      "number": perfilData.numeroTelefoneCliente,
+                      "area_code": perfilData.dddCliente,
+                  },
+                  "mobile_phone": {
+                    "country_code": "55",
+                    "number": perfilData.numeroTelefoneCliente,
+                    "area_code": perfilData.dddCliente,
+                  }
+              },
+              "metadata": {} // Metadados do cliente
+          },
+          "payments": [
+              {
+                  "payment_method": "credit_card",
+                  "credit_card": {
+                      "recurrence": false,
+                      "installments": 1,
+                      "statement_descriptor": "Pedido IMPRIMEAI",
+                      "card": {
+                          "number": formData.numCar,
+                          "holder_name": formData.nomeTitular,
+                          "exp_month": formData.mesExp,
+                          "exp_year": formData.anoExp,
+                          "cvv": formData.cvvCard,
+                          "billing_address": {
+                              "line_1": perfilData.ruaCliente,
+                              "zip_code": perfilData.cepCliente,
+                              "city": perfilData.cidadeCliente,
+                              "state": perfilData.estadoCliente,
+                              "country": "BR"
+                          }
+                      }
+                  }
+              }
+          ]
+      };
+  
+
+      console.log("BODY PARA A TRANSAÇÃO", body);
+
+      // Configuração das opções para a requisição
+      const options = {
+        method: 'POST',
+        uri: 'https://api.pagar.me/core/v5/orders',
+        headers: {
+            'Authorization': 'Basic ' + Buffer.from("sk_5956e31434bb4c618a346da1cf6c107b:").toString('base64'),
+            'Content-Type': 'application/json'
+        },
+        json: body // Corpo da requisição em formato JSON
+      };
+
+      // Fazendo a requisição usando a biblioteca 'request'
+      request(options, function(error, response, responseBody) {
+        if (error) {
+            console.error('Erro ao fazer a requisição:', error);
+            return;
+        }
+        console.log("ID DA TRANSAÇÃO", responseBody.id);
+        const idTransacao = responseBody.charges.map(charge => charge.id);
+        // Verificando se a requisição foi bem-sucedida (código de status 2xx)
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+            console.log('Resposta da API:', responseBody, idTransacao);
+            // Envie o ID da transação de volta para o cliente
+            res.status(200).send({ idTransacao: idTransacao });
+        } else {
+            console.error('Erro na resposta da API:', responseBody);
+            // Em caso de erro, envie uma mensagem de erro para o cliente
+            res.status(500).send('Erro ao processar o pagamento');
+        }
+      });
+  });
+
+  // Defina a rota para verificar o status da transação do cartão de crédito no Pagarme
+app.get('/verificarStatusTransacao', async (req, res) => {
+  try {
+      const chargeId = req.query.chargeId; // Obtenha o ID da transação do cliente
+      const apiKey = 'sk_5956e31434bb4c618a346da1cf6c107b'; // Substitua pelo sua chave de API do Pagarme
+      
+      // Faça uma solicitação GET para a API do Pagarme para obter o status da transação
+      const response = await axios.get(`https://api.pagar.me/core/v5/charges/${chargeId}`, {
+          headers: {
+              'Authorization': `Basic ${Buffer.from(apiKey + ':').toString('base64')}`
+          }
+      });
+
+      // Verifique se a solicitação foi bem-sucedida
+      if (response.status === 200) {
+          const statusTransacao = response.data.status; // Obtenha o status da transação da resposta
+          res.json({ status: statusTransacao }); // Envie o status da transação de volta para o cliente
+      } else {
+          // Se a solicitação não foi bem-sucedida, envie uma mensagem de erro para o cliente
+          res.status(500).send('Erro ao verificar o status da transação');
+      }
+  } catch (error) {
+      // Em caso de erro, envie uma mensagem de erro para o cliente
+      console.error('Erro ao verificar o status da transação:', error);
+      res.status(500).send('Erro ao verificar o status da transação');
+  }
+});
+
 
 httpServer.listen(8081, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8081`);

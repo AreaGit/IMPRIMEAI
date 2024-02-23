@@ -98,6 +98,54 @@ a#lnkBol {
     font-weight: bold;
     color: #F37160;
 }
+#cartaoDeCreditoContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 24%;
+    left: 54%;
+    transform: translate(-50%);
+    height: 756px;
+    border-radius: 5px;
+    background-color: white;
+}
+h2#h2CreditCont {
+    position: relative;
+    top: 30px;
+    left: 6%;
+    font-size: 32px;
+}
+p#pCreditCont {
+    position: relative;
+    left: 7%;
+    top: 28px;
+}
+form#formCardCredit {
+    position: relative;
+    top: 85px;
+    left: 10%;
+    width: 25%;
+    height: 427px;
+}
+form#formCardCredit > p {
+  margin-bottom: 10px;
+}
+form#formCardCredit > p > input {
+    padding: 10px 28px 10px 28px;
+    font-size: 20px;
+}
+#btnEnvCardCredit {
+    padding: 18px 28px 18px 28px;
+    border: 1px solid #EF4126;
+    color: #F37160;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    top: 20px;
+    left: 85%;
+}
   main > h1 {
     font-size: 30px;
     font-weight: normal;
@@ -725,9 +773,46 @@ main > h1 {
   <div id="qrCodeContainer"></div>
   <div id="pixPayloadContainer"></div>
   <div id="boletoPayContainer"></div>
+  <div id="cartaoDeCreditoContainer">
+    <h2 id="h2CreditCont">Cartão de Crédito</h2>
+    <p id="pCreditCont">Preencha os campos Abaixo</p>
+    <form id="formCardCredit">
+        <p>
+
+          <label for="numCard">Número do Cartão</label>
+          <input type="text" name="numCar" id="numCard" placeholder="XXXX XXXX XXXX XXXX" maxlength="16" required>
+          
+        </p>
+        <p>
+
+
+          <label for="nomeTitular">Nome do Titular</label>
+          <input type="text" name="nomeTitular" id="nomeTitular" placeholder="Digite o nome do Titular..." required>
+
+        </p>
+        <p>
+
+
+          <label for="mesExp">Mês de Expiração</label>
+          <input type="number" name="mesExp" id="mesExp" min="1" max="12" minlength="1" maxlength="2" required>
+          <label for="anoExp">Ano de Expiração</label>
+          <input type="number" name="anoExp" id="anoExp" min="0" max="99" minlength="1" maxlength="2" required>
+
+        </p>
+        <p>
+
+
+          <label for="cvvCard">CVV</label>
+          <input type="text" name="cvvCard" id="cvvCard" placeholder="Digite o CVV..." minlength="3" maxlength="4" required>
+
+        </p>
+        <button id="btnEnvCardCredit" type="submit">Continuar</button>
+    </form>
+  </div>
 </main>
 <script>
   const qrCodeContainer = document.getElementById('qrCodeContainer');
+  const btnEnvCardCredit = document.getElementById('btnEnvCardCredit');
   async function carregarPerfil() {
     try {
         // Obtém o userId do cookie
@@ -1198,58 +1283,242 @@ while (true) {
   monitorarStatusBoleto(idBoleto);
 });
 
+const cartaoDeCreditoContainer = document.getElementById('cartaoDeCreditoContainer');
 document.getElementById('finalizarCompraBtn3').addEventListener('click', function () {
-  // Obtenha o total de itens e o total a pagar do resumo da compra
-  const totalItens = document.getElementById('totalItensCarrinho').textContent;
-  const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
-  const metodPag = 'Cartão de Crédito';
+  setTimeout(() => {
+    cartaoDeCreditoContainer.style.display = 'block'
+  }, 3000);
+})
+btnEnvCardCredit.addEventListener('click', async function(event) {
+    event.preventDefault(); // Evita o envio do formulário
+    const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+    // Captura os valores dos campos do formulário
+    const numCar = document.getElementById('numCard').value;
+    const nomeTitular = document.getElementById('nomeTitular').value;
+    const mesExp = document.getElementById('mesExp').value;
+    const anoExp = document.getElementById('anoExp').value;
+    const cvvCard = document.getElementById('cvvCard').value;
 
-  // Crie um objeto XMLHttpRequest
-  const xhr = new XMLHttpRequest();
+    // Crie um objeto para armazenar os dados do formulário
+    const formData = {
+        numCar: numCar,
+        nomeTitular: nomeTitular,
+        mesExp: mesExp,
+        anoExp: anoExp,
+        cvvCard: cvvCard
+    };
 
-  // Configure a solicitação POST
-  xhr.open('POST', '/criar-pedidos', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
+    // Fetch para obter os dados do perfil do usuário
+    try {
+        const response = await fetch('/perfil/dados');
+        if (!response.ok) {
+            throw new Error('Erro ao obter dados do perfil');
+        }
+        const perfilData = await response.json();
+        // Função para formatar o número de telefone
+        function formatarTelefone(numero) {
+            // Remove todos os caracteres não numéricos
+            const numeroLimpo = numero.replace(/\D/g, '');
 
-  // Defina o manipulador de eventos para a resposta da solicitação
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      // A solicitação foi bem-sucedida, você pode processar a resposta aqui
-      const response = JSON.parse(xhr.responseText);
-      alert(response.message);
+            // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+            const ddd = numeroLimpo.substring(0, 2);
+            const numeroTelefone = numeroLimpo.substring(2);
 
-      // Exiba a mensagem de confirmação
-      document.getElementById('confirmacaoCompra').style.display = 'block';
+            // Retorna um objeto com as partes do número formatado
+            return {
+                ddd: ddd,
+                numeroTelefone: numeroTelefone
+            };
+        }
+        function getUF(estadoCompleto) {
+          const estados = {
+              'Acre': 'AC',
+              'Alagoas': 'AL',
+              'Amapá': 'AP',
+              'Amazonas': 'AM',
+              'Bahia': 'BA',
+              'Ceará': 'CE',
+              'Distrito Federal': 'DF',
+              'Espírito Santo': 'ES',
+              'Goiás': 'GO',
+              'Maranhão': 'MA',
+              'Mato Grosso': 'MT',
+              'Mato Grosso do Sul': 'MS',
+              'Minas Gerais': 'MG',
+              'Pará': 'PA',
+              'Paraíba': 'PB',
+              'Paraná': 'PR',
+              'Pernambuco': 'PE',
+              'Piauí': 'PI',
+              'Rio de Janeiro': 'RJ',
+              'Rio Grande do Norte': 'RN',
+              'Rio Grande do Sul': 'RS',
+              'Rondônia': 'RO',
+              'Roraima': 'RR',
+              'Santa Catarina': 'SC',
+              'São Paulo': 'SP',
+              'Sergipe': 'SE',
+              'Tocantins': 'TO'
+          };
 
-      // Limpe o carrinho (se desejar)
-      // ...
+          return estados[estadoCompleto];
+      }
+      function formatarCPF(cpf) {
+        // Remove todos os caracteres não numéricos
+        return cpf.replace(/\D/g, '');
+      }
+        const cpfCliente = formatarCPF(perfilData.cpfCad);
 
-      // Atualize o resumo da compra (se desejar)
-      // ...
-    } else {
-      // A solicitação não foi bem-sucedida, trate o erro aqui
-      console.error('Erro ao finalizar a compra:', xhr.statusText);
-      alert('Erro ao finalizar a compra');
+        const estadoCliente = getUF(perfilData.estadoCad);
+        // Formate o número de telefone
+        const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+
+        // Agora você pode acessar as partes formatadas do número de telefone
+        const codPaisCliente = "55";
+        const dddCliente = telefoneFormatado.ddd;
+        const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+
+        const emailCliente = perfilData.emailCad;
+        const cepCliente = perfilData.cepCad;
+        const cidadeCliente = perfilData.cidadeCad;
+        const ruaCliente = perfilData.endereçoCad;
+        const numeroResidenciaCliente = perfilData.numCad;
+        const bairroCliente = perfilData.bairroCad;
+        const numeroDocumento = perfilData.cpfCad;
+        const nomeCliente = perfilData.userCad;
+        const paisCliente = "BR";
+        const idCliente = perfilData.userId;
+
+        // Crie um objeto para armazenar os dados do perfil do usuário
+        const perfilUsuario = {
+            emailCliente: emailCliente,
+            cpfCliente: cpfCliente,
+            cepCliente: cepCliente,
+            cidadeCliente: cidadeCliente,
+            estadoCliente: estadoCliente,
+            ruaCliente: ruaCliente,
+            numeroResidenciaCliente: numeroResidenciaCliente,
+            bairroCliente: bairroCliente,
+            numeroDocumento: numeroDocumento,
+            nomeCliente: nomeCliente,
+            paisCliente: paisCliente,
+            codPaisCliente: codPaisCliente,
+            dddCliente: dddCliente,
+            numeroTelefoneCliente: numeroTelefoneCliente,
+            userId: idCliente,
+            totalCompra:  totalAPagar
+        };
+
+        // Envie os dados do formulário e do perfil do usuário para o backend
+        const response2 = await fetch('/processarPagamento', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ formData: formData, perfilData: perfilUsuario })
+        });
+
+        if (!response2.ok) {
+            throw new Error('Erro ao processar pagamento');
+        }
+
+    // Extrair o idTransacao da resposta
+    const responseData = await response2.json();
+    const idTransacao = responseData.idTransacao;
+    console.log('Id da transação:', idTransacao);
+    verificarStatusTransacao(idTransacao);
+    } catch (error) {
+        console.error('Erro durante o processo:', error);
     }
-  };
-
-  // Trate erros de rede
-  xhr.onerror = function () {
-    console.error('Erro de rede ao finalizar a compra');
-    alert('Erro de rede ao finalizar a compra');
-  };
-
-  // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
-  const pedidoData = {
-    totalItens,
-    valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-    metodPag
-  };
-
-  // Envie os dados como JSON
-  const requestData = JSON.stringify(pedidoData);
-  xhr.send(requestData);
 });
+
+// Função para verificar o status da transação a cada 5 segundos
+function verificarStatusTransacao(idTransacao) {
+    // Define uma função anônima que faz uma solicitação GET ao servidor para verificar o status da transação
+    const verificar = async () => {
+        try {
+            // Faz uma solicitação GET ao servidor para verificar o status da transação
+            const response = await fetch(`/verificarStatusTransacao?chargeId=${idTransacao}`);
+            if (!response.ok) {
+                throw new Error('Erro ao verificar status da transação');
+            }
+            const data = await response.json();
+            console.log('Status da transação:', data.status);
+            // Se o status ainda estiver pendente, chama novamente a função após 5 segundos
+            if (data.status === 'waiting_capture') {
+                setTimeout(verificar, 5000);
+            }else if(data.status === 'captured') {
+                // Obtenha o total de itens e o total a pagar do resumo da compra
+                const totalItens = document.getElementById('totalItensCarrinho').textContent;
+                const totalAPagar = parseFloat(document.getElementById('totalAPagar').textContent);
+                const metodPag = 'Cartão de Crédito';
+
+                // Crie um objeto XMLHttpRequest
+                const xhr = new XMLHttpRequest();
+
+                // Configure a solicitação POST
+                xhr.open('POST', '/criar-pedidos', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                // Defina o manipulador de eventos para a resposta da solicitação
+                xhr.onload = function () {
+                  if (xhr.status === 200) {
+                    // A solicitação foi bem-sucedida, você pode processar a resposta aqui
+                    const response = JSON.parse(xhr.responseText);
+                    alert(response.message);
+
+                    // Exiba a mensagem de confirmação
+                    document.getElementById('confirmacaoCompra').style.display = 'block';
+
+                    // Limpe o carrinho (se desejar)
+                    // ...
+
+                    // Atualize o resumo da compra (se desejar)
+                    // ...
+                  } else {
+                    // A solicitação não foi bem-sucedida, trate o erro aqui
+                    console.error('Erro ao finalizar a compra:', xhr.statusText);
+                    alert('Erro ao finalizar a compra');
+                  }
+                };
+
+                // Trate erros de rede
+                xhr.onerror = function () {
+                  console.error('Erro de rede ao finalizar a compra');
+                  alert('Erro de rede ao finalizar a compra');
+                };
+
+                // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+                const pedidoData = {
+                  totalItens,
+                  valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+                  metodPag
+                };
+
+                // Envie os dados como JSON
+                const requestData = JSON.stringify(pedidoData);
+                xhr.send(requestData);
+            }else if(data.status === "not_authorized") {
+              alert("Cartão não foi Autorizado!")
+            }else if (data.status === "refunded") {
+              alert("O valor da transação foi Estornado!")
+            }else if(data.status === "voided") {
+              alert("A transação foi Cancelada")
+            }else if(data.status === "waiting_cancellation") {
+              alert("Aguardando o Cancelamento!")
+            }else if(data.status === "with_error") {
+              alert("Transação com Erro!")
+            }else if(data.status === "failed") {
+              alert("Falha na Transação!")
+            }
+        } catch (error) {
+            console.error('Erro ao verificar status da transação:', error);
+        }
+    };
+
+    // Inicia a verificação do status da transação
+    verificar();
+}
 
 document.getElementById('finalizarCompraBtn4').addEventListener('click', function () {
   const totalItens = document.getElementById('totalItensCarrinho').textContent;
