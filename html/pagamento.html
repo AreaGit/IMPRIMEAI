@@ -1466,7 +1466,7 @@ function verificarStatusTransacao(idTransacao) {
                     // A solicitação foi bem-sucedida, você pode processar a resposta aqui
                     const response = JSON.parse(xhr.responseText);
                     alert(response.message);
-
+                    cartaoDeCreditoContainer.style.display = 'none'
                     // Exiba a mensagem de confirmação
                     document.getElementById('confirmacaoCompra').style.display = 'block';
 
