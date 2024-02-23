@@ -301,6 +301,54 @@
         font-weight: bold;
         color: #F37160;
     }
+    #cartaoDeCreditoContainer {
+        display: none;
+        border: 1px solid #858383;
+        position: relative;
+        top: -35%;
+        width: 24%;
+        left: 57%;
+        transform: translate(-50%);
+        height: 756px;
+        border-radius: 5px;
+        background-color: white;
+    }
+    h2#h2CreditCont {
+        position: relative;
+        top: 30px;
+        left: 6%;
+        font-size: 32px;
+    }
+    p#pCreditCont {
+        position: relative;
+        left: 7%;
+        top: 28px;
+    }
+    form#formCardCredit {
+        position: relative;
+        top: 85px;
+        left: 10%;
+        width: 25%;
+        height: 427px;
+    }
+    form#formCardCredit > p {
+    margin-bottom: 10px;
+    }
+    form#formCardCredit > p > input {
+        padding: 10px 28px 10px 28px;
+        font-size: 20px;
+    }
+    #btnEnvCardCredit {
+        padding: 18px 28px 18px 28px;
+        border: 1px solid #EF4126;
+        color: #F37160;
+        background-color: white;
+        font-weight: bold;
+        cursor: pointer;
+        position: relative;
+        top: 20px;
+        left: 85%;
+    }
     </style>
 <body>
     <header>
@@ -353,7 +401,7 @@
                     <p>Pix</p>
                 </div>
             </a>
-            <a href="#">
+            <a href="#" id="btnCardCredit">
                 <div id="mtd-Crd">
                     <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
                     <p>Cartão de Crédito</p>
@@ -368,6 +416,42 @@
         </div>
         <div id="qrCodeContainer"></div>
         <div id="boletoPayContainer"></div>
+        <div id="cartaoDeCreditoContainer">
+            <h2 id="h2CreditCont">Cartão de Crédito</h2>
+            <p id="pCreditCont">Preencha os campos Abaixo</p>
+            <form id="formCardCredit">
+                <p>
+        
+                  <label for="numCard">Número do Cartão</label>
+                  <input type="text" name="numCar" id="numCard" placeholder="XXXX XXXX XXXX XXXX" maxlength="16" required>
+                  
+                </p>
+                <p>
+        
+        
+                  <label for="nomeTitular">Nome do Titular</label>
+                  <input type="text" name="nomeTitular" id="nomeTitular" placeholder="Digite o nome do Titular..." required>
+        
+                </p>
+                <p>
+        
+        
+                  <label for="mesExp">Mês de Expiração</label>
+                  <input type="number" name="mesExp" id="mesExp" min="1" max="12" minlength="1" maxlength="2" required>
+                  <label for="anoExp">Ano de Expiração</label>
+                  <input type="number" name="anoExp" id="anoExp" min="0" max="99" minlength="1" maxlength="2" required>
+        
+                </p>
+                <p>
+        
+        
+                  <label for="cvvCard">CVV</label>
+                  <input type="text" name="cvvCard" id="cvvCard" placeholder="Digite o CVV..." minlength="3" maxlength="4" required>
+        
+                </p>
+                <button id="btnEnvCardCredit" type="submit">Continuar</button>
+            </form>
+          </div>
     </main>
     <script>
         const btnRec = document.getElementById('btnRec');
@@ -381,6 +465,9 @@
         const qrCodeContainer = document.getElementById('qrCodeContainer');
         const btnBol = document.getElementById('btnBol');
         const boletoPayContainer = document.getElementById('boletoPayContainer');
+        const cartaoDeCreditoContainer = document.getElementById('cartaoDeCreditoContainer');
+        const btnCardCredit = document.getElementById('btnCardCredit');
+        const btnEnvCardCredit = document.getElementById('btnEnvCardCredit');
        btnRec.addEventListener('click', () => {
         popupPag.style.display = 'block'
        })
@@ -704,6 +791,12 @@
                 monitorarStatusBoleto(idBoleto);
             })
 
+            btnCardCredit.addEventListener('click', async() => {
+                setTimeout(() => {
+                    cartaoDeCreditoContainer.style.display = 'block';
+                    pagRec.style.display = 'none';
+                },3000);
+            });
         // Solicitação AJAX para buscar e exibir o saldo do usuário na página HTML
         async function exibirSaldoUsuario() {
             try {
