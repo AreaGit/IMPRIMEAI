@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles/style.css" media="all">
 <link rel="stylesheet" href="../styles/pag-prods.css">
-<link rel="stylesheet" href="../styles/medias.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
@@ -328,6 +327,145 @@ label.lbl-EnvArtDep {
     label[disabled]:hover {
         background: none;
     }
+}
+@media screen and (min-width: 768px) and (max-width: 1034px) {
+    .logo-imprimeai {
+        position: relative;
+        top: -39px;
+        left: 40%;
+        transform: translate(-40%);
+        width: fit-content;
+    }
+    .produto-carrinho {
+    color: #212529;
+    height: 230px;
+    margin: 72px;
+    position: relative;
+    top: -169px;
+    width: 96%;
+    border-radius: 5px;
+    left: -6%;
+    box-shadow: 0px 0px 7px black;
+}
+    .produto-carrinho > img {
+        width: 16%;
+        position: relative;
+        left: -5%;
+        top: -52px;
+    }
+    .pEnvArt {
+        width: fit-content;
+        font-weight: normal;
+        font-size: 12px;
+        position: relative;
+        left: 56%;
+        top: -326px;
+        transform: translate(-5%);
+    }
+    .pEnvArtDep {
+        width: fit-content;
+        font-weight: normal;
+        font-size: 12px;
+        position: relative;
+        left: 73%;
+        top: -455px;
+        transform: translate(3%);
+    }
+}
+@media screen and (min-width:1440px) and (max-width:1880px) {
+    .produto-carrinho {
+        color: #212529;
+        height: 230px;
+        margin: 72px;
+        position: relative;
+        top: -169px;
+        width: 68vw;
+        border-radius: 5px;
+        box-shadow: 0px 0px 7px black;
+    }
+    .pEnvArt {
+        width: fit-content;
+        font-weight: normal;
+        font-size: 12px;
+        position: relative;
+        left: 56%;
+        top: -326px;
+        transform: translate(-5%);
+    }
+    .pEnvArtDep {
+        width: fit-content;
+        font-weight: normal;
+        font-size: 12px;
+        position: relative;
+        left: 73%;
+        top: -455px;
+        transform: translate(3%);
+    }
+}
+@media screen and (min-width:2560px) {
+.produto-carrinho {
+    color: #212529;
+    height: 230px;
+    margin: 72px;
+    position: relative;
+    top: -169px;
+    width: 41vw;
+    border-radius: 5px;
+    box-shadow: 0px 0px 7px black;
+}
+.logo-imprimeai {
+    position: relative;
+    top: -39px;
+    left: 44%;
+    width: fit-content;
+}
+.pEnvArt {
+    width: fit-content;
+    font-weight: normal;
+    font-size: 17px;
+    position: relative;
+    left: 568px;
+    top: -326px;
+}
+.pEnvArtDep {
+    width: fit-content;
+    font-weight: normal;
+    font-size: 17px;
+    position: relative;
+    left: 744px;
+    top: -455px;
+}
+header > p {
+    position: relative;
+    top: -93px;
+    left: 50%;
+    font-size: 20px;
+    letter-spacing: 0.4px;
+    width: fit-content;
+    font-weight: normal;
+    transform: translate(-50%);
+}
+header > h1 {
+    position: relative;
+    top: -110px;
+    left: 50%;
+    width: fit-content;
+    transform: translate(-50%);
+    font-size: 40px;
+}
+.lnk-av {
+    background-color: #EF4126;
+    color: white;
+    text-decoration: none;
+    position: fixed;
+    bottom: 50px;
+    right: 6%;
+    cursor: pointer;
+    padding: 18px 28px 18px 28px;
+    border: none;
+    font-weight: bold;
+    font-size: 20px;
+}
 }
 </style>
 <body>

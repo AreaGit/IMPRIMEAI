@@ -498,7 +498,7 @@ main > h1 {
 }
 .mtd-carteira {
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.473);
-    width: 90%;
+    width: 90vw;
     border-radius: 5px;
     padding: 10px;
     margin-top: 10px;
@@ -530,6 +530,98 @@ main > h1 {
     top: -8px;
     font-size: 13px;
     font-weight: bold;
+}
+div#qrCodeContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 97%;
+    left: 50%;
+    transform: translate(-50%);
+    height: 627px;
+    border-radius: 5px;
+    background-color: white;
+}
+h2#h2Container {
+    position: relative;
+    top: -40%;
+    left: 50%;
+    transform: translate(-50%);
+}
+button#copiarPayloadBtn {
+    padding: 18px 28px 18px 28px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%);
+    border: 1px solid #EF4126;
+    color: #F37160;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+#boletoPayContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 104%;
+    left: 47%;
+    transform: translate(-50%);
+    height: 627px;
+    border-radius: 5px;
+    background-color: white;
+}
+a#lnkBol {
+    position: absolute;
+    left: 50%;
+    top: 26%;
+    font-size: 10px;
+    transform: translate(-50%);
+}
+#boletoPayContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 104%;
+    left: 47%;
+    transform: translate(-50%);
+    height: 627px;
+    border-radius: 5px;
+    background-color: white;
+}
+#btnCopCodBol {
+    padding: 18px 28px 18px 28px;
+    border: 1px solid #EF4126;
+    color: #F37160;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    transform: translate(-50%);
+}
+a#lnkBol {
+    position: absolute;
+    left: 50%;
+    top: 26%;
+    font-size: 10px;
+    transform: translate(-50%);
+}
+#cartaoDeCreditoContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 105%;
+    left: 47%;
+    transform: translate(-50%);
+    height: 756px;
+    border-radius: 5px;
+    background-color: white;
 }
   }
   @media screen and (min-width:768px) and (max-width:1024px) {
@@ -648,6 +740,72 @@ main > h1 {
         left: 1%;
         width: fit-content;
     }
+    div#qrCodeContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 66%;
+    left: 50%;
+    transform: translate(-50%);
+    height: 627px;
+    border-radius: 5px;
+    background-color: white;
+}
+button#copiarPayloadBtn {
+    padding: 18px 28px 18px 28px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%);
+    border: 1px solid #EF4126;
+    color: #F37160;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+#boletoPayContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 65%;
+    left: 52%;
+    transform: translate(-50%);
+    height: 627px;
+    border-radius: 5px;
+    background-color: white;
+}
+a#lnkBol {
+    position: absolute;
+    left: 50%;
+    top: 25%;
+    transform: translate(-50%);
+}
+#btnCopCodBol {
+    padding: 18px 28px 18px 28px;
+    border: 1px solid #EF4126;
+    color: #F37160;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    transform: translate(-50%);
+}
+#cartaoDeCreditoContainer {
+    display: none;
+    border: 1px solid #858383;
+    position: relative;
+    top: -110%;
+    width: 57%;
+    left: 47%;
+    transform: translate(-50%);
+    height: 756px;
+    border-radius: 5px;
+    background-color: white;
+}
   }
   @media screen and (min-width:1025px) and (max-width:1345px) {
     .logo-imprimeai {
@@ -1157,7 +1315,7 @@ while (true) {
     // Verifica se o tempo limite foi atingido
     if (Date.now() - horarioInicial > limiteTempo) {
         console.log('Tempo limite atingido. Criando o pedido mesmo sem o pagamento confirmado.');
-        boletoPayContainer.style.display = 'none'
+        //boletoPayContainer.style.display = 'none'
         // Código para criar o pedido mesmo sem o pagamento confirmado
         // Neste caso, você pode definir o status do pedido como 'Esperando Pagamento'
         const totalItens = document.getElementById('totalItensCarrinho').textContent;

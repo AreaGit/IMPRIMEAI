@@ -296,16 +296,6 @@ input[type="submit"] {
 .infos-container {
     display: flex;
 }
-
-@media (max-width: 1024px) {
-    .ui {
-        flex-direction: column-reverse;
-    }
-
-    .container-left, .container-right {
-        width: 100%;
-    }
-}
 label {
     color: #333333;
 }
@@ -560,41 +550,7 @@ input[type="submit"] {
     left: -37px;
 }
 }
-@media screen and (min-width:1280px) and (max-width:1360px) {
-    .produto-carrinho > .remover-produto {
-    background-color: white;
-    border: none;
-    font-size: 13px;
-    cursor: pointer;
-    color: #EF4126;
-    position: relative;
-    top: -270px;
-    left: 35%;
-}
-.container-left {
-    width: 100%;
-    position: relative;
-    left: -125px;
-}
-.container-right {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    position: relative;
-    left: 18%;
-}
-.exp {
-    position: fixed;
-    top: 334px;
-    left: 58%;
-}
-.cvv {
-    position: fixed;
-    left: 68%;
-    top: 336px;
-}
-}
-@media screen and (min-width:768px) and (max-width:1440px) {
+@media screen and (min-width:768px) and (max-width:1024px) {
 .logo-imprimeai {
     position: absolute;
     top: 20%;
@@ -670,12 +626,19 @@ header > p {
     color: #EF4126;
     position: relative;
     top: -126%;
-    left: 54%;
+    left: 61%;
     transform: translate(46%);
 }
 .produto-carrinho > img {
     min-width: 15%;
     max-width: 15%;
+}
+.lnk-av {
+    background-color: #EF4126;
+    color: white;
+    text-decoration: none;
+    position: relative;
+    top: 17px;
 }
 }
 @media screen and (min-width:1440px) and (max-width: 2560px) {
@@ -685,6 +648,16 @@ header > p {
     transform: translate(45%);
     top: 12%;
 }
+.produto-carrinho > .remover-produto {
+    background-color: white;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    color: #EF4126;
+    position: relative;
+    top: -270px;
+    left: 34%;
+} 
 }
 @media screen and (min-width:2560px) {
     .icons-header {
@@ -692,6 +665,52 @@ header > p {
     left: 70%;
     transform: translate(45%);
     top: 9%;
+}
+.produto-carrinho {
+    color: #212529;
+    height: 192px;
+    margin: 57px;
+}
+h2 {
+    font-size: 25px;
+}
+.produto-carrinho > h2 {
+    font-size: 25px;
+}
+.produto-carrinho > .qnt {
+    font-size: 20px;
+}
+.produto-carrinho > .vlr {
+    font-size: 20px;
+}
+.produto-carrinho > .sub {
+    font-size: 20px;
+}
+.produto-carrinho > .remover-produto {
+    font-size: 20px;
+}
+#resumo-compra > h2 {
+    font-size: 34px;
+    font-weight: normal;
+}
+#resumo-compra > p, span, a {
+    font-size: 20px;
+    font-weight: normal;
+    margin: 20px 0px 20px 0px;
+}
+header > p {
+    position: relative;
+    top: 30px;
+    left: 18%;
+    font-size: 18px;
+    letter-spacing: 0.4px;
+    width: fit-content;
+}
+.menu2 > a {
+    padding-left: 28px;
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
 }
 }
 </style>
