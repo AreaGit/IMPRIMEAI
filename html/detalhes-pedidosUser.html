@@ -121,19 +121,18 @@
         const urlParams = new URLSearchParams(window.location.search);
         const idPedido = urlParams.get('idPedido');
         
-        // Fazer uma solicitação Fetch para obter os detalhes do pedido
         fetch(`/detalhes-pedidoUser/${idPedido}`)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            const enderecoContainer = document.getElementById('endereco-list');
-            const itensPedidoContainer = document.getElementById('itens-pedido-list');
-            const imagesContainer = document.getElementById('images');
-            // Exibir detalhes do endereço
-            if(data.itens.statusPed === "Pedido em Aberto")
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+        const enderecoContainer = document.getElementById('endereco-list');
+        const itensPedidoContainer = document.getElementById('itens-pedido-list');
+        const imagesContainer = document.getElementById('images');
+        // Verificar se há endereços disponíveis
+        if (data.enderecos && data.enderecos.length > 0) {
             data.enderecos.forEach((endereco) => {
                 const div = document.createElement('div');
-                div.id = 'divEnd'
+                div.id = 'divEnd';
                 div.innerHTML = `
                 <p><strong>Rua:</strong> ${endereco.rua}</p>
                 <p><strong>CEP:</strong> ${endereco.cep}</p>
@@ -146,6 +145,12 @@
                 `;
                 enderecoContainer.appendChild(div);
             });
+        } else {
+            // Se não houver endereços disponíveis, exibir uma mensagem
+            const div = document.createElement('div');
+            div.innerHTML = '<p>Nenhum endereço encontrado.</p>';
+            enderecoContainer.appendChild(div);
+        }
             
             // Exibir detalhes dos itens do pedido
             data.itens.forEach((item) => {
