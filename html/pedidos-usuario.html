@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles/style.css" media="all">
 <link rel="stylesheet" href="../styles/pag-prods.css">
-<link rel="stylesheet" href="styles/medias.css">
+<!--<link rel="stylesheet" href="styles/medias.css">-->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
@@ -271,7 +271,7 @@
         <h3>Nome do Produto</h3>
         <h3>Valor do Pedido</h3>
         <h3>Quantidade</h3>
-        <h3>Status</h3>
+        <!--<h3>Status</h3>-->
         <ul id="pedidos-list">
             
         </ul>
@@ -307,11 +307,11 @@ fetch(`/pedidos-usuario/${userId}`)
                         <p class="ped-nome">${pedidos.nomePed}</p>
                         <p class="ped-valor">${pedidos.valorPed}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
-                        <p class="ped-status" id="ped-status">${pedidos.statusPed}</p>
+                        <!--<p class="ped-status" id="ped-status">${pedidos.statusPed}</p>-->
                         <a href="detalhes-pedidosUser.html?idPedido=${pedidos.id}" id="verPed">Detalhes do Pedido</a>
                     `;
 
-                    if (pedidos.statusPed === "Aceito") {
+                    /*if (pedidos.statusPed === "Aceito") {
                         li.querySelector('.ped-status').style.color = 'green'
                     } else if(pedidos.statusPed === "Aguardando") {
                         li.querySelector('.ped-status').style.color = '#e5e52aad'
@@ -319,7 +319,7 @@ fetch(`/pedidos-usuario/${userId}`)
                         li.querySelector('.ped-status').style.color = '#EF4126'
                     } else {
                         li.querySelector('.ped-status').style.color = 'black'
-                    }
+                    }*/
 
 
                     pedidosList.appendChild(li);

@@ -866,6 +866,12 @@ app.get('/pedidos-usuario/:userId', async (req, res) => {
       where: {
         idUserPed: userId,
       },
+      include: [
+        {
+          model: ItensPedido,
+          attributes: ['statusPed'], // Inclua apenas a coluna 'statusPed'
+        }
+      ],
     });
 
     // Renderize a página HTML de pedidos-usuario e passe os pedidos como JSON
