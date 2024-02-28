@@ -2935,26 +2935,44 @@ app.post('/descontarSaldo', async (req, res) => {
 
 app.get('/total-pedidos-grafica/:idGrafica/:ano/:mes', async (req, res) => {
   try {
-      const idGrafica = req.params.idGrafica;
-      const ano = req.params.ano;
-      const mes = req.params.mes;
+    const idGrafica = req.params.idGrafica;
+    const ano = req.params.ano;
+    const mes = req.params.mes;
 
-      // Obter o primeiro dia e o último dia do mês
-      const primeiroDia = new Date(ano, mes - 1, 1);
-      const ultimoDia = new Date(ano, mes, 0);
+    // Obter o primeiro dia e o último dia do mês
+    const primeiroDia = new Date(ano, mes - 1, 1);
+    const ultimoDia = new Date(ano, mes, 0);
 
-      // Consulta para somar o total de pedidos finalizados pela gráfica específica no mês especificado
-      const totalPedidos = await ItensPedidos.count({
-          where: {
-              graficaFin: idGrafica,
-              createdAt: { [Sequelize.Op.between]: [primeiroDia, ultimoDia] }
-          }
-      });
+    // Consultar o banco de dados para calcular o valor total dos pedidos finalizados
+    const totalPedidos = await ItensPedidos.sum('valorProd', {
+      where: {
+        graficaFin: idGrafica,
+        createdAt: { [Sequelize.Op.between]: [primeiroDia, ultimoDia] }
+      }
+    });
 
-      res.json({ totalPedidos });
+    // Consulta para contar o total de pedidos finalizados pela gráfica específica no mês especificado
+    const totalPedidos2 = await ItensPedidos.count({
+      where: {
+        graficaFin: idGrafica,
+        createdAt: { [Sequelize.Op.between]: [primeiroDia, ultimoDia] }
+      }
+    });
+
+    console.log('Total de pedidos:', totalPedidos);
+    console.log('Quantidade de pedidos:', totalPedidos2);
+
+    // Verificar se o resultado da consulta é válido
+    if (totalPedidos !== null && totalPedidos2 !== null) {
+      // Arredondar o valor para duas casas decimais
+      const totalPedidosArredondado = parseFloat(totalPedidos.toFixed(2));
+      res.json({ totalPedidos: totalPedidosArredondado, totalPedidos2: totalPedidos2 });
+    } else {
+      res.status(404).json({ error: 'Nenhum pedido encontrado para a gráfica neste período' });
+    }
   } catch (error) {
-      console.error('Erro ao buscar total de pedidos por gráfica:', error);
-      res.status(500).json({ error: 'Erro ao buscar total de pedidos por gráfica' });
+    console.error('Erro ao buscar total de pedidos por gráfica:', error);
+    res.status(500).json({ error: 'Erro ao buscar total de pedidos por gráfica' });
   }
 });
 

@@ -50,6 +50,16 @@
         text-decoration: underline;
         cursor: pointer;
     }
+    #listaGraficas > div {
+        box-shadow: -1px -1px 8px black;
+        width: 40%;
+        border-radius: 5px;
+        margin: 15px;
+        position: relative;
+        left: 5%;
+        height: 177px;
+        padding: 10px;
+    }
 </style>
 <body>
     <header>
@@ -74,39 +84,42 @@
         <div id="listaGraficas"></div>
     </main>
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/listar-graficas');
+        const graficas = await response.json();
+        console.log(graficas); // Verifica se os dados estão corretos
+        const listaGraficas = document.getElementById('listaGraficas');
+        
+        for (const grafica of graficas) {
             try {
-                const response = await fetch('/listar-graficas');
-                const graficas = await response.json();
+                const anoAtual = new Date().getFullYear();
+                const mesAtual = new Date().getMonth() + 1;
+                const responsePedidos = await fetch(`/total-pedidos-grafica/${grafica.id}/${anoAtual}/${mesAtual}`);
+                const { totalPedidos, totalPedidos2 } = await responsePedidos.json();
+                console.log(totalPedidos);
+                console.log(totalPedidos2);
 
-                const listaGraficas = document.getElementById('listaGraficas');
-                
-                graficas.forEach(async grafica => {
-                    try {
-                        const anoAtual = new Date().getFullYear();
-                        const mesAtual = new Date().getMonth() + 1;
-                        const responsePedidos = await fetch(`/total-pedidos-grafica/${grafica.id}/${anoAtual}/${mesAtual}`);
-                        const { totalPedidos } = await responsePedidos.json();
-
-                        // Cria um elemento div para exibir as informações da gráfica e o total de pedidos finalizados
-                        const graficaDiv = document.createElement('div');
-                        graficaDiv.innerHTML = `
-                            <h2>${grafica.userCad}</h2>
-                            <p>Endereço: ${grafica.enderecoCad}, ${grafica.cepCad}, ${grafica.cidadeCad}, ${grafica.estadoCad}</p>
-                            <p>Telefone: ${grafica.telefoneCad}</p>
-                            <p>Email: ${grafica.emailCad}</p>
-                            <p>Total de Pedidos Finalizados em <strong>${mesAtual}/${anoAtual}:</strong> ${totalPedidos}</p>
-                            <a id="btnEditarGrafica" href="editar-graficas.html?id=${grafica.id}">Editar Informações</a>
-                        `;
-                        listaGraficas.appendChild(graficaDiv);
-                    } catch (error) {
-                        console.error('Erro ao carregar total de pedidos:', error);
-                    }
-                });
+                // Cria um elemento div para exibir as informações da gráfica e o total de pedidos finalizados
+                const graficaDiv = document.createElement('div');
+                graficaDiv.innerHTML = `
+                    <h2>${grafica.userCad}</h2>
+                    <p>Endereço: ${grafica.enderecoCad}, ${grafica.cepCad}, ${grafica.cidadeCad}, ${grafica.estadoCad}</p>
+                    <p>Telefone: ${grafica.telefoneCad}</p>
+                    <p>Email: ${grafica.emailCad}</p>
+                    <p>Total de Pedidos Finalizados em <strong>${mesAtual}/${anoAtual}</strong> <strong>Valor Total:</strong> ${totalPedidos}</p>
+                    <p>Quantidade de Pedidos: ${totalPedidos2}</p>
+                    <a id="btnEditarGrafica" href="editar-graficas.html?id=${grafica.id}">Editar Informações</a>
+                `;
+                listaGraficas.appendChild(graficaDiv);
             } catch (error) {
-                console.error('Erro ao carregar dados:', error);
+                console.error('Erro ao carregar total de pedidos:', error);
             }
-        });
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+    }
+});
     </script>
 </body>
 </html>

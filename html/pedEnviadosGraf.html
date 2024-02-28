@@ -599,6 +599,40 @@
         console.error('Erro ao obter pedidos enviados:', error);
       }
     });
+    document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    // Fetch dos pedidos com status "Pedido Entregue pela Gráfica"
+    const response = await fetch('/pedidos-entregues-grafica');
+    
+    if (!response.ok) {
+      throw new Error(`Erro ao obter pedidos entregues: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const pedidosEntregues = data.pedidos;
+
+    // Container para os pedidos
+    const pedidosContainer = document.getElementById('pedidosContainer');
+
+    // Iterar sobre os pedidos e criar elementos HTML para cada um
+    pedidosEntregues.forEach(pedido => {
+      // Verificar se o status do pedido é 'Pedido Entregue pela Gráfica'
+      if (pedido.statusPed === 'Pedido Entregue pela Gráfica') {
+        const pedidoDiv = document.createElement('li');
+        pedidoDiv.innerHTML = `
+          <p class="ped-id">${pedido.idPed}</p>
+          <p class="ped-nome">${pedido.nomeProd}</p>
+          <p class="ped-valor">${pedido.valorProd}</p>
+          <p class="ped-quant">${pedido.quantidade}</p>
+        `;
+        pedidosContainer.appendChild(pedidoDiv);
+      }
+    });
+
+  } catch (error) {
+    console.error('Erro ao obter pedidos entregues:', error);
+  }
+});
   </script>
   </body>
   </html>
