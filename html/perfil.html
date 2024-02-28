@@ -138,6 +138,247 @@
     top: 15px;
     left: 60px;
   }
+  @media screen and (min-width:320px) and (max-width: 481px) {
+    img {
+      margin-bottom: 10px;
+    }
+    #email {
+        border-radius: 5px;
+        width: 20%;
+        height: 0%;
+        position: absolute;
+        top: 200px;
+        left: 0%;
+    }
+    #email > img {
+        width: 85%;
+        position: absolute;
+        left: 11%;
+        top: -27px;
+        transform: translate(-11%);
+    }
+    #email > p {
+        position: absolute;
+        top: -15px;
+        left: 100%;
+        font-size: 14px;
+    }
+    #cep {
+        border-radius: 5px;
+        width: 20%;
+        height: 0%;
+        position: absolute;
+        top: 236px;
+        left: 0%;
+    }
+    #cep > img {
+        width: 85%;
+        position: absolute;
+        left: 8%;
+        top: 14px;
+        transform: translate(-8%);
+    }
+    #cep > p {
+        position: absolute;
+        top: 15px;
+        left: 100%;
+        width: fit-content;
+        font-size: 14px;
+    }
+    #cidade {
+        border-radius: 5px;
+        width: 20%;
+        height: 0%;
+        position: absolute;
+        top: 200px;
+        left: 0%;
+    }
+    #cidade > img {
+        width: 85%;
+        position: absolute;
+        left: 0%;
+        top: 123px;
+    }
+    #cidade > p {
+        position: absolute;
+        /* top: 15px; */
+        left: 97%;
+        font-size: 14px;
+        top: 123px;
+    }
+    #estado {
+        border-radius: 5px;
+        width: 20%;
+        height: 0%;
+        position: absolute;
+        top: 500px;
+        left: 0%;
+    }
+    #estado > img {
+        width: 85%;
+        position: absolute;
+        left: 7%;
+        top: -104px;
+    }
+    #estado > p {
+        position: absolute;
+        top: -90px;
+        left: 107%;
+        font-size: 14px;
+    }
+    #endereco {
+        border-radius: 5px;
+        width: 20%;
+        height: 0%;
+        position: absolute;
+        top: 500px;
+        left: 0%;
+    }
+    #endereco > img {
+        width: 85%;
+        position: relative;
+        left: 3%;
+        top: -27px;
+    }
+    #endereco > p {
+        position: absolute;
+        top: -24px;
+        left: 104%;
+        font-size: 14px;
+    }
+    #telefone {
+        border-radius: 5px;
+        width: 20%;
+        height: 0%;
+        position: absolute;
+        top: 500px;
+        left: 0%;
+    }
+    #telefone > img {
+        width: 85%;
+        position: absolute;
+        left: 3%;
+        top: 61px;
+    }
+    #telefone > p {
+        position: absolute;
+        top: 57px;
+        left: 104%;
+        font-size: 14px;
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    div#userInfo {
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #email > p {
+        position: relative;
+        top: 15px;
+        left: -19px;
+    }
+    #estado > p {
+        position: relative;
+        top: 15px;
+        left: 71px;
+    }
+    #endereco > p {
+        position: relative;
+        top: 15px;
+        left: 54px;
+    }
+  }
+  @media screen and (min-width:1440px) and (max-width:2560px) {
+    #nomeUser > h1 {
+        font-size: 2em;
+    }
+    #email > p {
+        position: absolute;
+        top: 174px;
+        font-size: 1.2em;
+        left: 8%;
+        transform: translate(-8%);
+    }
+    #cep > p {
+        position: absolute;
+        top: 174px;
+        font-size: 1.2em;
+        left: 46%;
+        transform: translate(-46%);
+    }
+    #cidade > p {
+        position: absolute;
+        top: 174px;
+        font-size: 1.2em;
+        left: 46%;
+        transform: translate(-46%);
+    }
+    #estado > p {
+        position: absolute;
+        top: 174px;
+        font-size: 1.2em;
+        left: 46%;
+        transform: translate(-46%);
+    }
+    #endereco > p {
+        position: absolute;
+        top: 174px;
+        font-size: 1.2em;
+        left: 46%;
+        transform: translate(-46%);
+    }
+    #telefone > p {
+        position: absolute;
+        top: 174px;
+        font-size: 1.2em;
+        left: 46%;
+        transform: translate(-46%);
+    }
+    #email > img {
+      width: 30%;
+      position: absolute;
+      left: 46%;
+      top: 10px;
+      transform: translate(-46%);
+    }
+    #cep > img {
+      width: 30%;
+      position: absolute;
+      left: 46%;
+      top: 10px;
+      transform: translate(-46%);
+  }
+  #cidade > img {
+      width: 30%;
+      position: absolute;
+      left: 46%;
+      top: 10px;
+      transform: translate(-46%);
+  }
+  #estado > img {
+      width: 30%;
+      position: absolute;
+      left: 46%;
+      top: 10px;
+      transform: translate(-46%);
+  }
+  #endereco > img {
+      width: 30%;
+      position: absolute;
+      left: 46%;
+      top: 10px;
+      transform: translate(-46%);
+  }
+  #telefone > img {
+      width: 30%;
+      position: absolute;
+      left: 46%;
+      top: 10px;
+      transform: translate(-46%);
+  }
+
+  }
 </style>
 <body>
     <header>
@@ -192,8 +433,6 @@
                   <a href="papelaria">Papelaria</a>
                   <a href="brindes">Brindes e Promocionais</a>
                   <a href="cartazes">Cartazes</a>
-                  <a href="impressoes">Impressões</a>
-                  <a href="orçamentos">Orçamentos Especiais</a>
                 </div>
               </li>
               <li><a href="#">Sobre Nós</a></li>

@@ -158,7 +158,8 @@ button:hover {
 @media screen and (min-width: 768px) and (max-width: 1440px) {
     .logo-imprimeai {
         position: relative;
-        left: 38%;
+        left: 50%;
+        transform: translate(-50%);
     }
     form {
         position: relative;

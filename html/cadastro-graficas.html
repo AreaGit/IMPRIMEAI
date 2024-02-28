@@ -69,7 +69,7 @@
         left: 37px;
     }
 }
-@media screen and (min-width: 381px) and (max-width: 425px) {
+@media screen and (min-width: 381px) and (max-width: 481px) {
     .logo-imprimeai {
         position: relative;
         left: 29%;
@@ -89,10 +89,10 @@
         left: 1%;
     }
     form > input {
-        width: 380px;
+        width: 94vw;
     }
     button {
-        width: 380px;
+        width: 94vw;
     }
     .btns > a {
         text-decoration: none;
@@ -108,10 +108,11 @@
         top: 12px;
     }
 }
-@media screen and (min-width: 768px) and (max-width: 1440px) {
+@media screen and (min-width: 768px) and (max-width: 2560px) {
     .logo-imprimeai {
         position: relative;
-        left: 41%;
+        left: 50%;
+        transform: translate(-50%);
     }
     form {
         position: relative;
@@ -120,11 +121,15 @@
     }
     form > h1 {
         position: relative;
-        left: -4%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
     }
     form > p {
         position: relative;
-        left: -4%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
     }
     form > input {
         width: 95vw;
@@ -151,7 +156,11 @@
         width: 580px;
         height: 40px;
         margin: 10px;
-        
+        position: absolute;
+        top: 100%;
+        width: fit-content;
+        left: 48%;
+        transform: translate(-48%);
     }
     #cad {
         position: relative;
@@ -165,30 +174,66 @@
 }
 @media screen and (min-width: 2560px) {
     .logo-imprimeai {
-        position: absolute;
-        left: 48%;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
     }
     form {
-        position: absolute;
-        left: 40%;
+        position: relative;
+        top: 10px;
+        left: 0%;
     }
     form > h1 {
         position: relative;
-        left: 0%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
     }
     form > p {
         position: relative;
-        left: 0%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
+    }
+    form > input {
+        width: 95vw;
+    }
+    button {
+        width: 95vw;
     }
     #lnk-gr {
         position: relative;
-        top: 33px;
+        font-size: 16px;
+        padding: -29px;
+        left: -33%;
+        top: 32px;
     }
     #lnk-lggr {
-        padding: 0%;
         position: relative;
-        left: -64%;
-        top: 53px;
+        font-size: 16px;
+        padding: 0%;
+        left: 524px;
+        top: 31px;
+    }
+    .btns > a {
+        text-decoration: none;
+        width: 580px;
+        height: 40px;
+        margin: 10px;
+        position: absolute;
+        top: 100%;
+        width: fit-content;
+        left: 48%;
+        transform: translate(-48%);
+    }
+    #cad {
+        position: relative;
+        left: 5px;
+    }
+    #lnk-esq {
+        position: relative;
+        left: -1%;
+        top: 12px;
     }
 }
 </style>

@@ -17,31 +17,29 @@
     font-family: 'Open Sans';
 }
 .logo-imprimeai {
-    position: absolute;
-    top: 20%;
-    left: 45%;
-}
-#form {
-    position: absolute;
-    top: 30%;
-    left: 34%;
-}
-#form > h1 {
-    text-align: center;
-    font-size: 40px;
-}
-#form > p {
-    text-align: center;
-    padding: 20px 0px 20px 0px;
-}
-#form > input {
-    width: 580px;
-    height: 60px;
-    text-indent: 20px;
-    margin: 10px;
-}
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    form {
+        position: absolute;
+        top: 29%;
+        left: 35%;
+    }
+    form > h1 {
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: -43px;
+    }
+    form > p {
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: -57px;
+    }
 button {
-    width: 580px;
+    width: 94vw;
     height: 40px;
     margin: 10px;
     font-size: 13px;
@@ -50,6 +48,9 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+}
+input {
+    width: 94vw;
 }
 button:hover {
     transform: translateY(-5px);
@@ -66,11 +67,166 @@ button:hover {
     top: 10px;
     color: #EF4126;
 }
-
+    @media screen and (min-width:320px) and (max-width:481px) {
+        .logo-imprimeai {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        form {
+            position: absolute;
+            top: 33%;
+            left: 0%;
+        }
+        form > h1 {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -43px;
+        }
+        form > p {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -57px;
+        }
+        button {
+            width: 95%;
+        }
+    }
+    @media screen and (min-width:768px) and (max-width:1024px) {
+        .logo-imprimeai {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        form {
+            position: absolute;
+            top: 33%;
+            left: 0%;
+        }
+        form > h1 {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -43px;
+        }
+        form > p {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -57px;
+        }
+        button {
+            width: 97%;
+        }
+    }
+    @media screen and (min-width:1025px) and (max-width: 1440px) {
+        .logo-imprimeai {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        form {
+            position: absolute;
+            top: 33%;
+            left: 0%;
+        }
+        form > h1 {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -43px;
+        }
+        form > p {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -57px;
+        }
+        input#newPass {
+            width: 97%;
+        }
+        input#email {
+            width: 97%;
+        }
+    }
+    @media screen and (min-width:1441px) and (max-width:2560px) {
+        .logo-imprimeai {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        form {
+            position: absolute;
+            top: 33%;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        form > h1 {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -43px;
+        }
+        form > p {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -57px;
+        }
+        input#newPass {
+            width: 97%;
+        }
+        input#email {
+            width: 97%;
+        }
+    }
+    @media screen and (min-width: 2560px) {
+        .logo-imprimeai {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            width: 9%;
+        }
+        form {
+            position: absolute;
+            top: 33%;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        form > h1 {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -43px;
+            font-size: 50px;
+        }
+        form > p {
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            top: -57px;
+            font-size: 24px;
+        }
+        form > input {
+            font-size: 22px;
+        }
+        #btn {
+            font-size: 22px;
+            height: 50px;
+        }
+        input#newPass {
+            width: 97%;
+        }
+        input#email {
+            width: 97%;
+        }
+    }
 </style>
 <body>
     <a href="../index.html"><img class="logo-imprimeai" src="../images/logo-imprimeai2.PNG" alt="..."></a>
-    <div id="form">
+    <form id="form">
         <h1>Redefinir Senha</h1>
         <p id="msg">Insira a sua nova Senha</p>
         <input type="email" name="email" id="email" placeholder="Digite seu Email Cadastrado..." required>
@@ -81,7 +237,7 @@ button:hover {
             <button id="btn" type="submit">Redefinir Senha</button>
             <br>
         </div>
-    </div>
+    </form>
     <script>
         const email = document.getElementById('email')
         const newPass = document.getElementById('newPass');

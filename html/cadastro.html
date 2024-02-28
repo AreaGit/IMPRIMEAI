@@ -36,6 +36,10 @@
         top: 70px;
         padding: 0%;
     }
+    a#lnk-log {
+        text-decoration: none;
+        color: #EF4126;
+    }
     @media screen and (min-width: 300px) and (max-width: 320px) {
     .logo-imprimeai {
         position: relative;
@@ -141,10 +145,11 @@
         width: 41%;
     }
 }
-@media screen and (min-width: 768px) and (max-width: 1440px) {
+@media screen and (min-width: 768px) and (max-width: 2560px) {
     .logo-imprimeai {
         position: relative;
-        left: 41%;
+        left: 50%;
+        transform: translate(-50%);
     }
     form {
         position: relative;
@@ -153,11 +158,15 @@
     }
     form > h1 {
         position: relative;
-        left: -4%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
     }
     form > p {
         position: relative;
-        left: -4%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
     }
     form > input {
         width: 95vw;
@@ -195,33 +204,84 @@
         left: -1%;
         top: 12px;
     }
+    a#lnk-log {
+        position: absolute;
+        left: 48%;
+        transform: translate(-48%);
+        top: 100%;
+    }
 }
 @media screen and (min-width: 2560px) {
     .logo-imprimeai {
-        position: absolute;
-        left: 48%;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        width: 9%;
     }
     form {
-        position: absolute;
-        left: 40%;
+        position: relative;
+        top: 10px;
+        left: 0%;
     }
     form > h1 {
         position: relative;
-        left: -28%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
+        font-size: 50px;
     }
     form > p {
         position: relative;
-        left: -28%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
+        font-size: 24px;
+    }
+    form > input {
+        width: 95vw;
+        font-size: 22px;
+    }
+    button {
+        width: 95vw;
+        height: 62px;
+        font-size: 22px;
     }
     #lnk-gr {
         position: relative;
-        top: 33px;
+        font-size: 16px;
+        padding: -29px;
+        left: -33%;
+        top: 32px;
     }
     #lnk-lggr {
-        padding: 0%;
         position: relative;
-        left: -64%;
-        top: 53px;
+        font-size: 16px;
+        padding: 0%;
+        left: 524px;
+        top: 31px;
+    }
+    .btns > a {
+        text-decoration: none;
+        width: 580px;
+        height: 40px;
+        margin: 10px;
+        
+    }
+    #cad {
+        position: relative;
+        left: 5px;
+    }
+    #lnk-esq {
+        position: relative;
+        left: -1%;
+        top: 12px;
+    }
+    a#lnk-log {
+        position: absolute;
+        left: 48%;
+        transform: translate(-48%);
+        top: 100%;
+        font-size: 22px;
     }
 }
 </style>
@@ -260,11 +320,11 @@
         <div class="btns">
             <button id="btnCad" type="button">Cadastrar</button>
             <br>
-            <a id="lnk-log" href="form.html">Faça o login</a>
+            
             <!--<a id="lnk-gr" href="cadastro-graficas.html">Se é um vendedor Gráfico cadastre-se Aqui</a>
             <a href="login-graficas.html" id="lnk-lggr">Faça o login como Vendedor Gráfico</a>-->
         </div>
-        
+        <a id="lnk-log" href="form.html">Faça o login</a>
         <script src="../scripts/cadastro.js"></script>
     </form>
 </body>
