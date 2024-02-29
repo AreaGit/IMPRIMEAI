@@ -50,6 +50,9 @@ const ItensPedidos = db.define('itenspedidos', {
     linkDownload: {
         type: Sequelize.STRING(255)
     },
+    nomeArquivo: {
+        type: Sequelize.STRING(255)
+    },
     raio: {
         type: Sequelize.FLOAT,
         allowNull: false,

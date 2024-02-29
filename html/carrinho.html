@@ -719,7 +719,7 @@ header > p {
         <div class="mini-banner">
             <!-- IMAGEM <img src="image.jpg" alt="...">-->
         </div>
-        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <p>Tá com pressa? <strong>Imprimeai</strong></p>
         <nav>
             <ul class='menu2'>
                 <a href="pedidos-usuario.html">Meus Pedidos</a>
@@ -761,7 +761,7 @@ header > p {
             <p>Total a Pagar: R$ <span id="totalAPagar">0.00</span></p>
             <!--<button id="finalizarCompraBtn">Finalizar Compra</button>-->
             <a class="lnk-volt" href="../index.html">Voltar</a>
-            <a class="lnk-av" href="uploadArt.html">Avançar</a>
+            <a id="lnk-av" class="lnk-av" href="#">Avançar</a>
         </div>
         <div id="conteudo">
            <!-- <img src="https://wbl.blob.core.windows.net/public/credit-card.png" alt="...">
@@ -1206,6 +1206,19 @@ fetch(`/atualizar-carrinho/${userId}`, {
   .catch((error) => {
     console.error('Erro ao atualizar o carrinho:', error);
   });
+    </script>
+    <script>
+        
+  const btnAvancar = document.getElementById('lnk-av');
+
+  btnAvancar.addEventListener('click', () => {
+      if(!userId) {
+          alert("Para avançar com a Compra tem que estar logado em sua Conta!");
+          window.location.href = 'form.html'
+        }else {
+            window.location.href = 'uploadArt.html'
+        }
+    });
     </script>
 </body>
 </html>

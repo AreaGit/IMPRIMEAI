@@ -1950,6 +1950,7 @@ app.post('/criar-pedidos', async (req, res) => {
             : 'Aguardando',
           statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Aguardando',
           linkDownload: produtoQuebrado.downloadLink,
+          nomeArquivo: produtoQuebrado.nomeArquivo,
           // ... outros campos relevantes ...
         });
         await verificarGraficaMaisProximaEAtualizar(itemPedido);
@@ -2051,6 +2052,7 @@ app.post('/criar-pedidos', async (req, res) => {
             : 'Aguardando',
           statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
           linkDownload: produtoNoCarrinho.downloadLink,
+          nomeArquivo: produtoNoCarrinho.nomeArquivo,
           enderecoId: endereco.id,
         });
 
@@ -2489,7 +2491,7 @@ async function atualizarStatusPedido(pedidoId, novoStatus) {
 
 async function uploadFile(file) {
   console.log('File Object:', file);
-
+  const nomeArquivo = file.originalname;
   if (file.originalname.trim() === "Enviar Arte Depois") {
     return { downloadLink: "Enviar Arte Depois" };
   }else {
@@ -2531,7 +2533,7 @@ async function uploadFile(file) {
 
       const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
-      return { fileId, webViewLink, downloadLink };
+      return { fileId, webViewLink, downloadLink, nomeArquivo };
     } catch (err) {
       console.error('Error during file upload:', err);
       retryCount++;
@@ -2562,6 +2564,7 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
       if (produtoIndex !== -1) {
         // Encontrou um produto sem link de download
         carrinho[produtoIndex].downloadLink = file.webViewLink;
+        carrinho[produtoIndex].nomeArquivo = file.nomeArquivo;
       }
     });
 
@@ -2617,6 +2620,7 @@ app.get('/detalhes-pedidoUser/:idPedido', async (req, res) => {
       formato: item.formato,
       material: item.material,
       linkDownload: item.linkDownload,
+      nomeArquivo: item.nomeArquivo,
       imgProd: item.produto.imgProd,
     }));
 
@@ -2932,6 +2936,43 @@ app.post('/descontarSaldo', async (req, res) => {
     res.status(500).send('Erro ao descontar saldo da carteira');
   }
 });
+
+// Rota para buscar as transações do usuário com base no ID do usuário
+app.get('/transacoesUsuario/:userId', async (req, res) => {
+  try {
+    // Obtenha o ID do usuário a partir dos parâmetros da URL
+    const userId = req.params.userId;
+
+    // Consulte o banco de dados para obter as transações do usuário
+    const transacoes = await Carteira.findAll({
+      where: { userId: userId }
+    });
+
+    // Mapeie os dados das transações para um formato adequado (se necessário)
+    const transacoesFormatadas = transacoes.map(transacao => ({
+      id: transacao.id,
+      valor: transacao.saldo,
+      tipo: getTipoTransacao(transacao.statusPag) // Determina o tipo de transação com base no status
+    }));
+
+    // Envie os dados das transações como resposta
+    res.json({ transacoes: transacoesFormatadas });
+  } catch (error) {
+    console.error('Erro ao buscar transações do usuário:', error);
+    res.status(500).json({ error: 'Erro ao buscar transações do usuário' });
+  }
+});
+
+// Função para determinar o tipo de transação com base no status
+function getTipoTransacao(statusPag) {
+  if (statusPag === 'SAIDA') {
+    return 'Saída';
+  } else if (statusPag === 'ESPERANDO PAGAMENTO') {
+    return 'Esperando'; // Exibe "ESPERANDO PAGAMENTO" se o status for esse
+  } else {
+    return 'Entrada';
+  }
+}
 
 app.get('/total-pedidos-grafica/:idGrafica/:ano/:mes', async (req, res) => {
   try {

@@ -207,14 +207,6 @@ header > p {
     top: 178px;
     left: 78%;
   }
-  #totalItens {
-    background-color: white;
-    border-radius: 100px;
-    padding: 1px;
-    position: absolute;
-    top: 16%;
-    left: 79%;
-  }
   .menu {
     position: relative;
     top: -50px;
@@ -519,4 +511,16 @@ footer > p {
 .lnk-cart {
   text-decoration: none;
   color: black;
+}
+#totalItens {
+  background-color: white;
+  border-radius: 100px;
+  padding: 1px;
+  position: absolute;
+  top: 18%;
+  left: 79%;
+  transform: translate(-79%);
+}
+#imgCart {
+  width: 7%;
 }

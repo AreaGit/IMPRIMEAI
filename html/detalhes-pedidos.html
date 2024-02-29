@@ -214,7 +214,7 @@ body {
         <div class="mini-banner">
             <!-- IMAGEM <img src="image.jpg" alt="...">-->
         </div>
-        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <p>Tá com pressa? <strong>Imprimeai</strong></p>
         <nav>
           <ul class='menu2'>
             <a href="pedidos-grafica.html">Meus Pedidos</a>
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
           <!--<p><strong>Nome do Pedido:</strong> ${detalhesPedido.nomePed}</p>-->
           <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.itenspedidos[0].quantidade}</p>
-          <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed}</p>
+          <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed.toFixed(2)}</p>
           <p class="nomeDest"><strong>Nome do Destinatário:</strong> ${detalhesUsuario.userCad}</p>
           <p class=""><strong>Material:</strong> ${variacoesProduto.material}</p>
           <p class=""><strong>Formato:</strong> ${variacoesProduto.formato}</p>

@@ -12,7 +12,19 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
-       @media screen and (min-width:320px) and (max-width:481px) {
+#totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 18%;
+    left: 70%;
+    transform: translate(-70%);
+  }
+  #imgCart {
+    width: 6%;
+  }
+    @media screen and (min-width:320px) and (max-width:481px) {
         header > p{
             position: relative;
             left: 0px;
@@ -49,9 +61,18 @@
       left: -10px;
     }
     #carrinho_compras {
-      position: absolute;
-      top: 76px;
-      left: 74%;
+        position: absolute;
+        top: 85px;
+        left: 74%;
+    }
+    #totalItens {
+        background-color: white;
+        border-radius: 100px;
+        padding: 1px;
+        position: absolute;
+        top: 9%;
+        left: 79%;
+        transform: translate(-70%);
     }
     #logado {
       position: relative;
@@ -85,9 +106,18 @@
         }
         #carrinho_compras {
           position: absolute;
-          left: 80%;
+          left: 71%;
+          top: 9%;
         }
-
+        #totalItens {
+            background-color: white;
+            border-radius: 100px;
+            padding: 1px;
+            position: absolute;
+            top: 8%;
+            left: 73%;
+            transform: translate(-70%);
+        }
         header > p {
           position: relative;
           top: 4px;
@@ -119,8 +149,21 @@
           left: 9%;
         }
         #carrinho_compras {
+            position: absolute;
+            left: 71%;
+            top: 18%;
+        }
+        #imgCart {
+            width: 11%;
+        }
+        #totalItens {
+          background-color: white;
+          border-radius: 100px;
+          padding: 1px;
           position: absolute;
-          left: 78%;
+          top: 19%;
+          left: 73%;
+          transform: translate(-70%);
         }
     }
     @media screen and (min-width:2560px) {
@@ -148,7 +191,21 @@
           grid-template-columns: repeat(3, 1fr);
           gap: 22px;
         }
-
+        #carrinho_compras {
+          position: relative;
+          left: 63%;
+          top: -61px;
+          font-size: 36px;
+        }
+        #totalItens {
+          background-color: white;
+          border-radius: 100px;
+          padding: 1px;
+          position: absolute;
+          top: 15%;
+          left: 64%;
+          transform: translate(-70%);
+      }
     }
 </style>
 <body>
@@ -156,7 +213,7 @@
         <div class="mini-banner">
             <!-- IMAGEM <img src="image.jpg" alt="...">-->
         </div>
-        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <p>Tá com pressa? <strong>Imprimeai</strong></p>
         <nav>
             <ul class='menu2'>
                 <a href="pedidos-usuario.html">Meus Pedidos</a>
@@ -189,7 +246,8 @@
          <div id="resultadosPesquisa" class="product-card"></div>
             <div id="logado"></div>
             <button style="display: none;" id="sairBtn" onclick="sair()">sair</button>
-            <a class="lnk-cart" href="carrinho.html"><span id="carrinho_compras" class="material-icons">shopping_cart</span></a>
+            <a class="lnk-cart" href="html/carrinho.html"><span id="carrinho_compras" class="material-icons"><img id="imgCart" src="../images/carrinho.png" alt="..."><!--shopping_cart--></span></a>
+            <span id="totalItens"></span>
                 <!--<span id="totalItens">0</span>-->
 
         </div>
@@ -197,7 +255,7 @@
             <ul>
               <li><a href="../index.html">Início</a></li>
               <li class="dropdown">
-                <a href="#">Produtos ∇</a>
+                <a href="#">Produtos</a>
                 <div class="dropdown-content">
                   <a href="comunicacao-visual.html">Comunicação Visual</a>
                   <a href="adesivos-etiquetas.html">Adesivos e Etiquetas</a>
@@ -336,5 +394,31 @@ btnPesq.addEventListener('click', () => {
                 resultadosPesquisa.innerHTML = ''; // Limpa os resultados da pesquisa
             });
     </script>
+            <script>
+              const totalItens = document.getElementById('totalItens');
+              // Função para buscar o número de produtos no carrinho
+              async function fetchNumeroProdutosCarrinho() {
+                try {
+                  // Faz a requisição GET para a rota /carrinho
+                  const response = await fetch('/carrinho');
+                  const data = await response.json();
+                  
+                  // Verifica se a resposta contém o carrinho
+                  if (data && data.carrinho && data.carrinho.length > 0) {
+                    // Exibe o número de produtos no carrinho
+                    console.log(`Número de produtos no carrinho: ${data.carrinho.length}`);
+                    totalItens.innerText = `${data.carrinho.length}`
+                  } else {
+                    // Caso contrário, mostra que o carrinho está vazio
+                    console.log('Carrinho vazio');
+                  }
+                } catch (error) {
+                  console.error('Erro ao buscar número de produtos no carrinho:', error);
+                }
+              }
+            
+              // Chama a função ao carregar a página
+              fetchNumeroProdutosCarrinho();
+            </script>
 </body>
 </html>

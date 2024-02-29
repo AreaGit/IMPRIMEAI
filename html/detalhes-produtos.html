@@ -13,6 +13,14 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
+  #btnContinuarComprando {
+    position: absolute;
+    left: 82%;
+    top: 151%;
+    text-decoration: underline;
+    color: #EF4126;
+    transform: translate(-82%);
+}
 #downlArt {
   border: 1px solid #00000061;
     width: 11%;
@@ -289,10 +297,18 @@ select#acabamento {
       transform: translate(-2%);
     }
     #valor {
-      position: relative;
-      left: 17%;
-      top: 990px;
-      transform: translate(-17%);
+        position: relative;
+        left: 20%;
+        top: 990px;
+        transform: translate(-17%);
+    }
+    #btnContinuarComprando {
+        position: absolute;
+        left: 91%;
+        top: 187%;
+        text-decoration: underline;
+        color: #EF4126;
+        transform: translate(-91%);
     }
     .addCart {
       position: relative;
@@ -300,18 +316,19 @@ select#acabamento {
       top: 456px;
       transform: translate(0%);
     }
-.lnk-comp {
-    position: absolute;
-    top: 152.9%;
-    left: 66%;
-    padding: 14px 20px 14px 20px;
-}
-#desc {
-    position: relative;
-    left: 14%;
-    top: 1193px;
-    font-size: 13px;
-}
+    .lnk-comp {
+        position: relative;
+        top: 418px;
+        left: 66%;
+        padding: 14px 20px 14px 20px;
+        transform: translate(-66%);
+    }
+    #desc {
+        position: relative;
+        left: 14%;
+        top: 1218px;
+        font-size: 13px;
+    }
     .descProd {
     text-align: center;
     position: relative;
@@ -324,6 +341,14 @@ select#acabamento {
     }
     }
     @media screen and (min-width:768px) and (max-width:1024px) {
+      #btnContinuarComprando {
+        position: absolute;
+        left: 72%;
+        top: 172%;
+        text-decoration: underline;
+        color: #EF4126;
+        transform: translate(-72%);
+    }
       .produtoCard > h2 {
     position: relative;
     left: 57%;
@@ -424,6 +449,14 @@ select#acabamento {
 }
     }
     @media screen and (min-width:1280px) and (max-width:1880px) {
+      #btnContinuarComprando {
+          position: absolute;
+          left: 82%;
+          top: 159%;
+          text-decoration: underline;
+          color: #EF4126;
+          transform: translate(-82%);
+      }
           #desc {
             position: relative;
             top: 700px;
@@ -476,6 +509,14 @@ select#acabamento {
           }
     }
     @media screen and (min-width:2560px) {
+      #btnContinuarComprando {
+          position: absolute;
+          left: 78%;
+          top: 113%;
+          text-decoration: underline;
+          color: #EF4126;
+          transform: translate(-78%);
+      }
       #imagemPreview {
     position: absolute;
     top: 402px;
@@ -543,7 +584,7 @@ select#acabamento {
         <div class="mini-banner">
             <!-- IMAGEM <img src="image.jpg" alt="...">-->
         </div>
-        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <p>Tá com pressa? <strong>Imprimeai</strong></p>
         <nav>
             <ul class='menu2'>
                 <a href="pedidos-usuario.html">Meus Pedidos</a>
@@ -663,7 +704,8 @@ select#acabamento {
         </section>
         <!-- Outras seções da página aqui -->
     </main>
-    <span id="voltar_ao_topo" class="material-icons">expand_less</span>
+    <!--<span id="voltar_ao_topo" class="material-icons">expand_less</span>-->
+    <a href="../index.html" id="btnContinuarComprando">Continuar Comprando</a>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.4/fetch.min.js"></script>
     <!--<script src="../scripts/script.js"></script>-->
 

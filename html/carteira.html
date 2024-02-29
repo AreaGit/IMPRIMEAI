@@ -349,7 +349,118 @@
         top: 20px;
         left: 85%;
     }
+    div#divTransacoes {
+        border-radius: 5px;
+        width: 60vw;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 70%;
+        box-shadow: -3px -3px 11px #0000008a;
+        height: auto;
+    }
+    #divTransacoes > h2 {
+        position: relative;
+        left: 14%;
+        width: fit-content;
+        font-size: 33px;
+        padding: 10px;
+        transform: translate(-14%);
+    }
+    #divTransacoes > h3 {
+        display: inline;
+        padding: 12px;
+        font-size: 1.6em;
+    }
+    h3#h3Id {
+        position: absolute;
+        left: 14%;
+        transform: translate(-14%);
+    }
+    h3#h3Valor {
+        position: absolute;
+        left: 20%;
+        transform: translate(-20%);
+    }
+    h3#h3EntSad {
+        position: absolute;
+        left: 32%;
+        transform: translate(-32%);
+    }
+    li > p {
+        position: relative;
+        left: 15%;
+        top: 55px;
+        font-size: 21px;
+        font-weight: normal;
+    }
+    p#transacaoValor {
+        position: relative;
+        left: 21%;
+        top: 29px;
+        transform: translate(-21%);
+        width: fit-content;
+    }
+    p#transacaoTipo {
+        width: fit-content;
+        position: relative;
+        left: 34%;
+        top: 0px;
+        transform: translate(-34%);
+    }
     @media screen and (min-width:320px) and (max-width:481px) {
+        div#divTransacoes {
+            border-radius: 5px;
+            width: 99vw;
+            position: absolute;
+            left: 0%;
+            transform: translate(-0%);
+            top: 70%;
+            box-shadow: -3px -3px 11px #0000008a;
+            height: auto;
+        }
+        #divTransacoes > h3 {
+            font-size: 18px;
+        }
+        h3#h3Valor {
+            position: absolute;
+            left: 20%;
+            transform: translate(-20%);
+            padding-left: 65px;
+        }
+        h3#h3EntSad {
+            position: absolute;
+            left: 30%;
+            transform: translate(-30%);
+            padding-left: 174px;
+        }
+        li > p {
+            position: relative;
+            left: 15%;
+            top: 55px;
+            font-size: 15px;
+            font-weight: normal;
+        }
+        p#transacaoTipo {
+            width: fit-content;
+            position: relative;
+            left: 67%;
+            top: 0px;
+            transform: translate(-78%);
+        }
+        p#transacaoValor {
+            position: relative;
+            left: 38%;
+            top: 21px;
+            transform: translate(-38%);
+            width: fit-content;
+        }
+        p#transacaoId {
+            width: fit-content;
+            top: 41px;
+            left: 18%;
+            transform: translate(-18%);
+        }
         header > p {
             position: relative;
             top: 30px;
@@ -520,6 +631,32 @@
         }
     }
     @media screen and (min-width:768px) and (max-width:1440px) {
+        h3#h3Valor {
+            position: absolute;
+            left: 27%;
+            transform: translate(-20%);
+            /* padding-left: 65px; */
+        }
+        h3#h3EntSad {
+            position: absolute;
+            left: 56%;
+            transform: translate(-30%);
+            /* padding-left: 201px; */
+        }
+        p#transacaoValor {
+            position: relative;
+            left: 27%;
+            top: 29px;
+            transform: translate(-21%);
+            width: fit-content;
+        }
+        p#transacaoTipo {
+            width: fit-content;
+            position: relative;
+            left: 56%;
+            top: 0px;
+            transform: translate(-34%);
+        }
         header > p {
             position: relative;
             top: 30px;
@@ -681,6 +818,57 @@
         }
     }
     @media screen and (min-width:1441px) and (max-width:1879px) {
+        h3#h3Valor {
+            position: absolute;
+            left: 27%;
+            transform: translate(-20%);
+            /* padding-left: 65px; */
+        }
+        h3#h3EntSad {
+            position: absolute;
+            left: 56%;
+            transform: translate(-30%);
+            /* padding-left: 201px; */
+        }
+        p#transacaoValor {
+            position: relative;
+            left: 27%;
+            top: 29px;
+            transform: translate(-21%);
+            width: fit-content;
+        }
+        p#transacaoTipo {
+            width: fit-content;
+            position: relative;
+            left: 56%;
+            top: 0px;
+            transform: translate(-34%);
+        }        h3#h3Valor {
+            position: absolute;
+            left: 27%;
+            transform: translate(-20%);
+            /* padding-left: 65px; */
+        }
+        h3#h3EntSad {
+            position: absolute;
+            left: 56%;
+            transform: translate(-30%);
+            /* padding-left: 201px; */
+        }
+        p#transacaoValor {
+            position: relative;
+            left: 27%;
+            top: 29px;
+            transform: translate(-21%);
+            width: fit-content;
+        }
+        p#transacaoTipo {
+            width: fit-content;
+            position: relative;
+            left: 56%;
+            top: 0px;
+            transform: translate(-34%);
+        }
         h2#h2Container {
             position: absolute;
             top: 3%;
@@ -877,7 +1065,7 @@
         <div class="mini-banner">
             <!-- IMAGEM <img src="image.jpg" alt="...">-->
         </div>
-        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <p>Tá com pressa? <strong>Imprimeai</strong></p>
         <nav>
             <ul class='menu2'>
                 <a href="pedidos-usuario.html">Meus Pedidos</a>
@@ -973,6 +1161,15 @@
                 </p>
                 <button id="btnEnvCardCredit" type="submit">Continuar</button>
             </form>
+          </div>
+          <div id="divTransacoes">
+                <h2>Transações</h2>
+                <h3 id="h3Id">ID</h3>
+                <h3 id="h3Valor">Valor</h3>
+                <h3 id="h3EntSad">Entrada/Saída</h3>
+                <ul id="ulTransacoes">
+                    <!-- Os elementos <li> das transações serão adicionados aqui -->
+                </ul>
           </div>
     </main>
     <script>
@@ -1545,6 +1742,43 @@
  
         // Chame a função para exibir o saldo do usuário quando a página for carregada
         exibirSaldoUsuario();
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(`/transacoesUsuario/${userId}`);
+                const data = await response.json();
+
+                // Verifica se há transações retornadas
+                if (data && data.transacoes && data.transacoes.length > 0) {
+                    // Obtém o elemento onde as transações serão adicionadas
+                    const pedidosList = document.getElementById('ulTransacoes');
+
+                    // Itera sobre cada transação e cria um elemento <li> para cada uma delas
+                    data.transacoes.forEach(transacao => {
+                        // Cria um elemento <li> para a transação
+                        const li = document.createElement('li');
+                        li.style.display = 'block';
+
+                       li.innerHTML = `
+                       
+                            <p id="transacaoId">${transacao.id}</p>
+                            <p id="transacaoValor">${transacao.valor}</p>
+                            <p id="transacaoTipo">${transacao.tipo}</p>
+
+                       `
+
+                        // Adiciona o elemento <li> ao elemento onde as transações serão listadas
+                        pedidosList.appendChild(li);
+                    });
+                } else {
+                    // Se não houver transações, exibe uma mensagem indicando isso
+                    const mensagem = document.createElement('li');
+                    mensagem.textContent = 'Nenhuma transação encontrada para este usuário.';
+                    document.getElementById('pedidos-list').appendChild(mensagem);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar e exibir transações do usuário:', error);
+            }
+        });
 
     </script>
 </body>

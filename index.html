@@ -16,7 +16,7 @@
         <div class="mini-banner">
             <!-- IMAGEM <img src="image.jpg" alt="...">-->
         </div>
-        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <p>Tá com pressa? <strong>Imprimeai</strong></p>
         <nav>
             <ul class='menu2'>
                 <a href="html/pedidos-usuario.html">Meus Pedidos</a>
@@ -50,7 +50,7 @@
             <div id="logado"></div>
             <a id="conviteCad" href="html/cadastro.html" class="lnk"><p class="par">Olá, bem-vindo! <br> Entre ou cadastre-se</p></a>
             <button style="display: none;" id="sairBtn" onclick="sair()">&RightArrow;</button>
-                <a class="lnk-cart" href="html/carrinho.html"><span id="carrinho_compras" class="material-icons">shopping_cart</span></a>
+                <a class="lnk-cart" href="html/carrinho.html"><span id="carrinho_compras" class="material-icons"><img id="imgCart" src="images/carrinho.png" alt="..."><!--shopping_cart--></span></a>
                 <span id="totalItens"></span>
 
         </div>
@@ -58,7 +58,7 @@
             <ul>
               <li><a href="index.html">Início</a></li>
               <li class="dropdown">
-                <a href="#">Produtos ∇</a>
+                <a href="#">Produtos</a>
                 <div class="dropdown-content">
                   <a href="html/comunicacao-visual.html">Comunicação Visual</a>
                   <a href="html/adesivos-etiquetas.html">Adesivos e Etiquetas</a>
@@ -178,5 +178,31 @@
     <span id="voltar_ao_topo" class="material-icons">expand_less</span>
     <script src="scripts/slider.js"></script>
     <script src="scripts/script.js"></script>
+    <script>
+        const totalItens = document.getElementById('totalItens');
+        // Função para buscar o número de produtos no carrinho
+        async function fetchNumeroProdutosCarrinho() {
+          try {
+            // Faz a requisição GET para a rota /carrinho
+            const response = await fetch('/carrinho');
+            const data = await response.json();
+            
+            // Verifica se a resposta contém o carrinho
+            if (data && data.carrinho && data.carrinho.length > 0) {
+              // Exibe o número de produtos no carrinho
+              console.log(`Número de produtos no carrinho: ${data.carrinho.length}`);
+              totalItens.innerText = `${data.carrinho.length}`
+            } else {
+              // Caso contrário, mostra que o carrinho está vazio
+              console.log('Carrinho vazio');
+            }
+          } catch (error) {
+            console.error('Erro ao buscar número de produtos no carrinho:', error);
+          }
+        }
+      
+        // Chama a função ao carregar a página
+        fetchNumeroProdutosCarrinho();
+      </script>
 </body>
 </html>

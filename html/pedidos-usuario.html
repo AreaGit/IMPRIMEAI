@@ -247,7 +247,7 @@
         <div class="mini-banner">
             <!-- IMAGEM <img src="image.jpg" alt="...">-->
         </div>
-        <p>Tá com pressa? <strong>ImprimeAí</strong></p>
+        <p>Tá com pressa? <strong>Imprimeai</strong></p>
         <nav>
             <ul class='menu2'>
                 <a href="pedidos-usuario.html">Meus Pedidos</a>
@@ -305,7 +305,7 @@ fetch(`/pedidos-usuario/${userId}`)
                     li.innerHTML = `
                         <p class="ped-id">${pedidos.id}</p>
                         <p class="ped-nome">${pedidos.nomePed}</p>
-                        <p class="ped-valor">${pedidos.valorPed}</p>
+                        <p class="ped-valor">${pedidos.valorPed.toFixed(2)}</p>
                         <p class="ped-quant">${pedidos.quantPed}</p>
                         <!--<p class="ped-status" id="ped-status">${pedidos.statusPed}</p>-->
                         <a href="detalhes-pedidosUser.html?idPedido=${pedidos.id}" id="verPed">Detalhes do Pedido</a>

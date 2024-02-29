@@ -1,5 +1,18 @@
 /*DIVERSAS TELAS*/
 @media screen and (min-width:320px) and (max-width:480px) {
+  #imgCart {
+    width: 30%;
+  }
+  #totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 74px;
+    left: 80%;
+    transform: translate(-80%);
+    font-size: 14px;
+  }
     .slider-container {display: none;}
     footer {
       position: absolute;
@@ -70,7 +83,7 @@
     }
     #carrinho_compras {
       position: absolute;
-      top: 76px;
+      top: 81px;
       left: 74%;
     }
     #logado {
@@ -139,6 +152,19 @@
 }
 
 @media screen and (min-width:481px) and (max-width:579px) {
+  #imgCart {
+    width: 30%;
+  }
+  #totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 102px;
+    left: 84%;
+    transform: translate(-84%);
+    font-size: 14px;
+  }
   footer {
     position: absolute;
     top: 289%;
@@ -194,8 +220,8 @@
 }
 #carrinho_compras {
   position: absolute;
-  top: 64px;
-  left: 94%;
+  top: 107px;
+  left: 79%;
 }
 .icons-header {
   position: relative;
@@ -295,6 +321,19 @@
   }
 }
 @media screen and (min-width:516px) and (max-width:579px) {
+  #imgCart {
+    width: 130%;
+  }
+  #totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 55px;
+    left: 100%;
+    transform: translate(-84%);
+    font-size: 14px;
+  }
   .slider-container {
     display: none;
   }
@@ -420,6 +459,18 @@
 }
 }
 @media screen and (min-width:580px) and (max-width:767px) {
+  #imgCart {
+    width: 110%;
+  }
+  #totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 6%;
+    left: 99%;
+    transform: translate(-79%);
+  }
   .produtos {
     position: relative;
     left: -10%;
@@ -565,6 +616,18 @@
 }
 }
 @media screen and (min-width:660px) and (max-width:767px) {
+  #totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 6%;
+    left: 93%;
+    transform: translate(-79%);
+}
+#imgCart {
+  width: 40%;
+}
   .produtos {
     position: relative;
     left: -10%;
@@ -659,8 +722,8 @@
 }
 #carrinho_compras {
   position: absolute;
-  top: 64px;
-  left: 96%;
+  top: 66px;
+  left: 90%;
 }
 .logo-imprimeai {
   position: relative;
@@ -715,6 +778,9 @@
       margin: 0px;
       padding: 0px;
       box-sizing: border-box;
+  } 
+  #imgCart {
+    width: 13%;
   }
   body {
       font-family: var(--font-padrao);
@@ -1040,13 +1106,13 @@ header > p {
   }
 }
 @media screen and (min-width:768px) and (max-width:1023px) {
-  .logo-imprimeai {
-    left: 1px;
-  }
   #carrinho_compras {
     position: absolute;
     top: 9%;
-    left: 73%;
+    left: 72%;
+}
+  .logo-imprimeai {
+    left: 1px;
   }
   #totalItens {
     position: absolute;
@@ -1227,6 +1293,9 @@ header > p {
     letter-spacing: 0.4px;
     width: fit-content;
 }
+#imgCart {
+  width: 19%;
+}
 #carrinho_compras {
   position: absolute;
   top: 23%;
@@ -1234,8 +1303,8 @@ header > p {
 }
 #totalItens {
   position: absolute;
-  top: 8%;
-  left: 75%;
+  top: 21%;
+  left: 88%;
 }
 #logado {
   position: relative;
@@ -1282,11 +1351,6 @@ header > p {
     width: 420px;
     transition: all ease-in-out .5s;
     margin-right: -2rem;
-  }
-  #totalItens {
-    position: absolute;
-    top: 21%;
-    left: 82%;
   }
   .par {
     display: block;
@@ -1377,6 +1441,9 @@ header > p {
     letter-spacing: 0.4px;
     width: fit-content;
 }
+#imgCart {
+  width: 20%;
+}
 #carrinho_compras {
   position: absolute;
   top: 23%;
@@ -1384,8 +1451,8 @@ header > p {
 }
 #totalItens {
   position: absolute;
-  top: 8%;
-  left: 75%;
+  top: 22%;
+  left: 88%;
 }
 #logado {
   position: relative;
@@ -1432,11 +1499,6 @@ header > p {
     width: 420px;
     transition: all ease-in-out .5s;
     margin-right: -2rem;
-  }
-  #totalItens {
-    position: absolute;
-    top: 21%;
-    left: 82%;
   }
   .par {
     display: block;
@@ -1590,6 +1652,9 @@ header > p {
   }
 }
 @media screen and (min-width:1601px) and (max-width:1800px){
+  #imgCart {
+    width: 18%;
+  }
   .logo-imprimeai {
     position: relative;
     left: 15%;
@@ -1604,8 +1669,8 @@ header > p {
   }
   #totalItens {
     position: absolute;
-    top: 16%;
-    left: 86%;
+    top: 19%;
+    left: 89%;
   }
   #formPesquisa {
     width: fit-content;
@@ -1677,13 +1742,13 @@ header > p {
   #carrinho_compras {
     position: absolute;
     top: 23%;
-    left: 95%;
+    left: 88%;
 }
-  #totalItens {
-    position: absolute;
-    top: 16%;
-    left: 86%;
-  }
+#totalItens {
+  position: absolute;
+  top: 21%;
+  left: 90%;
+}
   #formPesquisa {
     width: fit-content;
     position: absolute;
@@ -1741,6 +1806,9 @@ header > p {
   }
 }
 @media screen and (min-width: 1540px) and (max-widht:1800px) {
+  #imgCart {
+    width: 16%;
+  }
   .slider {
     position: relative;
     width: 118%;
@@ -1757,13 +1825,13 @@ header > p {
   #carrinho_compras {
     position: absolute;
     top: 20%;
-    left: 87%;
+    left: 84%;
   }
   #totalItens {
     position: absolute;
-    top: 16%;
+    top: 19%;
     left: 86%;
-  }
+}
   #formPesquisa {
     width: fit-content;
     position: absolute;
@@ -1818,6 +1886,15 @@ header > p {
   }
 }
 @media screen and (min-width: 2560px) {
+  #totalItens {
+    background-color: white;
+    border-radius: 100px;
+    padding: 1px;
+    position: absolute;
+    top: 13%;
+    left: 79%;
+    transform: translate(-79%);
+  }
     header > p {
       font-size: 18px;
     }
