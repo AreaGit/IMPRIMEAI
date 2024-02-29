@@ -780,6 +780,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }else if (data.message === 'Já existe uma Gráfica com este e-mail cadastrado') {
                 msg.innerHTML = '<strong>Já existe uma Gráfica com este E-mail</strong>'
                 msg.setAttribute('style', 'color:red;')
+                alert("Já existe uma Gráfica com este E-mail!")
+                setTimeout(() => {
+                    window.location.reload()
+                }, 5000)
             } else {
             // Erro no cadastro
             console.error('Erro ao cadastrar grafica:', data.error);

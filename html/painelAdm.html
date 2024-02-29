@@ -207,12 +207,14 @@
                 const data = await response.json();
   
                 const pedidos = data.pedidos;
+                const itensPedidos = data.itensPedidos;
   
-                // Filtrar pedidos com diferentes status
-                const pedidosAguardando = pedidos.filter(pedido => pedido.statusPed === 'Aguardando');
-                const pedidosAceitos = pedidos.filter(pedido => pedido.statusPed === 'Pedido Aceito Pela Gráfica');
-                const pedidosFinalizados = pedidos.filter(pedido => pedido.statusPed === 'Finalizado');
-                const pedidosEntregues = pedidos.filter(pedido => pedido.statusPed === 'Pedido Entregue pela Gráfica');
+
+            // Filtrar itens de pedido com diferentes status
+                const pedidosAguardando = itensPedidos.filter(item => item.statusPed === 'Aguardando');
+                const pedidosAceitos = itensPedidos.filter(item => item.statusPed === 'Pedido Aceito Pela Gráfica');
+                const pedidosFinalizados = itensPedidos.filter(item => item.statusPed === 'Pedido Finalizado pela Gráfica');
+                const pedidosEntregues = itensPedidos.filter(item => item.statusPed === 'Pedido Entregue pela Gráfica');
   
                 const pedidosDataAguardando = processPedidosData(pedidosAguardando);
                 const pedidosDataAceitos = processPedidosData(pedidosAceitos);

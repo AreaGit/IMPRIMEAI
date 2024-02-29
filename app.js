@@ -2561,7 +2561,7 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
       
       if (produtoIndex !== -1) {
         // Encontrou um produto sem link de download
-        carrinho[produtoIndex].downloadLink = file.downloadLink;
+        carrinho[produtoIndex].downloadLink = file.webViewLink;
       }
     });
 
