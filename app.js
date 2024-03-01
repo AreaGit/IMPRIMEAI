@@ -12,6 +12,7 @@ const Enderecos = require('./models/Enderecos');
 const ItensPedido = require('./models/ItensPedido');
 const VariacoesProduto = require('./models/VariacoesProduto');
 const Carteira = require('./models/Carteira')
+const Entregas = require('./models/Entregas');
 const multer = require('multer');
 const { where } = require('sequelize');
 const ejs = require('ejs');
@@ -2387,7 +2388,7 @@ app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
     const result = await uploadFile(file);
     const pedidoId = req.body.pedidoId;
     // Atualize o produto no banco de dados com o downloadLink
-    await atualizarProduto(idProduto, result.downloadLink, pedidoId);
+    await atualizarProduto(idProduto, result.webViewLink, pedidoId, result.nomeArquivo);
     // Verifique se todos os produtos do pedido têm linkDownload diferente de "Enviar Arte Depois"
     const todosProdutosEnviados = await verificarTodosProdutosEnviados(pedidoId);
 
@@ -2403,8 +2404,8 @@ app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
   }
 });
 
-async function atualizarProduto(idProduto, downloadLink, pedidoId) {
-  await ItensPedidos.update({ linkDownload: downloadLink }, { where: { idPed: pedidoId, idProduto: idProduto } });
+async function atualizarProduto(idProduto, webViewLink, pedidoId, nomeArquivo) {
+  await ItensPedidos.update({ linkDownload: webViewLink, nomeArquivo: nomeArquivo }, { where: { idPed: pedidoId, idProduto: idProduto } });
 }
 // Função para obter o ID do pedido por ID do produto
 async function obterPedidoIdPorIdProduto(idProduto) {
@@ -2493,7 +2494,7 @@ async function uploadFile(file) {
   console.log('File Object:', file);
   const nomeArquivo = file.originalname;
   if (file.originalname.trim() === "Enviar Arte Depois") {
-    return { downloadLink: "Enviar Arte Depois" };
+    return { webViewLink: "Enviar Arte Depois" };
   }else {
   const fileMetaData = {
     'name': file.originalname, // Use file.originalname instead of 'file.originalname'
@@ -3191,6 +3192,39 @@ app.get('/verificarStatusTransacao', async (req, res) => {
   }
 });
 
+// Rota para receber os dados do formulário de entrega
+app.post('/dadosEntrega', upload.single('fotoEnt'), async (req, res) => {
+  const recEnt = req.body.recEnt;
+  const horEnt = req.body.horEnt;
+  const pedidoId = req.body.pedidoId;
+  const fotoEnt = req.file; // Informações sobre o arquivo da imagem
+
+  console.log('Dados Recebidos:');
+  console.log('Quem Recebeu:', recEnt);
+  console.log('Horário da Entrega:', horEnt);
+  console.log('ID do Pedido:', pedidoId);
+  console.log('Imagem:', fotoEnt);
+
+  // Verifica se o arquivo de imagem foi enviado
+  if (!fotoEnt) {
+    return res.status(400).send('Nenhuma imagem foi enviada.');
+  }
+
+  try {
+    // Aqui você pode fazer o que quiser com os dados recebidos, como salvar no banco de dados
+    await Entregas.create({
+      idPed: pedidoId,
+      destinatario: recEnt,
+      horario: horEnt,
+      foto: fotoEnt.buffer, // Salva o conteúdo da imagem no banco de dados
+    });
+
+    res.send('Dados de entrega recebidos com sucesso!');
+  } catch (error) {
+    console.error('Erro ao salvar imagem:', error);
+    res.status(500).send('Erro ao salvar imagem.');
+  }
+});
 
 httpServer.listen(8081, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8081`);

@@ -106,6 +106,31 @@
     top: 7%;
     left: 49%;
 }
+#formEntrega {
+    display: none;
+    position: absolute;
+    left: 92%;
+    transform: translate(-92%);
+    top: 8%;
+    box-shadow: -2px -2px 13px #00000099;
+    border-radius: 5px;
+    width: 26%;
+    padding: 14px;
+    height: 358px;
+}
+button#btnConfEnt {
+    position: relative;
+    top: 10px;
+    transform: translate(-50%);
+    padding: 12px 25px 12px 25px;
+}
+input {
+    font-size: 1em;
+    width: 24vw;
+    height: 40px;
+    margin: 5px;
+    padding: 6px;
+}
 @media screen and (min-width:320px) and (max-width:766px) {     
           button {
             position: relative;
@@ -120,6 +145,31 @@
             font-weight: bold;
             cursor: pointer;
         }   
+        #formEntrega {
+            position: absolute;
+            left: 69%;
+            transform: translate(-92%);
+            top: 35%;
+            box-shadow: -2px -2px 13px #00000099;
+            border-radius: 5px;
+            width: 74%;
+            padding: 14px;
+            height: 372px;
+        }
+        button#btnConfEnt {
+            position: relative;
+            top: 10px;
+            left: 50%;
+            transform: translate(-50%);
+            padding: 12px 25px 12px 25px;
+        }
+        input {
+            font-size: 1em;
+            width: 65vw;
+            height: 40px;
+            margin: 5px;
+            padding: 6px;
+        }
         header > p {
             position: relative;
             top: 11px;
@@ -214,6 +264,31 @@
         }
     }
     @media screen and (min-width:762px) and (max-width:1440px) {
+        #formEntrega {
+            position: absolute;
+            left: 69%;
+            transform: translate(-92%);
+            top: 28%;
+            box-shadow: -2px -2px 13px #00000099;
+            border-radius: 5px;
+            width: 74%;
+            padding: 14px;
+            height: 372px;
+        }
+        button#btnConfEnt {
+            position: relative;
+            top: 10px;
+            left: 50%;
+            transform: translate(-50%);
+            padding: 12px 25px 12px 25px;
+        }
+        input {
+            font-size: 1em;
+            width: 65vw;
+            height: 40px;
+            margin: 5px;
+            padding: 6px;
+        }
       .icons-header {
             position: relative;
             top: 0px;
@@ -341,6 +416,31 @@
 
     }
     @media screen and (min-width:1441px) and (max-width:1850px) {
+        #formEntrega {
+            position: absolute;
+            left: 78%;
+            transform: translate(-92%);
+            top: 29%;
+            box-shadow: -2px -2px 13px #00000099;
+            border-radius: 5px;
+            width: 74%;
+            padding: 14px;
+            height: 372px;
+        }
+        button#btnConfEnt {
+            position: relative;
+            top: 10px;
+            left: 50%;
+            transform: translate(-50%);
+            padding: 12px 25px 12px 25px;
+        }
+        input {
+            font-size: 1em;
+            width: 65vw;
+            height: 40px;
+            margin: 5px;
+            padding: 6px;
+        }
       button {
             position: relative;
             top: -43px;
@@ -534,8 +634,23 @@
   <ul id="pedidosContainer">
       
   </ul> 
+  <div id="formEntrega">
+    <h2>Informações da Entrega</h2>
+    <label for="recEnt">Quem Recebeu?</label>
+    <input type="text" name="recEnt" id="recEnt" placeholder="Digite quem Recebeu..." required>
+    <br>
+    <label for="horEnt">Horário da Entrega</label>
+    <input type="text" name="horEnt" id="horEnt" placeholder="Digite o Horário da Entrega...">
+    <br>
+    <label for="fotoEnt">Foto da Entrega</label>
+    <input type="file" name="fotoEnt" id="fotoEnt">
+    <br>
+    <button id="btnConfEnt">Confirmar Entrega</button>
+  </div>
   </main>
   <script>
+    const formEntrega = document.getElementById('formEntrega');
+    const btnConfEnt = document.getElementById('btnConfEnt');
     document.addEventListener('DOMContentLoaded', async () => {
       try {
         // Fetch the orders with status "Pedido Enviado pela Gráfica"
@@ -566,7 +681,7 @@
         const btnPedidoEntregue = document.querySelectorAll('.btnPedidoEntregue');
       btnPedidoEntregue.forEach(btn => {
         btn.addEventListener('click', async () => {
-          try {
+          /*try {
             const idPedido = btn.dataset.pedidoId;
             const novoStatus = 'Pedido Entregue pela Gráfica';
 
@@ -591,10 +706,64 @@
 
           } catch (error) {
             console.error('Erro ao enviar pedido:', error);
-          }
+          }*/
+          formEntrega.style.display = 'block';
+          btn.style.display = 'none';
+          currentPedidoId = btn.dataset.pedidoId; // Armazenar o ID do pedido atual
         });
       });
+      btnConfEnt.addEventListener('click', async () => {
+        const recEnt = document.getElementById('recEnt').value;
+        const horEnt = document.getElementById('horEnt').value;
+        const fotoEnt = document.getElementById('fotoEnt').files[0];
+        const formData = new FormData();
+        formData.append('recEnt', recEnt);
+        formData.append('horEnt', horEnt);
+        formData.append('fotoEnt', fotoEnt);
+        formData.append('pedidoId', currentPedidoId);
 
+        try {
+            const response = await fetch('/dadosEntrega', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro ao enviar dados: ${response.statusText}`);
+            }
+
+            console.log('Dados enviados com sucesso!');
+            // Faça qualquer ação necessária após o envio dos dados
+            try {
+            const idPedido = currentPedidoId;
+            const novoStatus = 'Pedido Entregue pela Gráfica';
+
+            const response = await fetch('/atualizar-status-pedido', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pedidoId: idPedido,
+                novoStatus: novoStatus,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Erro ao enviar pedido: ${response.statusText}`);
+            }
+
+            // Redirect to after updating the order status
+            window.location.reload()
+           
+
+          } catch (error) {
+            console.error('Erro ao enviar pedido:', error);
+          }
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+        }
+    });
       } catch (error) {
         console.error('Erro ao obter pedidos enviados:', error);
       }

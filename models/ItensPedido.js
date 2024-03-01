@@ -24,7 +24,7 @@ const ItensPedidos = db.define('itenspedidos', {
         allowNull: false,
     },
     valorProd: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
     },
     acabamento: {

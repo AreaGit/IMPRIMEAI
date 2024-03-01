@@ -99,6 +99,12 @@
     top: 7%;
     left: 49%;
 }
+p#dataCriacao {
+    width: fit-content;
+    position: absolute;
+    left: 8%;
+    transform: translate(-8%);
+}
 @media screen and (min-width:320px) and (max-width:766px) {        
         header > p {
             position: relative;
@@ -107,6 +113,13 @@
             font-size: 14px;
             letter-spacing: 0.4px;
             width: fit-content;
+        }
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 8%;
+            transform: translate(-8%);
+            font-size: 14px;
         }
         .menu2 {
             display: flex;
@@ -194,6 +207,14 @@
         }
     }
     @media screen and (min-width:768px) and (max-width:1024px) {
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 8%;
+            transform: translate(-8%);
+            font-size: 14px;
+            top: 60%;
+        }
         header > p {
             position: relative;
             top: 30px;
@@ -276,6 +297,14 @@
         }
     }
     @media screen and (min-width:1025px) and (max-width:1440px) {
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 0%;
+            transform: translate(0%);
+            font-size: 14px;
+            top: 66px;
+        }
         header > p {
             position: relative;
             top: 16px;
@@ -369,6 +398,13 @@
         }
     }
     @media screen and (min-width:1441px) and (max-width:1850px) {
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 6%;
+            transform: translate(-6%);
+            top: -22px;
+        }
         .menu2 {
             display: flex;
             list-style: none;
@@ -438,6 +474,13 @@
         }
     }
     @media screen and (min-width:2560px) {
+        a#verPed {
+            position: relative;
+            left: 57%;
+            top: -5px;
+            width: fit-content;
+            font-size: 22px;
+        }
         h3#h3Id {
             font-size: 28px;
             position: absolute;
@@ -569,10 +612,15 @@ socket.on('msg', (msg) => {
             .then(data => {
                 const pedidosList = document.getElementById('pedidos-list');
                 data.pedidos.forEach(pedidos => {
+                    console.log(pedidos)
                     //cardEsc.setAttribute('style', 'display:none;')
                     const li = document.createElement('li');
                     li.style.display = 'block';
+                    const dataCriacao = new Date(pedidos.createdAt);
+                    const dataFormatada = dataCriacao.toLocaleString('pt-BR');
+                    li.style.display = 'block';
                     li.innerHTML = `
+                        <p id="dataCriacao">${dataFormatada}</p>
                         <p class="ped-id">${pedidos.idPed}</p>
                         <p class="ped-nome">${pedidos.nomeProd}</p>
                         <p class="ped-valor">${pedidos.valorProd}</p>
