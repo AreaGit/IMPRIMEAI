@@ -263,24 +263,53 @@ app.post('/editar-grafica/:id', upload.none(), async (req, res) => {
 
 app.get('/pedidos-aceitos-grafica', async (req, res) => {
   try {
-    const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
+    const graficaId = req.cookies.userId; // Obtém o ID da gráfica do cookie
 
     if (!graficaId) {
       return res.status(401).json({ message: "Usuário não autenticado" });
     }
-    // Query the database for orders with status "Pedido Aceito Pela Gráfica" and associated data
+
+    // Query para encontrar pedidos aceitos pela gráfica
     const pedidosAceitos = await ItensPedido.findAll({
       where: {
         statusPed: 'Pedido Aceito Pela Gráfica',
-        graficaAtend: graficaId, // Filter by the ID of the graphics company
+        graficaAtend: graficaId, // Filtra pela ID da gráfica
       },
     });
 
-    // Return the filtered orders with associated data as JSON
+    // Extrai os IDs de pedidos aceitos
+    const pedidoIds = pedidosAceitos.map(pedido => pedido.idPed);
+
+    // Query para encontrar os IDs de usuário de pedidos aceitos
+    const userIds = await Pedidos.findAll({
+      attributes: ['idUserPed'], // Seleciona apenas o campo idUserPed
+      where: {
+        id: pedidoIds, // Filtra pelos IDs de pedidos aceitos
+      },
+    });
+
+    // Extrai os IDs de usuário dos resultados
+    const userIdsArray = userIds.map(user => user.idUserPed);
+
+    // Para cada ID de usuário encontrado, obtenha o telefone cadastrado
+    for (const userId of userIdsArray) {
+      const user = await User.findOne({ // Substitua 'Users' pelo modelo real de usuários
+        attributes: ['telefoneCad'], // Seleciona apenas o telefone cadastrado
+        where: { id: userId }
+      });
+
+      // Verifica se o telefone foi encontrado e envia a mensagem via WhatsApp
+      if (user && user.telefoneCad) {
+        const corpoMensagem = "Olá! Temos o prazer de informar que seu pedido foi aceito pela gráfica e está em processo de produção. Em breve entraremos em contato para fornecer atualizações sobre o progresso e a entrega. Agradecemos por escolher nossos serviços!😉";
+        await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+        console.log("Mensagem enviada Com Sucesso!")
+      }
+    }
+
     return res.json({ success: true, pedidos: pedidosAceitos });
   } catch (error) {
-    console.error('Erro ao obter pedidos aceitos:', error);
-    return res.json({ success: false, message: 'Erro ao obter pedidos aceitos.' });
+    console.error('Erro ao obter pedidos aceitos e enviar notificações:', error);
+    return res.json({ success: false, message: 'Erro ao obter pedidos aceitos e enviar notificações.' });
   }
 });
 
@@ -299,7 +328,35 @@ app.get('/pedidos-finalizados-grafica', async (req,res) => {
       },
     });
 
-    // Return the filtered orders with associated data as JSON
+    // Extrai os IDs de pedidos aceitos
+    const pedidoIds = pedidosAceitos.map(pedido => pedido.idPed);
+
+    // Query para encontrar os IDs de usuário de pedidos aceitos
+    const userIds = await Pedidos.findAll({
+      attributes: ['idUserPed'], // Seleciona apenas o campo idUserPed
+      where: {
+        id: pedidoIds, // Filtra pelos IDs de pedidos aceitos
+      },
+    });
+
+    // Extrai os IDs de usuário dos resultados
+    const userIdsArray = userIds.map(user => user.idUserPed);
+
+    // Para cada ID de usuário encontrado, obtenha o telefone cadastrado
+    for (const userId of userIdsArray) {
+      const user = await User.findOne({ // Substitua 'Users' pelo modelo real de usuários
+        attributes: ['telefoneCad'], // Seleciona apenas o telefone cadastrado
+        where: { id: userId }
+      });
+
+      // Verifica se o telefone foi encontrado e envia a mensagem via WhatsApp
+      if (user && user.telefoneCad) {
+        const corpoMensagem = "Olá! Seu pedido foi finalizado e está pronto para retirada ou entrega. Por favor, entre em contato conosco para agendar a retirada ou fornecer detalhes de entrega. Obrigado por escolher nossos serviços!😉";
+        await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+        console.log("Mensagem enviada Com Sucesso!")
+      }
+    }
+
     return res.json({ success: true, pedidos: pedidosAceitos });
   } catch (error) {
     console.error('Erro ao obter pedidos aceitos:', error);
@@ -321,7 +378,34 @@ app.get('/pedidos-enviados-grafica', async (req, res) => {
         graficaatend: graficaId,
       },
     });
+        // Extrai os IDs de pedidos aceitos
+        const pedidoIds = pedidosEnviados.map(pedido => pedido.idPed);
 
+        // Query para encontrar os IDs de usuário de pedidos aceitos
+        const userIds = await Pedidos.findAll({
+          attributes: ['idUserPed'], // Seleciona apenas o campo idUserPed
+          where: {
+            id: pedidoIds, // Filtra pelos IDs de pedidos aceitos
+          },
+        });
+    
+        // Extrai os IDs de usuário dos resultados
+        const userIdsArray = userIds.map(user => user.idUserPed);
+    
+        // Para cada ID de usuário encontrado, obtenha o telefone cadastrado
+        for (const userId of userIdsArray) {
+          const user = await User.findOne({ // Substitua 'Users' pelo modelo real de usuários
+            attributes: ['telefoneCad'], // Seleciona apenas o telefone cadastrado
+            where: { id: userId }
+          });
+    
+          // Verifica se o telefone foi encontrado e envia a mensagem via WhatsApp
+          if (user && user.telefoneCad) {
+            const corpoMensagem = "Olá! Seu pedido foi enviado e está a caminho do seu endereço. Você receberá em breve um código de rastreamento para acompanhar a entrega. Agradecemos por sua preferência!😉";
+            await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+            console.log("Mensagem enviada Com Sucesso!")
+          }
+        }
     res.json({ success: true, pedidos: pedidosEnviados });
   } catch (error) {
     console.error('Erro ao obter pedidos enviados:', error);
@@ -337,14 +421,63 @@ app.get('/pedidos-entregues-grafica', async (req, res) => {
       return res.status(401).json({ message: 'Usuário não autenticado' });
     }
 
-    const pedidosEnviados = await ItensPedido.findAll({
+    const pedidosEntregues = await ItensPedido.findAll({
       where: {
         statusPed: 'Pedido Entregue pela Gráfica',
         graficaatend: graficaId,
       },
     });
 
-    res.json({ success: true, pedidos: pedidosEnviados });
+    // Extrai os IDs de pedidos entregues
+    const pedidoIds = pedidosEntregues.map(pedido => pedido.idPed);
+
+    // Query para encontrar as informações de entrega dos pedidos entregues
+    const entregas = await Entregas.findAll({
+      where: {
+        idPed: pedidoIds, // Filtra pelos IDs de pedidos entregues
+      },
+    });
+
+    // Construir a resposta com as informações de entrega
+    const response = pedidosEntregues.map(pedido => {
+      const entrega = entregas.find(entrega => entrega.idPed === pedido.idPed);
+      return {
+        idPedido: pedido.idPed,
+        destinatario: entrega.destinatario,
+        horario: entrega.horario,
+        // Aqui você pode adicionar mais campos da entrega que deseja incluir na resposta
+      };
+    });
+
+    // Query para encontrar os IDs de usuário de pedidos entregues
+    const userIds = await Pedidos.findAll({
+      attributes: ['idUserPed'], // Seleciona apenas o campo idUserPed
+      where: {
+        id: pedidoIds, // Filtra pelos IDs de pedidos entregues
+      },
+    });
+
+    // Extrai os IDs de usuário dos resultados
+    const userIdsArray = userIds.map(user => user.idUserPed);
+
+    // Para cada ID de usuário encontrado, obtenha o telefone cadastrado
+    for (const userId of userIdsArray) {
+      const user = await User.findOne({ // Substitua 'Users' pelo modelo real de usuários
+        attributes: ['telefoneCad'], // Seleciona apenas o telefone cadastrado
+        where: { id: userId }
+      });
+
+      // Verifica se o telefone foi encontrado e envia a mensagem via WhatsApp
+      if (user && user.telefoneCad) {
+        for (const entrega of response) {
+          const corpoMensagem = `Olá! Temos o prazer de informar que seu pedido foi entregue com sucesso para ${entrega.destinatario} no horário ${entrega.horario}. Esperamos que você esteja satisfeito com nossos produtos e serviços. Se precisar de mais alguma coisa, não hesite em nos contatar. Obrigado!😉`;
+          await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+          console.log("Mensagem enviada Com Sucesso!")
+        }
+      }
+    }
+
+    res.json({ success: true, pedidos: pedidosEntregues });
   } catch (error) {
     console.error('Erro ao obter pedidos enviados:', error);
     res.status(500).json({ success: false, message: 'Erro ao obter pedidos enviados.' });

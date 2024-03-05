@@ -106,7 +106,20 @@
     top: 7%;
     left: 49%;
 }
+p#dataCriacao {
+        width: fit-content;
+        position: absolute;
+        left: 8%;
+        transform: translate(-8%);
+    }
 @media screen and (min-width:320px) and (max-width:766px) {     
+    p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 8%;
+            transform: translate(-8%);
+            font-size: 14px;
+        }
           button {
             position: relative;
             top: -56px;
@@ -214,6 +227,14 @@
         }
     }
     @media screen and (min-width:762px) and (max-width:1440px) {
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 8%;
+            transform: translate(-8%);
+            font-size: 14px;
+            top: 60%;
+        }
       .icons-header {
             position: relative;
             top: 0px;
@@ -341,6 +362,13 @@
 
     }
     @media screen and (min-width:1441px) and (max-width:1850px) {
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 6%;
+            transform: translate(-6%);
+            top: -22px;
+        }
       button {
             position: relative;
             top: -43px;
@@ -551,8 +579,11 @@
         // Create HTML elements for each finalized order and append them to the container
         const pedidosContainer = document.getElementById('pedidosContainer');
         pedidosFinalizados.forEach(pedido => {
+            const dataCriacao = new Date(pedidosFinalizados[0].createdAt);
+            const dataFormatada = dataCriacao.toLocaleString('pt-BR');
             const pedidoDiv = document.createElement('li');
             pedidoDiv.innerHTML = `
+              <p id="dataCriacao">${dataFormatada}</p>
               <p class="ped-id">${pedidosFinalizados[0].idPed}</p>
               <p class="ped-nome">${pedidosFinalizados[0].nomeProd}</p>
               <p class="ped-valor">${pedidosFinalizados[0].valorProd}</p>

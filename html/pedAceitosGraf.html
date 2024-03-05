@@ -13,6 +13,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
+    p#dataCriacao {
+        width: fit-content;
+        position: absolute;
+        left: 8%;
+        transform: translate(-8%);
+    }
         main > h2 {
         position: relative;
         left: 15%;
@@ -107,6 +113,13 @@
     left: 49%;
 }
 @media screen and (min-width:320px) and (max-width:766px) {     
+    p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 8%;
+            transform: translate(-8%);
+            font-size: 14px;
+        }
           button {
             position: relative;
             top: -56px;
@@ -214,6 +227,14 @@
         }
     }
     @media screen and (min-width:762px) and (max-width:1440px) {
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 8%;
+            transform: translate(-8%);
+            font-size: 14px;
+            top: 60%;
+        }
       .icons-header {
             position: relative;
             top: 0px;
@@ -341,6 +362,13 @@
 
     }
     @media screen and (min-width:1441px) and (max-width:1850px) {
+        p#dataCriacao {
+            width: fit-content;
+            position: absolute;
+            left: 6%;
+            transform: translate(-6%);
+            top: -22px;
+        }
       button {
             position: relative;
             top: -43px;
@@ -553,7 +581,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const pedidosContainer = document.getElementById('pedidosContainer');
     pedidosAceitos.forEach(pedido => {
         const pedidoDiv = document.createElement('li');
+        const dataCriacao = new Date(pedidosAceitos[0].createdAt);
+        const dataFormatada = dataCriacao.toLocaleString('pt-BR');
         pedidoDiv.innerHTML = `
+          <p id="dataCriacao">${dataFormatada}</p>
           <p class="ped-id">${pedidosAceitos[0].idPed}</p>
           <p class="ped-nome">${pedidosAceitos[0].nomeProd}</p>
           <p class="ped-valor">${pedidosAceitos[0].valorProd}</p>
