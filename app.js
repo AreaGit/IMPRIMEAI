@@ -503,16 +503,23 @@ app.get('/pedidos-entregues-grafica', async (req, res) => {
       },
     });
 
-    // Construir a resposta com as informações de entrega
     const response = pedidosEntregues.map(pedido => {
       const entrega = entregas.find(entrega => entrega.idPed === pedido.idPed);
-      return {
-        idPedido: pedido.idPed,
-        destinatario: entrega.destinatario,
-        horario: entrega.horario,
-        // Aqui você pode adicionar mais campos da entrega que deseja incluir na resposta
-      };
+      // Verifica se há uma entrega correspondente
+      if (entrega) {
+        return {
+          idPedido: pedido.idPed,
+          destinatario: entrega.destinatario,
+          horario: entrega.horario,
+          // Aqui você pode adicionar mais campos da entrega que deseja incluir na resposta
+        };
+      } else {
+        // Se não houver entrega correspondente, retorne um objeto vazio ou null, ou trate de acordo com sua lógica de negócios
+        return null;
+      }
     });
+    // Remova os objetos nulos do array response
+    const filteredResponse = response.filter(item => item !== null);    
 
     // Query para encontrar os IDs de usuário de pedidos entregues
     const userIds = await Pedidos.findAll({
@@ -535,7 +542,7 @@ app.get('/pedidos-entregues-grafica', async (req, res) => {
 
         // Verifica se o telefone foi encontrado e envia a mensagem via WhatsApp
         if (user && user.telefoneCad) {
-          for (const entrega of response) {
+          for (const entrega of filteredResponse) { // Use filteredResponse em vez de response
             const corpoMensagem = `Olá! Temos o prazer de informar que seu pedido foi entregue com sucesso para ${entrega.destinatario} no horário ${entrega.horario}. Esperamos que você esteja satisfeito com nossos produtos e serviços. Se precisar de mais alguma coisa, não hesite em nos contatar. Obrigado!😉`;
             await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
             console.log("Mensagem enviada Com Sucesso!")
@@ -688,7 +695,7 @@ app.post("/login-graficas", async (req, res) => {
       return res.status(401).json({ message: "Senha incorreta" });
     }
 
-    res.cookie('userCad', grafica.userCad);
+    res.cookie('graficaUserCad', grafica.userCad);
     res.cookie('userId', grafica.id)
 
     // Gere um token de autenticação (exemplo simples)
