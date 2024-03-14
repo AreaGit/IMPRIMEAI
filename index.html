@@ -204,6 +204,64 @@
       
         // Chama a função ao carregar a página
         fetchNumeroProdutosCarrinho();
+
+        function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim().split('=');
+    if (cookie[0] === name) {
+      return decodeURIComponent(cookie[1]); // Decoded value for security
+    }
+  }
+  return null;
+}
+
+// Usage example (assuming you want to log the user ID to the console):
+const userId = getCookie('userId');
+const userCad = getCookie('userCad');
+if (userId) {
+  console.log('User ID:', userId);
+
+  fetch(`/user/${userId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json' // Optional, as the request retrieves data
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Validate retrieved userCad to prevent potential security vulnerabilities
+    if (!data || !data.userCad) {
+      console.error('Invalid or missing userCad data. Skipping further processing.');
+      return; // Exit the execution chain if validation fails
+    }
+
+    const userCad = data.userCad;
+    console.log(userCad);
+
+    // Update HTML element only if userCad is valid
+    const logadoElement = document.getElementById('logado');
+    const conviteCad = document.getElementById('conviteCad');
+    if (logadoElement) {
+      logadoElement.innerHTML = `
+        <a href="html/perfil.html?id=${encodeURIComponent(userCad)}" style="text-decoration: none; color: black;">
+          Olá ${userCad}
+        </a>`;
+        conviteCad.style.display = 'none'
+        sairBtn.setAttribute('style', 'display:block')
+
+    } else {
+        conviteCad.style.display = 'block'
+        console.warn('Element with ID "logado" not found in the HTML.');
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching user data:', error);
+    // Handle errors appropriately, e.g., display an error message to the user
+  });
+} else {
+  console.log('No "userId" cookie found.');
+}
       </script>
 </body>
 </html>

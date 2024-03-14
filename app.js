@@ -3437,6 +3437,24 @@ app.post('/dadosEntrega', upload.single('fotoEnt'), async (req, res) => {
   }
 });
 
+app.get('/user/:id', async (req, res) => {
+  const userId = req.params.id;
+  console.log(userId);
+
+  try {
+    const user = await User.findByPk(userId); // Assuming findByPk exists
+
+    if (!user) {
+      return res.status(404).send('User not found'); // Handle non-existent user
+    }
+
+    res.json({ userCad: user.userCad }); // Send JSON response with userCad
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error'); // Handle unexpected errors
+  }
+});
+
 httpServer.listen(8081, () => {
     console.log(`Servidor rodando na porta ${PORT}  http://localhost:8081`);
 });

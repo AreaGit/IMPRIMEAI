@@ -27,8 +27,7 @@ let validBairro = false
 
 
 usuario.addEventListener('keyup', () => {
-    const usuarioValue = usuario.value.trim(); // Remove espaços em branco do início e do fim
-    if (usuarioValue.length <= 5 || usuarioValue.includes(' ')) {
+    if(usuario.value.length <= 4) {
         usuario.style.color = 'red';
         usuario.style.borderColor = 'red';
         validUsuario = false;
@@ -37,7 +36,7 @@ usuario.addEventListener('keyup', () => {
         usuario.style.borderColor = 'green';
         validUsuario = true;
     }
-});
+})
 endereço.addEventListener('keyup', () => {
     if(endereço.value.length <= 5) {
         endereço.setAttribute('style', 'color: red; border-color: red;')
@@ -174,18 +173,16 @@ email.addEventListener('keyup', () => {
 pass.addEventListener('keyup', () => {
     const passValue = pass.value;
     const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(passValue);
-    const hasLowerCase = /[a-z]/.test(passValue);
-    const hasNumber = /\d/.test(passValue);
 
-    if (passValue.length < minLength || !(hasUpperCase && hasLowerCase && hasNumber)) {
-        pass.setAttribute('style', 'color: red; border-color: red;');
-        validPass = false;
+    if(passValue.length < minLength) {
+     pass.setAttribute('style', 'color:red; border-color: red;');
+     validPass = false;
     } else {
-        pass.setAttribute('style', 'color: black; border-color: green;');
-        validPass = true;
+     pass.setAttribute('style', 'color:black; border-color: green; ');
+     validPass = true;
     }
-});
+
+})
 
 document.getElementById('cadastroForm').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
@@ -218,16 +215,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const pass = document.getElementById('pass').value;
   
       // Verifique cada campo individualmente e exiba mensagens de erro, se necessário.
-      if (usuario.length <= 5 || usuario.includes(' ')) {
+      if (usuario.length <= 4) {
         msg.innerHTML = '<strong>O campo "Usuário" deve conter mais de 5 caracteres e não pode conter espaços.</strong>';
         msg.setAttribute('style', 'color: red;');
       } else if (email.length <= 3 || !validEmail) {
         msg.innerHTML = '<strong>Verifique o campo "E-mail" se ele foi digitado Corretamente.</strong>';
         msg.setAttribute('style', 'color: red;');
       } else if (pass.length <= 8 || !validPass) {
-        msg.innerHTML = '<strong>Verifique o campo "Senha" se ele foi digitado Corretamente.</strong>';
+        msg.innerHTML = '<strong>Verifique o campo "Senha" se ele atinge o mínimo de Caracteres.</strong>';
         msg.setAttribute('style', 'color: red;');
-      } else if (!validCPF || !validCep || !validTelefone || !validNumero || !validComplemento || !validBairro) {
+      } else if (!validCPF || !validCep || !validTelefone || !validNumero || !validBairro) {
         msg.innerHTML = '<strong>Verifique os Outros Campos e verifique se estão corretos!.</strong>';
         msg.setAttribute('style', 'color: red;');
       } else {

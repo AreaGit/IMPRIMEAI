@@ -63,30 +63,6 @@ const logado = document.getElementById('logado')
 const conviteCad = document.getElementById('conviteCad')
 const sairBtn = document.getElementById('sairBtn')
 
-function getCookie(name) {
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(name + '=')) {
-          return cookie.substring(name.length + 1);
-      }
-  }
-  return null;
-}
-
-// Ler o valor do cookie 'userCad'
-const userCad = getCookie('userCad');
-
-// Exibir o valor do 'userCad' na página
-const userCadDisplay = document.getElementById("userCadDisplay");
-if (userCad) {
-  logado.innerHTML = `<a href="html/perfil.html?id=${userCad}" style="text-decoration:none;color:black;">Olá ${userCad}</a>`;
-  conviteCad.setAttribute('style', 'display:none')
-  sairBtn.setAttribute('style', 'display:block')
-} else {
-  
-}
-
 //BOTÃO DE LOGOUT
 
 sairBtn.addEventListener("click", function () {
