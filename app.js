@@ -881,7 +881,15 @@ app.get('/pedidos-cadastrados', async (req, res) => {
           const raioEndereco = enderecoPedido.raio;
 
           if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
-            const produtosGrafica = JSON.parse(graficaMaisProxima.produtos);
+            let produtosGrafica;
+
+            // Verifica se graficaMaisProxima.produtos é uma string JSON
+            if (typeof graficaMaisProxima.produtos === 'string') {
+                const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"'); // Substitui todas as aspas simples por aspas duplas
+                produtosGrafica = JSON.parse(fixedJsonString);
+            } else {
+                produtosGrafica = graficaMaisProxima.produtos;
+            }
             if (pedido.graficaCancl == graficaMaisProxima.id) {
               console.log(`Pedido cancelado pela gráfica atual. Redirecionando para outra gráfica próxima. Pedido ID: ${pedido.idPed}`);
         
@@ -950,7 +958,7 @@ app.get('/pedidos-cadastrados', async (req, res) => {
                     console.log(`Pedido redirecionado com sucesso para a gráfica ID ${graficaMaisProxima.id}`);
     
                   } else {
-                    console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...');
+                    console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...', error);
                   }
                 } else {
                   console.log('Nenhuma gráfica próxima encontrada para redirecionamento.');
@@ -969,10 +977,18 @@ app.get('/pedidos-cadastrados', async (req, res) => {
 
               pedidosProximos.push(pedidoAssociado);
             } else {
-              console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...');
+              console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...', error);
 
               for (let graficaAtual of graficas) {
-                const produtosGraficaAtual = JSON.parse(graficaAtual.produtos);
+                let produtosGraficaAtual;
+
+                // Verifica se graficaAtual.produtos é uma string JSON
+                if (typeof graficaAtual.produtos === 'string') {
+                    const fixedJsonString = graficaAtual.produtos.replace(/'/g, '"'); // Substitui todas as aspas simples por aspas duplas
+                    produtosGraficaAtual = JSON.parse(fixedJsonString);
+                } else {
+                    produtosGraficaAtual = graficaAtual.produtos;
+                }
 
                 if (produtosGraficaAtual[pedido.nomeProd]) {
                   console.log(`Encontrada outra gráfica próxima que faz o produto necessário.`);
