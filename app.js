@@ -2372,8 +2372,14 @@ app.post('/criar-pedidos', async (req, res) => {
               const raioEndereco = enderecoPedido.raio;
     
               if (distanciaMinima <= raioEndereco && graficaMaisProxima && !enderecoNotificado) {
-                const produtosGrafica = JSON.parse(graficaMaisProxima.produtos);
-    
+                let produtosGrafica;
+              // Verifica se graficaMaisProxima.produtos é uma string JSON
+              if (typeof graficaMaisProxima.produtos === 'string') {
+                  const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"'); // Substitui todas as aspas simples por aspas duplas
+                  produtosGrafica = JSON.parse(fixedJsonString);
+              } else {
+                  produtosGrafica = graficaMaisProxima.produtos;
+              }    
                 if (produtosGrafica[pedidoCadastrado.nomeProd]) {
                   const pedidoAssociado = {
                     ...pedidoCadastrado.dataValues,
