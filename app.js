@@ -2048,7 +2048,7 @@ carrinho.forEach((produto, produtoIndex) => {
       enobrecimento: produto.enobrecimento,
       formato: produto.formato,
       material: produto.material,
-      arquivo: produto.arquivo,
+      arquivo: produto.nomeArquivo,
       downloadLink: produto.downloadLink,
       tipoEntrega: 'Múltiplos Enderecos',
       endereco: endereco,
@@ -2176,9 +2176,9 @@ app.post('/criar-pedidos', async (req, res) => {
           statusPed: carrinhoQuebrado.some(produtoQuebrado => produtoQuebrado.downloadLink === "Enviar Arte Depois")
             ? 'Pedido em Aberto'
             : 'Aguardando',
-          statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Aguardando',
+          statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
           linkDownload: produtoQuebrado.downloadLink,
-          nomeArquivo: produtoQuebrado.nomeArquivo,
+          nomeArquivo: produtoQuebrado.arquivo,
           // ... outros campos relevantes ...
         });
         await verificarGraficaMaisProximaEAtualizar(itemPedido);
@@ -2379,7 +2379,7 @@ app.post('/criar-pedidos', async (req, res) => {
                   produtosGrafica = JSON.parse(fixedJsonString);
               } else {
                   produtosGrafica = graficaMaisProxima.produtos;
-              }    
+              }     
                 if (produtosGrafica[pedidoCadastrado.nomeProd]) {
                   const pedidoAssociado = {
                     ...pedidoCadastrado.dataValues,
